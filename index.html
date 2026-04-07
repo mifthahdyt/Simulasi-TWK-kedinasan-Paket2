@@ -3,336 +3,209 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Try Out PKN - Bahan Bakar Semangat</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>PJOK EXAM - SMAN 10 SINJAI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #e74c3c;
-            --secondary: #ff7675;
-            --accent: #f1c40f;
-            --bg: #fdf2f2;
-            --white: #ffffff;
-            --dark: #2c3e50;
+            --bg: #050505;
+            --card-bg: rgba(255, 255, 255, 0.02);
+            --text-main: #ffffff;
+            --text-dim: #999999;
+            --accent: #ffffff;
+            --border: rgba(255, 255, 255, 0.1);
+            --correct: #00ff64;
+            --wrong: #ff3232;
         }
 
-        * { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg); color: var(--text-main); margin: 0; display: flex; justify-content: center; min-height: 100vh; padding: 20px; }
+        .container { width: 100%; max-width: 650px; }
 
-        body {
-            margin: 0;
-            background: linear-gradient(135deg, #c0392b, #e74c3c, #fab1a0);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
+        .card { background: var(--card-bg); backdrop-filter: blur(15px); padding: 35px; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 25px 50px rgba(0,0,0,0.5); display: none; }
+        .card.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+        .timer { position: fixed; top: 20px; right: 20px; background: var(--accent); color: #000; padding: 8px 15px; border-radius: 10px; font-weight: 800; font-size: 0.9rem; z-index: 100; }
+        .progress-container { width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px; margin: 20px 0; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: 0.5s; }
 
-        .container { width: 100%; max-width: 600px; }
+        h2 { font-size: 1.1rem; line-height: 1.6; margin-bottom: 25px; font-weight: 500; text-align: left; }
+        .badge { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: var(--text-dim); margin-bottom: 5px; display: block; }
 
-        .card {
-            background: rgba(255, 255, 255, 0.98);
-            padding: 30px;
-            border-radius: 30px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-            text-align: center;
-            display: none;
-            position: relative;
-            border: 2px solid white;
-        }
-
-        .card.active { display: block; animation: slideUp 0.4s ease-out; }
-
-        @keyframes slideUp {
-            from { transform: translateY(30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        h1 { font-weight: 800; color: var(--primary); margin-bottom: 5px; }
+        .opt-list { display: grid; gap: 10px; }
+        .opt { padding: 16px 20px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; cursor: pointer; transition: 0.2s; font-size: 14px; text-align: left; }
+        .opt:hover { background: rgba(255,255,255,0.08); }
+        .opt.selected { border-color: var(--accent); background: rgba(255,255,255,0.1); }
         
-        .fuel-badge {
-            background: var(--accent);
-            color: #7d6608;
-            padding: 10px 20px;
-            border-radius: 50px;
-            font-weight: 800;
-            font-size: 0.85rem;
-            display: inline-block;
-            margin: 15px 0;
-            box-shadow: 0 4px 15px rgba(241, 196, 15, 0.4);
-        }
+        /* State Colors */
+        .opt.is-correct { background: rgba(0, 255, 100, 0.15) !important; border-color: var(--correct) !important; color: var(--correct); }
+        .opt.is-wrong { background: rgba(255, 50, 50, 0.15) !important; border-color: var(--wrong) !important; color: var(--wrong); }
 
-        /* Styling Timer */
-        .timer-badge {
-            position: absolute;
-            top: 20px;
-            right: 25px;
-            background: var(--dark);
-            color: white;
-            padding: 5px 15px;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
+        input, textarea { width: 100%; padding: 16px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; color: #fff; font-size: 14px; outline: none; margin-top: 10px; }
 
-        .btn {
-            width: 100%;
-            padding: 16px;
-            border: none;
-            border-radius: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-bottom: 12px;
-        }
+        .btn { background: var(--accent); color: #000; padding: 18px; border: none; border-radius: 12px; font-weight: 800; text-transform: uppercase; cursor: pointer; width: 100%; margin-top: 25px; transition: 0.3s; }
+        .btn:hover { opacity: 0.8; transform: translateY(-2px); }
 
-        .btn-main { background: var(--primary); color: white; }
-        .btn-main:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(231, 76, 60, 0.3); }
+        .feedback-box { margin-top: 20px; padding: 20px; border-radius: 12px; font-size: 13px; display: none; line-height: 1.6; border-left: 4px solid #fff; }
+        .visible { display: block; }
 
-        .option-container { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
-        .option-btn {
-            background: #f8f9fa;
-            border: 2px solid #e9ecef;
-            padding: 15px;
-            border-radius: 15px;
-            text-align: left;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .option-btn:hover { border-color: var(--primary); }
-        .option-btn.selected { background: var(--primary); color: white; }
-        .option-btn.correct { background: #c6f6d5 !important; color: #1a531b !important; border-color: #2ecc71 !important; }
-        .option-btn.wrong { background: #fed7d7 !important; color: #822727 !important; border-color: #e74c3c !important; }
-
-        .explanation-box {
-            background: #fff9db;
-            padding: 15px;
-            border-radius: 15px;
-            text-align: left;
-            border-left: 6px solid var(--accent);
-            margin-top: 15px;
-            font-size: 0.9rem;
-        }
-
-        .hidden { display: none; }
-        .progress-bar { width: 100%; height: 8px; background: #eee; border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--secondary); width: 0%; transition: 0.3s; }
-        #evaluation-list { text-align: left; max-height: 250px; overflow-y: auto; margin-top: 20px; padding: 10px; background: #f8f9fa; border-radius: 15px; }
-        .eval-item { border-bottom: 1px solid #ddd; padding: 10px 0; font-size: 0.9rem; }
+        #eval-list { text-align: left; margin-top: 20px; font-size: 13px; }
+        .eval-item { border-bottom: 1px solid var(--border); padding: 15px 0; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div id="screen-welcome" class="card active">
-            <div class="fuel-badge">🇮🇩 TRY OUT PKN 🔥</div>
-            <h1>Halo, Miftha! 👋</h1>
-            <p>Siap menaklukkan 50 soal PKN?</p>
-            <p style="font-style: italic; color: #666; margin-top: -10px; font-size: 0.8rem;">"Gunakan Bahan Bakar Semangatmu!"</p>
-            <button class="btn btn-main" onclick="startQuiz()">Mulai Try Out ⚖️</button>
-        </div>
+<div id="timer-display" class="timer" style="display:none">00:00</div>
 
-        <div id="screen-quiz" class="card">
-            <div class="timer-badge" id="display-timer">00:00</div>
-            <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
-            <div style="display: flex; justify-content: space-between; font-size: 0.7rem; font-weight: bold; color: #999; margin-bottom: 10px;">
-                <span>TRY OUT PKN</span>
-                <span id="label-count">1/50</span>
-            </div>
-            <p id="text-question" style="font-weight: 600; text-align: left; font-size: 1.1rem;"></p>
-            <div id="container-options" class="option-container"></div>
-            
-            <div id="feedback-area" class="hidden">
-                <div class="explanation-box">
-                    <strong>💡 Pembahasan:</strong>
-                    <p id="text-explanation" style="margin-top: 5px;"></p>
-                </div>
-                <button class="btn btn-main" style="margin-top: 15px;" onclick="nextQuestion()">Lanjut ➡️</button>
-            </div>
-            <button id="btn-submit" class="btn btn-main hidden" onclick="checkAnswer()">Cek Jawaban ✅</button>
-        </div>
-
-        <div id="screen-result" class="card">
-            <h1>Hasil Akhir 🏆</h1>
-            <div style="font-size: 4rem; font-weight: 800; color: var(--primary);" id="final-score">0</div>
-            <p style="font-weight: bold; margin-bottom: 5px;">Waktu Pengerjaan: <span id="finish-time" style="color: var(--dark);">00:00</span></p>
-            <div class="fuel-badge" id="motivation-text">BAHAN BAKAR SEMANGATMU! 🔥</div>
-            <div id="evaluation-list"></div>
-            <button class="btn btn-main" style="margin-top: 20px;" onclick="location.reload()">Ulangi 🔄</button>
-        </div>
+<div class="container">
+    <div id="sc-start" class="card active" style="text-align: center;">
+        <span class="badge">SMAN 10 SINJAI</span>
+        <h1 style="font-size: 2.5rem; letter-spacing: -2px;">PJOK XII</h1>
+        <p style="color: var(--text-dim); margin-bottom: 40px;">Ujian Akhir Semester Ganjil 2025/2026</p>
+        <button class="btn" onclick="start()">Mulai Ujian Sekarang</button>
     </div>
 
-    <script>
-        const questions = [
-            { q: "1. Pembagian kekuasaan yang membagi fungsi lembaga menjadi legislatif, eksekutif, dan yudikatif disebut...", opts: ["Vertikal", "Horizontal", "Diagonal", "Federal", "Komunal"], ans: 1, exp: "Horizontal berarti dilakukan antarlembaga yang sejajar." },
-            { q: "2. Nilai Pancasila yang berkaitan dengan pengakuan kedudukan manusia yang sederajat adalah sila ke...", opts: ["1", "2", "3", "4", "5"], ans: 1, exp: "Sila ke-2 menekankan Kemanusiaan yang adil dan beradab." },
-            { q: "3. Kekuasaan untuk mengubah dan menetapkan UUD dijalankan oleh...", opts: ["Presiden", "DPR", "MPR", "MA", "MK"], ans: 2, exp: "MPR berwenang mengubah dan menetapkan UUD." },
-            { q: "4. Wilayah laut Indonesia sejauh 200 mil laut untuk eksploitasi alam disebut...", opts: ["Laut Teritorial", "Zona Tambahan", "Landas Kontinen", "ZEE", "Laut Pedalaman"], ans: 3, exp: "ZEE memberikan hak berdaulat atas sumber daya laut hingga 200 mil." },
-            { q: "5. Jaminan memeluk agama dalam UUD 1945 terdapat pada Pasal...", opts: ["27 Ayat 1", "28", "29 Ayat 2", "30 Ayat 1", "31 Ayat 1"], ans: 2, exp: "Pasal 29 ayat 2 menjamin kemerdekaan tiap penduduk beragama." },
-            { q: "6. Salah satu faktor eksternal penyebab pelanggaran HAM adalah...", opts: ["Sikap egois", "Rendahnya kesadaran HAM", "Penyalahgunaan kekuasaan", "Sikap tidak toleran", "Kurangnya empati"], ans: 2, exp: "Penyalahgunaan kekuasaan berasal dari sistem luar diri individu." },
-            { q: "7. Instrumen hukum pertama di Indonesia yang mengatur khusus tentang HAM adalah...", opts: ["UU No. 39 Tahun 1999", "UU No. 26 Tahun 2000", "UU No. 12 Tahun 2006", "Tap MPR No. XVII/1998", "UUD 1945 Pasal 28"], ans: 3, exp: "Tap MPR No. XVII/1998 adalah tonggak awal peraturan khusus HAM." },
-            { q: "8. Demokrasi Indonesia bersumber dari tata nilai sosial budaya bangsa, yaitu...", opts: ["Liberal", "Rakyat", "Pancasila", "Terpimpin", "Parlementer"], ans: 2, exp: "Demokrasi Pancasila berakar pada kekeluargaan bangsa." },
-            { q: "9. Sistem hukum di Indonesia secara dominan bersifat...", opts: ["Anglosaxon", "Common Law", "Civil Law", "Hukum Adat", "Hukum Agama"], ans: 2, exp: "Indonesia menganut Civil Law yang mengutamakan hukum tertulis." },
-            { q: "10. Lembaga peradilan tertinggi yang membawahi semua lingkungan peradilan adalah...", opts: ["MK", "KY", "MA", "PT", "PN"], ans: 2, exp: "MA adalah puncak peradilan umum, agama, militer, dan TUN." },
-            { q: "11. Kerja sama internasional sangat penting karena...", opts: ["Ingin menguasai", "Negara saling membutuhkan", "Cari untung", "Blok militer", "Hilangkan identitas"], ans: 1, exp: "Interdependensi membuat negara harus bekerja sama." },
-            { q: "12. Landasan konstitusional politik luar negeri bebas aktif adalah...", opts: ["Pancasila", "Pembukaan UUD 1945 Alinea 4", "Kepres", "Tap MPR", "Permenlu"], ans: 1, exp: "Tertuang dalam Pembukaan UUD 1945 alinea 4." },
-            { q: "13. Ancaman militer berupa perusakan instalasi penting disebut...", opts: ["Spionase", "Agresi", "Sabotase", "Pemberontakan", "Pelanggaran"], ans: 2, exp: "Sabotase merusak objek vital nasional." },
-            { q: "14. Persatuan bangsa dijaga untuk mencegah...", opts: ["Integrasi", "Disintegrasi", "Akulturasi", "Asimilasi", "Koalisi"], ans: 1, exp: "Disintegrasi adalah perpecahan bangsa." },
-            { q: "15. Wewenang memutus sengketa hasil pemilu berada pada...", opts: ["KPU", "Bawaslu", "MA", "MK", "Presiden"], ans: 3, exp: "Kewenangan Mahkamah Konstitusi sesuai UUD 1945." },
-            { q: "16. Kewajiban warga negara menurut Pasal 30 UUD 1945 adalah...", opts: ["Pendidikan", "Pajak", "Pertahanan Keamanan", "Hukum", "Budaya"], ans: 2, exp: "Pasal 30 fokus pada bela negara." },
-            { q: "17. Mengabaikan kewajiban yang ditetapkan hukum disebut...", opts: ["Pelanggaran hak", "Pengingkaran kewajiban", "Kejahatan", "Kriminal", "Penyelewengan"], ans: 1, exp: "Saat tidak melakukan apa yang diwajibkan hukum." },
-            { q: "18. Faktor internal pendorong pelanggaran HAM adalah...", opts: ["Aparat tidak tegas", "Teknologi", "Kesenjangan", "Sikap egois", "Sistem lemah"], ans: 3, exp: "Egoisme berasal dari kondisi psikologis pelaku." },
-            { q: "19. Unsur mutlak berdirinya negara secara de jure adalah...", opts: ["Rakyat", "Wilayah", "Pemerintah", "Pengakuan negara lain", "Tentara"], ans: 3, exp: "Secara hukum, pengakuan internasional sangat menentukan." },
-            { q: "20. Peran polisi dalam menjamin keadilan adalah...", opts: ["Menuntut", "Memutus", "Penyidikan", "Menguji UU", "Bantuan"], ans: 2, exp: "Polri bertugas melakukan penyelidikan dan penyidikan." },
-            { q: "21. Keberagaman Indonesia menjadi kekuatan karena...", opts: ["Konflik", "Nikah beda suku", "Rukun", "Kompetensi", "Rujukan multikulturalisme"], ans: 4, exp: "Indonesia adalah model dunia tentang persatuan." },
-            { q: "22. Musyawarah mufakat adalah pengamalan sila ke...", opts: ["1", "2", "3", "4", "5"], ans: 3, exp: "Sila ke-4 fokus pada musyawarah." },
-            { q: "23. Contoh sila ke-5 di masyarakat adalah...", opts: ["Hormat agama", "Musyawarah", "Kesempatan sama bagi warga", "Toleransi", "Hidup rukun"], ans: 2, exp: "Keadilan sosial berarti tidak diskriminatif." },
-            { q: "24. Hak mendapatkan status kewarganegaraan adalah hak...", opts: ["Ekonomi", "Politik", "Hukum", "Sosial", "Pribadi"], ans: 2, exp: "Berkaitan dengan kepastian status hukum." },
-            { q: "25. Pengaruh positif iptek bagi ekonomi adalah...", opts: ["Hukum", "Meningkatkan investasi", "Konsumtif", "Kesenjangan", "Demokratisasi"], ans: 1, exp: "Teknologi memudahkan aliran modal asing." },
-            { q: "26. Pengaruh negatif iptek dalam sosial budaya adalah...", opts: ["Transparansi", "Efisiensi", "Hedonisme", "Mudah info", "Pasar"], ans: 2, exp: "Gaya hidup mewah yang menggeser nilai lokal." },
-            { q: "27. Sikap menghadapi iptek sesuai Pancasila adalah...", opts: ["Terima saja", "Menolak", "Selektif dan kritis", "Menutup diri", "Ikut tren"], ans: 2, exp: "Menyaring yang sesuai jati diri bangsa." },
-            { q: "28. Kekuasaan Kejaksaan dalam sistem hukum adalah...", opts: ["Penuntut umum", "Pemutus", "Penyidik tunggal", "Pengaman", "Pembuat UU"], ans: 0, exp: "Jaksa bertugas melakukan penuntutan." },
-            { q: "29. Penganiayaan termasuk pelanggaran HAM kategori...", opts: ["Berat", "Ringan", "Internasional", "Politik", "Ekonomi"], ans: 1, exp: "Pelanggaran berat contohnya genosida." },
-            { q: "30. Bhinneka Tunggal Ika artinya...", opts: ["Berbeda tetap satu", "Bersatu teguh", "Hikmat", "Persatuan", "Keadilan"], ans: 0, exp: "Sudah sangat jelas." },
-            { q: "31. Asas kewarganegaraan berdasarkan tempat lahir adalah...", opts: ["Ius Sanguinis", "Ius Soli", "Apatride", "Bipatride", "Naturalisasi"], ans: 1, exp: "Ius Soli = Hukum tanah kelahiran." },
-            { q: "32. Pembukaan UUD 1945 berkedudukan sebagai...", opts: ["Batang tubuh", "Pokok kaidah fundamental", "Aturan tambahan", "Penjelasan", "Dokumen"], ans: 1, exp: "Sebagai Staatfundamentalnorm." },
-            { q: "33. Ciri utama negara demokrasi adalah...", opts: ["Tentara kuat", "Presiden absolut", "Keterlibatan rakyat", "Partai tunggal", "Ekonomi tutup"], ans: 2, exp: "Kedaulatan di tangan rakyat." },
-            { q: "34. Contoh sila ke-1 di masyarakat adalah...", opts: ["Kebersihan", "Hormat ibadah lain", "Musyawarah", "Adil", "Taat"], ans: 1, exp: "Inti toleransi beragama." },
-            { q: "35. Sikap berpancasila dalam globalisasi adalah...", opts: ["Tolak", "Terima semua", "Saring budaya", "Tiru gaya maju", "Anggap kuno"], ans: 2, exp: "Menyaring nilai asing." },
-            { q: "36. Hubungan luar negeri dua negara disebut...", opts: ["Multilateral", "Regional", "Bilateral", "Internasional", "Nasional"], ans: 2, exp: "Bilateral (Dua pihak)." },
-            { q: "37. Landasan idiil persatuan adalah...", opts: ["UUD 1945", "Pancasila", "Kebijakan", "Perda", "Konvensi"], ans: 1, exp: "Ideologi bangsa adalah Pancasila." },
-            { q: "38. Menyontek adalah pengingkaran kewajiban di...", opts: ["Rumah", "Sekolah", "Masyarakat", "Bangsa", "Negara"], ans: 1, exp: "Konteks dunia pendidikan." },
-            { q: "39. Perlindungan hukum diberikan kepada...", opts: ["Si kaya", "Aparat", "Seluruh warga", "WNA", "Pelaku"], ans: 2, exp: "Persamaan di mata hukum." },
-            { q: "40. Contoh ancaman non-militer ekonomi adalah...", opts: ["Agresi", "Siber", "Globalisasi tidak adil", "Pemberontakan", "Spionase"], ans: 2, exp: "Persaingan pasar yang tidak sehat." },
-            { q: "41. Tujuan utama penegakan hukum adalah...", opts: ["Bikin takut", "Denda", "Keadilan, Kepastian, Kemanfaatan", "Lindungi pejabat", "Cari denda"], ans: 2, exp: "Tiga nilai dasar hukum." },
-            { q: "42. Nilai praksis Pancasila adalah...", opts: ["Teks UUD", "Abstrak", "Realisasi sehari-hari", "Masa lalu", "Budaya asing"], ans: 2, exp: "Penerapan nyata di lapangan." },
-            { q: "43. Lembaga menangani pelanggaran HAM adalah...", opts: ["KPK", "Komnas HAM", "BPK", "KPU", "Ombudsman"], ans: 1, exp: "Komisi Nasional HAM." },
-            { q: "44. Hak berpendapat diatur dalam...", opts: ["UU No. 9 Tahun 1998", "UU No. 20", "UU No. 12", "UU No. 17", "UU No. 2"], ans: 0, exp: "UU tentang kemerdekaan berpendapat." },
-            { q: "45. NKRI adalah singkatan dari...", opts: ["Negara Rakyat", "Negara Kesatuan Republik Indonesia", "Kedaulatan", "Keadilan", "Rakyat"], ans: 1, exp: "Nama resmi negara kita." },
-            { q: "46. Tidak mengambil milik orang lain sesuai sila...", opts: ["1", "2", "3", "4", "5"], ans: 4, exp: "Keadilan sosial (hak milik)." },
-            { q: "47. Contoh perilaku keadilan sosial adalah...", opts: ["Hormat agama", "Kesempatan belajar sama", "Kerja bakti", "Taat", "Hargai pendapat"], ans: 1, exp: "Pemerataan akses pendidikan." },
-            { q: "48. Peluang Indonesia di globalisasi karena...", opts: ["Penduduk & SDA", "Tidak ada saingan", "Tergantung", "Kurang tenaga", "Minim kerja sama"], ans: 0, exp: "Potensi pasar dan alam." },
-            { q: "49. Tantangan sosial budaya globalisasi adalah...", opts: ["Peduli daerah", "Budaya asing geser lokal", "Kearifan lokal", "Rasa bangsa", "Seni tradisional"], ans: 1, exp: "Ancaman identitas budaya." },
-            { q: "50. Miftha, apa janji yang harus kamu pegang teguh untuk masa depanmu?", opts: ["Saya akan menyerah jika sulit.", "Saya akan belajar biasa saja.", "Saya akan berjuang habis-habisan demi mimpi saya!", "Saya akan menunda-nunda pekerjaan.", "Saya tidak peduli masa depan."], ans: 2, exp: "Mental juara tidak pernah menyerah. Berjuanglah demi mimpi dan janji pada dirimu sendiri!" }
-        ];
+    <div id="sc-quiz" class="card">
+        <div class="progress-container"><div id="prog-fill" class="progress-fill"></div></div>
+        <div id="quiz-content"></div>
+        <div id="fdb" class="feedback-box"></div>
+        <button id="btn-action" class="btn" onclick="handle()">Cek Jawaban</button>
+    </div>
 
-        let currentIdx = 0;
-        let score = 0;
-        let wrongAnswers = [];
-        let selectedIdx = -1;
-        
-        // Timer Logic
-        let timerInterval;
-        let seconds = 0;
+    <div id="sc-result" class="card" style="text-align: center;">
+        <span class="badge">Final Score</span>
+        <h1 id="score-val" style="font-size: 5rem; margin: 10px 0;">0</h1>
+        <p id="time-val" style="color: var(--text-dim);"></p>
+        <div id="eval-list"></div>
+        <button class="btn" onclick="location.reload()">Ulangi</button>
+    </div>
+</div>
 
-        function startQuiz() {
-            document.getElementById('screen-welcome').classList.remove('active');
-            document.getElementById('screen-quiz').classList.add('active');
-            startTimer();
-            loadQuestion();
-        }
+<script>
+// DATABASE SOAL LENGKAP (37 NOMOR)
+const db = [
+    { type:'pg', q:"Pola pertahanan manakah yang paling efektif untuk meredam kecepatan lawan dengan formasi 4-3-3?", opts:["Man to man defense", "Counter attack", "Zone defense area flank", "Offside trap", "Total football"], ans:2, exp:"Zone defense fokus flank meredam sayap cepat." },
+    { type:'pg', q:"Posisi ibu jari setelah bola terlepas (follow through) pada chest pass basket adalah...", opts:["Menghadap ke bawah", "Menghadap ke atas", "Saling bersentuhan", "Mengepal", "Menghadap ke samping"], ans:0, exp:"Ibu jari menghadap ke bawah." },
+    { type:'pg', q:"Pemain voli bertahan yang tidak boleh smash atau servis disebut...", opts:["Setter", "Spiker", "Universal", "Libero", "Tosser"], ans:3, exp:"Libero adalah pemain spesialis defense." },
+    { type:'pg', q:"Pukulan bulu tangkis tenaga penuh dan menukik tajam disebut...", opts:["Lob", "Smash", "Drive", "Drop shot", "Netting"], ans:1, exp:"Smash untuk mematikan lawan secara cepat." },
+    { type:'pg', q:"Taktik paling bijak memajukan pelari base 1 & 2 saat tertinggal 1 angka (0 out) di sofbol?", opts:["Home run", "Steal", "Full swing", "Bunt (Sacrifice)", "Slide"], ans:3, exp:"Bunt digunakan untuk pengorbanan (sacrifice)." },
+    { type:'pg', q:"Teknik silat memindahkan berat badan ke samping tanpa pindah kaki disebut...", opts:["Tangkisan", "Elakan samping", "Hindaran", "Kuda-kuda", "Pukulan"], ans:1, exp:"Elakan samping menghindari serangan tanpa langkah." },
+    { type:'pg', q:"Urutan sistematika latihan yang benar adalah...", opts:["Pemanasan-Inti-Pendinginan", "Inti-Pemanasan-Pendinginan", "Pemanasan-Pendinginan-Inti"], ans:0, exp:"Urutan: Pemanasan, Inti, lalu Pendinginan." },
+    { type:'pg', q:"Kesalahan yang sering terjadi saat melakukan guling lenting adalah...", opts:["Kaki lurus", "Tangan kuat", "Pinggul tidak melenting", "Mata tutup"], ans:2, exp:"Lentingan pinggul kunci utama gerakan." },
+    { type:'pg', q:"Cara pengambilan napas yang benar pada renang gaya bebas adalah...", opts:["Ke depan", "Menunduk", "Menoleh ke samping", "Tahan napas"], ans:2, exp:"Kepala menoleh ke samping saat lengan di atas air." },
+    { type:'pg', q:"Dampak jangka panjang rutin latihan aerobik pada kesehatan jantung adalah...", opts:["Nadi naik", "Nadi istirahat menurun", "Cepat lelah", "Otot mengecil"], ans:1, exp:"Jantung lebih efisien (nadi istirahat menurun)." },
+    { type:'pg', q:"Langkah pertama menemukan orang tak sadar (henti jantung) sesuai POS RJP?", opts:["Memeriksa respon", "Napas buatan", "Kompresi", "Panggil ambulans"], ans:0, exp:"Periksa respon korban terlebih dahulu." },
+    { type:'pg', q:"Dalam sepak bola, pemain dinyatakan offside jika...", opts:["Handsball", "Langgar kiper", "Dekat gawang dibanding bola & lawan kedua terakhir", "Keluar lapangan"], ans:2, exp:"Definisi offside menurut aturan FIFA." },
+    { type:'pg', q:"Keuntungan utama formasi 4-2 dalam bola voli adalah...", opts:["Blok tinggi", "Banyak smasher", "Servis masuk", "Selalu ada 2 setter di depan", "Rapat"], ans:3, exp:"Memudahkan pengaturan serangan dengan 2 setter." },
+    { type:'pg', q:"Pemain sofbol di belakang pemukul yang menangkap bola pitcher?", opts:["Batter", "Catcher", "Pitcher", "First base"], ans:1, exp:"Catcher (penangkap bola)." },
+    { type:'pg', q:"Tujuan gizi seimbang bagi siswa aktif olahraga adalah...", opts:["Cepat kenyang", "Mengurangi berat", "Menambah lemak", "Energi & pemulihan otot", "Tren"], ans:3, exp:"Menjaga energi dan mempercepat pemulihan sel otot." },
+    
+    // KOMPLEKS (16-20)
+    { type:'complex', q:"Prinsip Zone Defense (Pertahanan Daerah) basket yang benar? (Pilih >1)", opts:["Setiap pemain menjaga area tertentu", "Menjaga 1 lawan 1 ketat", "Hanya untuk menyerang", "Risiko foul individu berkurang"], ans:[0, 3], exp:"Jaga area dan mengurangi risiko pelanggaran individu." },
+    { type:'complex', q:"Komponen fisik utama rancangan pola silat yang baik? (Pilih >1)", opts:["Kecepatan reaksi", "Kelincahan", "Kemalasan", "Keseimbangan", "Power"], ans:[0, 1, 3, 4], exp:"Reaksi, lincah, seimbang, dan power adalah kunci silat." },
+    { type:'complex', q:"Gerakan pada fase pendinginan senam aerobik? (Pilih >1)", opts:["Peregangan statis", "Lompat tinggi", "Pernapasan dalam (lambat)", "Sprint"], ans:[0, 2], exp:"Pendinginan pakai peregangan statis dan napas lambat." },
+    { type:'complex', q:"Kepanjangan dari prinsip FITT adalah? (Pilih >1)", opts:["Frequency", "Intensity", "Time", "Type", "Fast"], ans:[0, 1, 2, 3], exp:"Frequency, Intensity, Time, Type." },
+    { type:'complex', q:"Kapan RJP boleh dihentikan? (Pilih >1)", opts:["Ahli medis tiba", "Korban sadar", "Penolong kelelahan", "Hujan"], ans:[0, 1, 2], exp:"Medis tiba, korban sadar, atau limit fisik penolong." },
 
-        function startTimer() {
-            seconds = 0;
-            timerInterval = setInterval(() => {
-                seconds++;
-                document.getElementById('display-timer').innerText = formatTime(seconds);
-            }, 1000);
-        }
+    // MENJODOHKAN (21-30) - Disederhanakan untuk Mobile
+    { type:'pg', q:"[Jodohkan] Istilah: Tembakan 2 langkah sambil melompat dalam basket?", opts:["Lay-up", "Netting", "Service Ace", "Handstand"], ans:0, exp:"Lay-up adalah teknik dasar basket." },
+    { type:'pg', q:"[Jodohkan] Istilah: Pukulan poin langsung tanpa disentuh lawan?", opts:["Netting", "Service Ace", "Blocking", "Pivot"], ans:1, exp:"Service Ace membuahkan poin instan." },
+    { type:'pg', q:"[Jodohkan] Istilah: Memukul bola bulu tangkis dekat dengan net?", opts:["Smash", "Lob", "Netting", "Drive"], ans:2, exp:"Netting menuntut kehalusan sentuhan." },
+    { type:'pg', q:"[Jodohkan] Istilah: Berdiri dengan tangan di bawah kaki di atas?", opts:["Kopstand", "Handstand", "Roll", "Kayang"], ans:1, exp:"Handstand melatih kekuatan lengan." },
+    { type:'pg', q:"[Jodohkan] Istilah: Gaya renang menyerupai gerakan katak?", opts:["Bebas", "Kupu-kupu", "Gaya Dada", "Punggung"], ans:2, exp:"Gaya dada sering disebut gaya katak." },
+    { type:'pg', q:"[Jodohkan] Istilah: Sumber energi utama bagi atlet?", opts:["Karbohidrat", "Lemak", "Vitamin", "Serat"], ans:0, exp:"Karbohidrat adalah bahan bakar utama." },
+    { type:'pg', q:"[Jodohkan] Istilah: Berputar dengan satu kaki sebagai poros (basket)?", opts:["Dribble", "Pivot", "Pass", "Screen"], ans:1, exp:"Pivot menjaga bola dari lawan." },
+    { type:'pg', q:"[Jodohkan] Istilah: Membendung smash tepat di atas net voli?", opts:["Passing", "Service", "Blocking", "Set up"], ans:2, exp:"Blocking mematikan serangan lawan." },
+    { type:'pg', q:"[Jodohkan] Istilah: Posisi skor sama kuat (misal 20-20)?", opts:["Jus", "Deuce", "Match", "Set"], ans:1, exp:"Deuce memerlukan selisih 2 poin." },
+    { type:'pg', q:"[Jodohkan] Istilah: Posisi dasar kaki untuk keseimbangan silat?", opts:["Pukulan", "Tangkisan", "Kuda-kuda", "Kuncian"], ans:2, exp:"Kuda-kuda adalah fondasi silat." },
 
-        function formatTime(sec) {
-            const m = Math.floor(sec / 60).toString().padStart(2, '0');
-            const s = (sec % 60).toString().padStart(2, '0');
-            return `${m}:${s}`;
-        }
+    // ISIAN & URAIAN (31-37)
+    { type:'isian', q:"Strategi bertahan melawan center tinggi agar tidak rebound?", ans:"box out", exp:"Box out menghalangi lawan mendekat ke ring." },
+    { type:'isian', q:"Sikap jika wasit memberikan keputusan yang salah adalah...", ans:"sportif", exp:"Sportivitas menghargai wasit." },
+    { type:'isian', q:"Langkah penyelamatan teman kram di kolam dalam adalah pakai...", ans:"alat bantu", exp:"Utamakan keselamatan diri dengan alat bantu." },
+    { type:'isian', q:"Kombinasi Karbo+Protein+Sayur terbaik untuk atlet?", ans:"nasi", exp:"Contoh: Nasi, Ayam, Sayur." },
+    { type:'isian', q:"Tujuan kaki ditinggikan 20-30 cm saat pingsan adalah...", ans:"aliran darah", exp:"Membantu darah ke jantung dan otak." },
+    { type:'uraian', q:"Analisis transisi counter attack yang efektif?", ans:"bebas", exp:"Rebut -> Oper Gelandang -> Through Pass Striker." },
+    { type:'uraian', q:"Kampanye singkat anti sedentary lifestyle?", ans:"bebas", exp:"Ayo bergerak aktif & makan bergizi demi masa depan." }
+];
 
-        function loadQuestion() {
-            const data = questions[currentIdx];
-            document.getElementById('label-count').innerText = `${currentIdx + 1}/50`;
-            document.getElementById('text-question').innerText = data.q;
-            document.getElementById('progress-fill').style.width = `${((currentIdx + 1)/50)*100}%`;
-            
-            const container = document.getElementById('container-options');
-            container.innerHTML = '';
-            data.opts.forEach((opt, i) => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn';
-                btn.innerText = opt;
-                btn.onclick = () => {
-                    selectedIdx = i;
-                    document.querySelectorAll('.option-btn').forEach((b, idx) => b.classList.toggle('selected', idx === i));
-                    document.getElementById('btn-submit').classList.remove('hidden');
-                };
-                container.appendChild(btn);
-            });
-            document.getElementById('feedback-area').classList.add('hidden');
-            document.getElementById('btn-submit').classList.add('hidden');
-        }
+let curr = 0, score = 0, time = 0, timerOn = false, wrongs = [];
 
-        function checkAnswer() {
-            const data = questions[currentIdx];
-            const btns = document.querySelectorAll('.option-btn');
-            btns.forEach(b => b.onclick = null);
-            
-            if(selectedIdx === data.ans) {
-                btns[selectedIdx].classList.add('correct');
-                score += 2;
-            } else {
-                btns[selectedIdx].classList.add('wrong');
-                btns[data.ans].classList.add('correct');
-                wrongAnswers.push({ q: data.q, user: data.opts[selectedIdx], correct: data.opts[data.ans] });
-            }
-            document.getElementById('text-explanation').innerText = data.exp;
-            document.getElementById('feedback-area').classList.remove('hidden');
-            document.getElementById('btn-submit').classList.add('hidden');
-        }
+function start() {
+    document.getElementById('sc-start').classList.remove('active');
+    document.getElementById('sc-quiz').classList.add('active');
+    document.getElementById('timer-display').style.display = 'block';
+    timerOn = true;
+    setInterval(() => { if(timerOn){ time++; let m=Math.floor(time/60).toString().padStart(2,'0'), s=(time%60).toString().padStart(2,'0'); document.getElementById('timer-display').innerText=`${m}:${s}`;} }, 1000);
+    render();
+}
 
-        function nextQuestion() {
-            currentIdx++;
-            if(currentIdx < 50) loadQuestion();
-            else {
-                clearInterval(timerInterval); // Stop timer
-                showResult();
-            }
-        }
+function render() {
+    const q = db[curr], area = document.getElementById('quiz-content');
+    document.getElementById('prog-fill').style.width = `${((curr+1)/db.length)*100}%`;
+    let html = `<span class="badge">Nomor ${curr+1}</span><h2>${q.q}</h2>`;
 
-        function showResult() {
-            document.getElementById('screen-quiz').classList.remove('active');
-            document.getElementById('screen-result').classList.add('active');
-            document.getElementById('final-score').innerText = score;
-            document.getElementById('finish-time').innerText = formatTime(seconds);
-            
-            const motivationText = document.getElementById('motivation-text');
-            const resultTitle = document.querySelector('#screen-result h1');
+    if(q.type === 'pg' || q.type === 'complex') {
+        html += `<div class="opt-list">` + q.opts.map((o,i) => `<div class="opt" onclick="sel(${i},'${q.type}')">${o}</div>`).join('') + `</div>`;
+    } else {
+        html += `<input type="text" id="ans-in" placeholder="Ketik jawaban Anda...">`;
+    }
+    area.innerHTML = html;
+    document.getElementById('fdb').classList.remove('visible');
+    document.getElementById('btn-action').innerText = "Cek Jawaban";
+}
 
-            if (score === 100) {
-                resultTitle.innerText = "Sempurna, Miftha! 🏆";
-                motivationText.innerText = "KAMU ADALAH JUARA SEJATI! 🔥";
-            } else if (score >= 80) {
-                resultTitle.innerText = "Hebat, Miftha! 👍";
-                motivationText.innerText = "DIKIT LAGI PERFECT, GAS TERUS! 🔥";
-            } else {
-                resultTitle.innerText = "Ayo, Miftha! 💪";
-                motivationText.innerText = "JANGAN MENYERAH, BELAJAR LAGI! 🔥";
-            }
+function sel(i, type) {
+    const opts = document.querySelectorAll('.opt');
+    if(type === 'pg') opts.forEach(o => o.classList.remove('selected'));
+    opts[i].classList.toggle('selected');
+}
 
-            const list = document.getElementById('evaluation-list');
-            list.innerHTML = "";
-            if(wrongAnswers.length === 0) list.innerHTML = "<p style='color: #27ae60; font-weight: bold;'>Luar biasa, Miftha! PKN kamu sempurna! 🇮🇩</p>";
-            else {
-                list.innerHTML = "<p style='font-weight: 600; text-align: left;'>📋 Evaluasi Jawaban Salah:</p>";
-                wrongAnswers.forEach(w => {
-                    list.innerHTML += `<div class="eval-item"><b>${w.q}</b><br>Kamu: <span style='color: #e74c3c;'>${w.user}</span> | Benar: <span style='color: #27ae60; font-weight: bold;'>${w.correct}</span></div>`;
-                });
-            }
-        }
-    </script>
+function handle() {
+    const btn = document.getElementById('btn-action');
+    if(btn.innerText === "CEK JAWABAN") {
+        check();
+        btn.innerText = "Lanjut Soal";
+    } else {
+        curr++;
+        if(curr < db.length) render(); else finish();
+    }
+}
+
+function check() {
+    const q = db[curr], f = document.getElementById('fdb'), opts = document.querySelectorAll('.opt');
+    let ok = false;
+
+    if(q.type === 'pg') {
+        let s = document.querySelector('.opt.selected');
+        if(!s) return;
+        let sIdx = Array.from(opts).indexOf(s);
+        ok = (sIdx === q.ans);
+        opts[q.ans].classList.add('is-correct');
+        if(!ok) s.classList.add('is-wrong');
+    } else if(q.type === 'complex') {
+        let sels = Array.from(document.querySelectorAll('.opt.selected')).map(el => Array.from(opts).indexOf(el));
+        ok = (JSON.stringify(sels.sort()) === JSON.stringify(q.ans.sort()));
+        opts.forEach((o,i) => { if(q.ans.includes(i)) o.classList.add('is-correct'); else if(sels.includes(i)) o.classList.add('is-wrong'); });
+    } else if(q.type === 'isian') {
+        ok = document.getElementById('ans-in').value.toLowerCase().includes(q.ans);
+    } else { ok = true; }
+
+    if(ok) { score += Math.round(100/db.length); f.style.borderColor = "#00ff64"; f.style.color = "#00ff64"; }
+    else { wrongs.push({q: q.q, k: q.exp}); f.style.borderColor = "#ff3232"; f.style.color = "#ff3232"; }
+
+    f.innerHTML = `<strong>${ok ? 'BENAR' : 'SALAH'}</strong><br>${q.exp}`;
+    f.classList.add('visible');
+}
+
+function finish() {
+    timerOn = false;
+    document.getElementById('sc-quiz').classList.remove('active');
+    document.getElementById('sc-result').classList.add('active');
+    document.getElementById('score-val').innerText = score > 100 ? 100 : score;
+    document.getElementById('time-val').innerText = "Waktu Pengerjaan: " + document.getElementById('timer-display').innerText;
+    document.getElementById('eval-list').innerHTML = `<h3 style="border-bottom:1px solid #333; padding-bottom:10px;">Evaluasi Jawaban Salah:</h3>` + wrongs.map(w => `<div class="eval-item"><b>${w.q}</b><br><span style="color:#777;">Pembahasan: ${w.k}</span></div>`).join('');
+}
+</script>
 </body>
 </html>
