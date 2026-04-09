@@ -3,143 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HISTORY ARCHIVE V5 - SMAN 10 SINJAI</title>
+    <title>HISTORY ARCHIVE V5.1 - 50 QUESTIONS</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <style>
         :root {
-            --paper: #f4e4bc;
-            --ink: #2c1e12;
-            --gold: #b8860b;
-            --correct: #2d5a27;
-            --wrong: #8b0000;
-            --border: #d2b48c;
+            --paper: #f4e4bc; --ink: #2c1e12; --gold: #b8860b;
+            --correct: #2d5a27; --wrong: #8b0000; --border: #d2b48c;
         }
-
         * { box-sizing: border-box; transition: all 0.3s ease; }
         body { 
-            background-color: #1a1a1a; 
-            background-image: url('https://www.transparenttextures.com/patterns/dark-leather.png');
-            color: var(--ink); 
-            font-family: 'Cormorant Garamond', serif; 
-            margin: 0; 
-            display: flex; 
-            justify-content: center; 
-            padding: 20px;
+            background-color: #1a1a1a; color: var(--ink); 
+            font-family: 'Cormorant Garamond', serif; margin: 0; 
+            display: flex; justify-content: center; padding: 20px;
         }
-
-        .container { width: 100%; max-width: 800px; }
-
+        .container { width: 100%; max-width: 850px; }
         .manuscript { 
-            background: var(--paper); 
-            background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
-            border: 12px double var(--border); 
-            border-radius: 5px; 
-            padding: 40px; 
-            box-shadow: 0 0 50px rgba(0,0,0,0.8);
-            display: none;
+            background: var(--paper); border: 12px double var(--border); 
+            border-radius: 5px; padding: 40px; box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            display: none; position: relative;
         }
         .active { display: block; animation: rollIn 0.8s ease; }
-
         @keyframes rollIn { from { transform: scaleY(0); opacity: 0; } to { transform: scaleY(1); opacity: 1; } }
-
-        .header { text-align: center; border-bottom: 2px solid var(--gold); margin-bottom: 30px; }
-        h1 { font-family: 'Cinzel', serif; font-size: 2rem; margin: 0; color: var(--gold); letter-spacing: 2px; }
-        
-        .meta-info { display: flex; justify-content: space-between; font-family: 'Cinzel', serif; font-size: 0.9rem; margin: 10px 0; }
-
-        .question-box { font-size: 1.4rem; font-weight: 600; line-height: 1.4; margin-bottom: 25px; border-left: 4px solid var(--gold); padding-left: 15px; }
-
-        .opt-list { display: grid; gap: 12px; }
-        .option {
-            background: rgba(0,0,0,0.03);
-            border: 1px solid var(--border);
-            padding: 15px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1.1rem;
-            position: relative;
-        }
-        .option:hover { background: rgba(184, 134, 11, 0.1); border-color: var(--gold); }
-        .option.selected { background: rgba(184, 134, 11, 0.15); border: 1px solid var(--gold); font-weight: 600; }
-
-        /* Feedback Colors */
-        .ans-correct { background: var(--correct) !important; color: #fff !important; border-color: #1a3a16 !important; }
-        .ans-wrong { background: var(--wrong) !important; color: #fff !important; border-color: #5a0000 !important; }
-
-        .scroll-box {
-            margin-top: 25px;
-            padding: 20px;
-            background: rgba(0,0,0,0.05);
-            border: 1px dashed var(--gold);
-            display: none;
-            font-style: italic;
-            line-height: 1.5;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .btn-action {
-            width: 100%;
-            padding: 18px;
-            background: var(--ink);
-            color: var(--paper);
-            font-family: 'Cinzel', serif;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            margin-top: 30px;
-            letter-spacing: 2px;
-        }
-        .btn-action:hover { background: var(--gold); color: var(--ink); }
-
+        .header { text-align: center; border-bottom: 2px solid var(--gold); margin-bottom: 20px; }
+        h1 { font-family: 'Cinzel', serif; color: var(--gold); margin: 0; }
+        .meta { display: flex; justify-content: space-between; font-family: 'Cinzel', serif; font-size: 0.8rem; margin-bottom: 10px; }
         .progress-line { width: 100%; height: 3px; background: rgba(0,0,0,0.1); margin-bottom: 20px; }
         .progress-fill { height: 100%; background: var(--gold); width: 0%; }
+        .question-box { font-size: 1.3rem; font-weight: 600; line-height: 1.4; margin-bottom: 20px; border-left: 4px solid var(--gold); padding-left: 15px; }
+        .opt-list { display: grid; gap: 10px; }
+        .option {
+            background: rgba(0,0,0,0.03); border: 1px solid var(--border);
+            padding: 12px 18px; border-radius: 4px; cursor: pointer; font-size: 1.05rem;
+        }
+        .option:hover { background: rgba(184, 134, 11, 0.1); }
+        .option.selected { background: rgba(184, 134, 11, 0.15); border: 1px solid var(--gold); font-weight: 600; }
+        .ans-correct { background: var(--correct) !important; color: #fff !important; }
+        .ans-wrong { background: var(--wrong) !important; color: #fff !important; }
+        .scroll-box {
+            margin-top: 20px; padding: 15px; background: rgba(0,0,0,0.05);
+            border: 1px dashed var(--gold); display: none; font-style: italic; font-size: 0.95rem;
+        }
+        .btn-action {
+            width: 100%; padding: 15px; background: var(--ink); color: var(--paper);
+            font-family: 'Cinzel', serif; border: none; cursor: pointer; margin-top: 20px;
+        }
+        .btn-action:hover { background: var(--gold); color: var(--ink); }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div id="sc-start" class="manuscript active" style="text-align: center;">
-        <h1 style="font-size: 3rem;">HISTORIA</h1>
-        <p style="font-style: italic; margin-bottom: 40px;">Ujian Sejarah Indonesia & Dunia • SMAN 10 SINJAI</p>
-        <button class="btn-action" onclick="startQuiz()">BUKA ARSIP SEJARAH</button>
+        <h1>HISTORIA INDONESIA</h1>
+        <p>Arsip Lengkap: 50 Soal Sejarah</p>
+        <button class="btn-action" onclick="startQuiz()">MULAI ANALISIS SEJARAH</button>
     </div>
 
     <div id="sc-quiz" class="manuscript">
-        <div class="header"><h1>HISTORIA ARCHIVE</h1></div>
-        <div class="meta-info">
-            <span id="q-label">ARCHIVE I</span>
-            <span id="timer">00:00</span>
-        </div>
+        <div class="header"><h1>HISTORY ARCHIVE</h1></div>
+        <div class="meta"><span id="q-label">ARCHIVE 1/50</span><span id="timer">00:00</span></div>
         <div class="progress-line"><div id="p-fill" class="progress-fill"></div></div>
-        
         <div id="content"></div>
         <div id="feedback" class="scroll-box"></div>
-        
         <button id="btn-next" class="btn-action" onclick="processStep()">PERIKSA CATATAN</button>
     </div>
 
     <div id="sc-result" class="manuscript" style="text-align: center;">
-        <h1>HASIL EVALUASI</h1>
-        <div id="final-score" style="font-size: 5rem; font-family: 'Cinzel', serif; color: var(--gold); margin: 20px 0;">0</div>
-        <p id="summary" style="margin-bottom: 30px; font-size: 1.2rem;"></p>
-        <button class="btn-action" onclick="location.reload()">ULANGI SEJARAH</button>
+        <h1>HASIL AKHIR</h1>
+        <div id="final-score" style="font-size: 4rem; color: var(--gold); margin: 20px 0;">0</div>
+        <p id="summary"></p>
+        <button class="btn-action" onclick="location.reload()">ULANGI UJIAN</button>
     </div>
 </div>
 
 <script>
 const questions = [
-    { q: "Seorang sejarawan menemukan laporan pejabat kolonial (keamanan) dan babad lokal (keberanian). Kesimpulan yang paling tepat adalah...", opts: ["Isi selalu sama", "Keduanya pasti salah", "Berbeda karena tujuan penulisan tidak sama", "Babad lebih valid", "Laporan kolonial lebih objektif"], ans: 2, exp: "Sumber sejarah dipengaruhi sudut pandang, tujuan, dan kepentingan penulisnya." },
-    { q: "Pernyataan (1) 'Pertempuran 10 Nov di Surabaya' & (2) 'Semangat heroik rakyat'. Mana yang merupakan interpretasi?", opts: ["(1) saja", "(2) saja", "(1) dan (2)", "Tidak keduanya", "Keduanya fakta murni"], ans: 1, exp: "Pernyataan (2) adalah penafsiran (interpretasi), sedangkan (1) adalah fakta waktu dan tempat." },
-    { q: "Surat menyurat berubah jadi pesan instan, tapi fungsi komunikasi tetap ada. Fenomena ini disebut...", opts: ["Perubahan tanpa keberlanjutan", "Keberlanjutan tanpa perubahan", "Perubahan dan keberlanjutan sekaligus", "Stagnasi sosial", "Modernisasi total"], ans: 2, exp: "Bentuknya berubah (pesan instan), tetapi esensi fungsinya tetap ada (keberlanjutan)." },
-    { q: "Ciri paling tepat dari historiografi tradisional Indonesia adalah...", opts: ["Analisis struktur sosial", "Kritis terhadap sumber", "Berpusat pada raja dan legitimasi", "Menggunakan statistik", "Menolak kepercayaan"], ans: 2, exp: "Historiografi tradisional umumnya bersifat istana-sentris dan bertujuan melegitimasi kekuasaan raja." },
-    { q: "Dalam penelitian sejarah, tahap heuristik dilakukan ketika peneliti...", opts: ["Menulis kesimpulan", "Mengumpulkan sumber sejarah relevan", "Membandingkan teori", "Menyusun daftar pustaka", "Menilai benar-salah sumber"], ans: 1, exp: "Heuristik adalah langkah awal mencari dan menemukan sumber sejarah." },
-    { q: "Menganalisis masyarakat Indonesia tahun 1928 tanpa membahas masa sebelum/sesudahnya menggunakan cara berpikir...", opts: ["Diakronik", "Sinkronik", "Kronologis", "Genealogis", "Periodisasi"], ans: 1, exp: "Sinkronik menelaah peristiwa pada satu kurun waktu tertentu secara meluas." },
-    { q: "Tulisan sejarah menyebut abad ke-13 Sriwijaya sudah pakai telepon genggam. Kesalahan ini disebut...", opts: ["Simplifikasi", "Anachronisme", "Generalisasi", "Subjektivitas", "Periodisasi"], ans: 1, exp: "Anachronisme adalah kesalahan menempatkan objek/unsur yang tidak sesuai dengan zamannya." },
-    { q: "Penelitian buruh pabrik abad ke-20 mengenai kondisi kerja dan hubungan kelas menggunakan pendekatan...", opts: ["Politik", "Ekonomi murni", "Sosial", "Biografis", "Diplomatik"], ans: 2, exp: "Pendekatan sosial menyoroti struktur masyarakat dan interaksi antarkelompok." },
-    { q: "Perbedaan paling tepat antara kolonialisme dan imperialisme adalah...", opts: ["Eropa vs Asia", "Penguasaan wilayah vs perluasan kekuasaan luas", "Damai vs Perang", "Budaya vs Ekonomi", "Tidak ada beda"], ans: 1, exp: "Kolonialisme fokus pada pemukiman/penguasaan wilayah, imperialisme pada dominasi politik/ekonomi lebih luas." },
-    { q: "Salah satu dampak penting Politik Etis di Indonesia adalah...", opts: ["Hilangnya pendidikan Barat", "Munculnya golongan terpelajar pribumi", "Berakhirnya eksploitasi", "Kemerdekaan penuh", "Tanah kembali ke pribumi"], ans: 1, exp: "Program edukasi Politik Etis melahirkan kaum intelektual yang nantinya memimpin pergerakan nasional." },
-    // Tambahkan soal lainnya di sini hingga nomor 50 sesuai format ini...
-    { q: "Pernyataan 1: Menjelang Proklamasi, Jepang kalah sehingga terjadi kekosongan kekuasaan. Pernyataan 2: Situasi dimanfaatkan pemimpin Indonesia mempercepat Proklamasi.", opts: ["Sebab-akibat Benar", "Benar tapi tidak berhubungan", "P1 Benar P2 Salah", "P1 Salah P2 Benar", "Keduanya Salah"], ans: 0, exp: "Kekalahan Jepang (Vacuum of Power) menjadi momentum kunci pelaksanaan proklamasi." }
+    { q: "Sumber kolonial menekankan ketertiban, babad lokal menekankan keberanian. Kesimpulan tepat:", opts: ["Isi sama", "Keduanya salah", "Berbeda karena tujuan penulisan", "Babad lebih valid", "Kolonial lebih objektif"], ans: 2, exp: "Sumber sejarah dipengaruhi sudut pandang dan tujuan penulisnya." },
+    { q: "Mana yang merupakan interpretasi sejarah?", opts: ["(1) Pertempuran 10 Nov di Surabaya", "(2) Pertempuran menunjukkan semangat heroik", "Keduanya fakta", "Keduanya interpretasi", "Hanya (1)"], ans: 1, exp: "Pernyataan (2) adalah penafsiran makna peristiwa." },
+    { q: "Surat berubah jadi pesan instan, tapi fungsi komunikasi tetap. Disebut...", opts: ["Perubahan tanpa keberlanjutan", "Keberlanjutan tanpa perubahan", "Perubahan & keberlanjutan sekaligus", "Stagnasi", "Modernisasi total"], ans: 2, exp: "Bentuk berubah, esensi tetap." },
+    { q: "Ciri historiografi tradisional Indonesia:", opts: ["Analisis sosial", "Kritis sumber", "Berpusat pada raja & istana", "Gunakan statistik", "Tolak kepercayaan"], ans: 2, exp: "Bersifat istana-sentris." },
+    { q: "Tahap heuristik adalah...", opts: ["Tulis kesimpulan", "Kumpul sumber sejarah", "Bandingkan teori", "Daftar pustaka", "Menilai sumber"], ans: 1, exp: "Heuristik = pengumpulan sumber." },
+    { q: "Menganalisis tahun 1928 secara meluas tanpa waktu lain disebut...", opts: ["Diakronik", "Sinkronik", "Kronologis", "Genealogis", "Periodisasi"], ans: 1, exp: "Sinkronik = meluas dalam ruang, terbatas waktu." },
+    { q: "Abad 13 Sriwijaya pakai HP. Kesalahan ini disebut...", opts: ["Simplifikasi", "Anachronisme", "Generalisasi", "Subjektivitas", "Periodisasi"], ans: 1, exp: "Anachronisme = ketidaksesuaian zaman." },
+    { q: "Meneliti buruh pabrik (kondisi kerja & kelas sosial) menggunakan pendekatan...", opts: ["Politik", "Ekonomi", "Sosial", "Biografis", "Diplomatik"], ans: 2, exp: "Pendekatan sosial fokus pada interaksi masyarakat." },
+    { q: "Bedanya kolonialisme & imperialisme...", opts: ["Eropa vs Asia", "Penguasaan wilayah vs perluasan kekuasaan", "Damai vs Perang", "Budaya vs Ekonomi", "Sama saja"], ans: 1, exp: "Kolonialisme pendudukan, imperialisme dominasi politik." },
+    { q: "Dampak Politik Etis:", opts: ["Hilang pendidikan", "Muncul golongan terpelajar", "Akhir eksploitasi", "Kemerdekaan penuh", "Tanah kembali"], ans: 1, exp: "Lahirnya kaum intelektual pergerakan." },
+    { q: "Sebab perlawanan daerah sering gagal:", opts: ["Senjata modern", "Terpisah & dipecah belah", "Koordinasi kuat", "Belanda tak punya strategi", "Rakyat menolak tokoh"], ans: 1, exp: "Kurang persatuan memudahkan devide et impera." },
+    { q: "Pentingnya Budi Utomo 1908:", opts: ["Akhir penjajahan", "Lahir kesadaran nasional modern", "Perang fisik", "Ganti Belanda", "Bentuk negara"], ans: 1, exp: "Tonggak Kebangkitan Nasional." },
+    { q: "Sumpah Pemuda 1928 mengarahkan perjuangan pada...", opts: ["Kerajaan daerah", "Persatuan & identitas kebangsaan", "Kekuasaan Belanda", "Hapus organisasi", "Negara federal"], ans: 1, exp: "Satu tanah air, bangsa, bahasa." },
+    { q: "Perubahan strategi dari senjata ke organisasi bertujuan...", opts: ["Gagal total", "Sesuaikan dengan kolonial modern", "Tolak nasionalisme", "Kembali ke kerajaan", "Hapus tujuan merdeka"], ans: 1, exp: "Beradaptasi dengan metode modern." },
+    { q: "Dampak utama Tanam Paksa:", opts: ["Sejahtera", "Kurang produksi", "Penderitaan rakyat", "Hilang dagang", "Petani bebas"], ans: 2, exp: "Beban berat bagi rakyat jelata." },
+    { q: "Dampak Perang Diponegoro bagi Belanda:", opts: ["Biaya kecil", "Untung ekonomi", "Beban keuangan & militer berat", "Belanda pergi", "Semua daerah bebas"], ans: 2, exp: "Sangat menguras kas Belanda." },
+    { q: "Tujuan Devide et Impera:", opts: ["Perkuat persatuan", "Pecah kekuatan lawan", "Tingkatkan edukasi", "Hapus jabatan adat", "Bentuk negara RI"], ans: 1, exp: "Strategi pecah belah." },
+    { q: "Dampak militer pendudukan Jepang:", opts: ["Dilarang latihan", "Muncul kader terlatih (semimiliter)", "Langsung merdeka", "Hapus organisasi", "Serah senjata"], ans: 1, exp: "PETA/Heiho beri pengalaman militer." },
+    { q: "Perkembangan Sarekat Islam dipengaruhi oleh...", opts: ["Hanya bangsawan", "Kepentingan ekonomi & solidaritas umat", "Tolak rakyat", "Olahraga", "Larang aspirasi"], ans: 1, exp: "Menyentuh akar rumput (pedagang & muslim)." },
+    { q: "Beda organisasi Radikal vs Moderat:", opts: ["Radikal dukung Belanda", "Radikal nonkooperatif, Moderat kooperatif", "Budaya vs Militer", "Diam vs Kekerasan", "Sama strategi"], ans: 1, exp: "Perbedaan pada cara kerja sama dengan Belanda." },
+    { q: "Fokus Rengasdengklok:", opts: ["Bentuk negara", "Waktu Proklamasi", "Presiden", "Isi UUD", "Kabinet"], ans: 1, exp: "Muda ingin cepat, tua ingin hati-hati." },
+    { q: "Makna yuridis-politik Proklamasi:", opts: ["Akhir budaya", "Dasar lahir negara berdaulat", "Seremoni saja", "Bentuk kolonial baru", "Kuasai Jepang"], ans: 1, exp: "Pernyataan hukum berdirinya negara." },
+    { q: "Pentingnya Pertempuran Surabaya:", opts: ["Mudah menyerah", "Semangat pertahankan merdeka", "Awal penjajahan", "Kembalinya Jepang", "Tanpa korban"], ans: 1, exp: "Bukti tekad rakyat." },
+    { q: "Pentingnya diplomasi:", opts: ["Ganti perang fisik", "Pengakuan internasional", "Hanya tentara", "Hapus konflik", "Tak berhubungan"], ans: 1, exp: "Agar kemerdekaan sah secara global." },
+    { q: "Kelemahan Demokrasi Liberal:", opts: ["Partai stabil", "Kabinet sering ganti", "Presiden terlalu kuat", "Tak punya partai", "Tak ada pemilu"], ans: 1, exp: "Ketidakstabilan pemerintahan (parlementer)." },
+    { q: "Dampak Dekrit Presiden 5 Juli 1959:", opts: ["Hapus RI", "Kembali ke UUD 1945", "Bubar lembaga", "Negara kolonial", "Hapus Presiden"], ans: 1, exp: "Kembali ke konstitusi awal." },
+    { q: "Wujud Bebas Aktif era Soekarno:", opts: ["Tolak kerja sama", "Pihak salah satu blok", "KAA & Non-Blok", "Bubar diplomatik", "Keluar organisasi"], ans: 2, exp: "Aktif dalam perdamaian dunia tanpa memihak." },
+    { q: "Dampak politik G30S 1965:", opts: ["Perkuat Orde Lama", "Lahirnya Orde Baru", "Bubar RI", "Kembali Belanda", "Hapus militer"], ans: 1, exp: "Peralihan kekuasaan ke Soeharto." },
+    { q: "Strategi Orde Baru:", opts: ["Tolak investasi", "Stabilisasi politik & Ekonomi", "Hapus pembangunan", "Barter tradisional", "Tutup dagang"], ans: 1, exp: "Fokus stabilitas & pertumbuhan." },
+    { q: "Sebab runtuhnya Orde Baru 1998:", opts: ["Rakyat puas", "Krisis, Korupsi, Reformasi", "Menang perang", "Hilang partai", "Tak ada masalah"], ans: 1, exp: "Krisis multidimensi." },
+    { q: "Krisis moneter 90-an pengaruhi politik karena...", opts: ["Ekonomi baik", "Harga naik & rakyat tak puas", "Rakyat kaya", "Tak ada kebijakan", "Tak pengaruh"], ans: 1, exp: "Beban ekonomi picu protes politik." },
+    { q: "Perubahan Amandemen UUD 1945:", opts: ["Presiden tanpa batas", "Penguatan checks & balances", "Hapus perwakilan", "Kembali kolonial", "Kerajaan"], ans: 1, exp: "Membatasi kekuasaan eksekutif." },
+    { q: "Tujuan Otonomi Daerah:", opts: ["Pusatkan keputusan", "Daerah atur rumah tangga sendiri", "Hapus pemda", "Daerah sama persis", "Tolak lokal"], ans: 1, exp: "Desentralisasi kekuasaan." },
+    { q: "Beda Orde Lama vs Orde Baru:", opts: ["Lama tanpa partai", "Lama dinamis, Baru terpusat/stabil", "Baru tolak ekonomi", "Lama tak punya kebijakan LN", "Sama"], ans: 1, exp: "Baru lebih menekankan stabilitas." },
+    { q: "Peran mahasiswa:", opts: ["Tidak penting", "Civil society penggerak perubahan", "Ganti lembaga", "Dukung kuasa", "Tak terlibat"], ans: 1, exp: "Agen perubahan sosial-politik." },
+    { q: "Tantangan globalisasi:", opts: ["Hilang pengaruh asing", "Melemahnya identitas nasional", "Tak ada komunikasi", "Akhir budaya lokal", "Tak terima info"], ans: 1, exp: "Perlunya selektivitas budaya." },
+    { q: "Indonesia di ASEAN membuktikan Bebas Aktif karena...", opts: ["Tolak regional", "Bangun kerja sama damai & aktif", "Keluar ASEAN", "Ikuti negara besar", "Tak terlibat"], ans: 1, exp: "Aktif membangun kawasan." },
+    { q: "Pemilu langsung menunjukkan...", opts: ["Tak punya hak", "Rakyat pilih pemimpin langsung", "Hanya Presiden", "Partai hapus", "Tak ada awas"], ans: 1, exp: "Kedaulatan rakyat lebih nyata." },
+    { q: "Pentingnya Supersemar:", opts: ["Awal merdeka", "Peralihan kekuasaan", "Bentuk kerajaan", "Akhir Jepang", "Lahir reformasi"], ans: 1, exp: "Dasar perubahan politik 1966." },
+    { q: "Dinamika demokrasi pasca-reformasi:", opts: ["Statis", "Kemajuan & tantangan baru", "Kembali kolonial", "Tolak pemilu", "Tanpa masalah"], ans: 1, exp: "Berkembang tapi masih ada kendala." },
+    // SEBAB AKIBAT 41-50
+    { q: "(Sebab): Penelitian sejarah harus lewat metode ilmiah. (Akibat): Tanpa itu, tulisan sejarah bias.", opts: ["Sebab-Akibat Benar", "Benar tidak berhubungan", "Sebab Benar", "Akibat Benar", "Salah Semua"], ans: 0, exp: "Metode ilmiah menjamin validitas." },
+    { q: "(Sebab): Nenek moyang migrasi jalur laut. (Akibat): Didukung kemampuan perahu prasejarah.", opts: ["Sebab-Akibat Benar", "Benar tidak berhubungan", "Sebab Benar", "Akibat Benar", "Salah Semua"], ans: 0, exp: "Teknologi maritim kunci migrasi." },
+    { q: "(Sebab): Konstantinopel jatuh 1453. (Akibat): Eropa cari jalur langsung ke Asia.", opts: ["Sebab-Akibat Benar", "Benar tidak berhubungan", "Sebab Benar", "Akibat Benar", "Salah Semua"], ans: 0, exp: "Akses tertutup memicu penjelajahan." },
+    { q: "(Sebab): Petani wajib tanam ekspor (Tanam Paksa). (Akibat): Muncul kelaparan & kemiskinan.", opts: ["Sebab-Akibat Benar", "Benar tidak berhubungan", "Sebab Benar", "Akibat Benar", "Salah Semua"], ans: 0, exp: "Eksploitasi mengorbankan pangan." },
+    { q: "(Sebab): Gagal perlawanan daerah. (Akibat): Strategi geser ke organisasi nasional.", opts: ["Sebab-Akibat Benar", "Benar tidak berhubungan", "Sebab Benar", "Akibat Benar", "Salah Semua"], ans: 0, exp: "Evaluasi kegagalan fisik memicu cara modern." },
+    { q: "(Sebab): Jepang kalah (Vacuum of Power). (Akibat): Pemimpin RI percepat Proklamasi.", opts: ["Sebab-Akibat Benar", "Benar tidak berhubungan", "Sebab Benar", "Akibat Benar", "Salah Semua"], ans: 0, exp: "Momentum kekosongan kekuasaan." },
+    { q: "(Sebab): Kabinet era Liberal mudah jatuh. (Akibat): Stabilitas politik terganggu.", opts: ["Sebab-Akibat Benar", "Benar tidak berhubungan", "Sebab Benar", "Akibat Benar", "Salah Semua"], ans: 0, exp: "Sistem parlemen yang rapuh." },
+    { q: "(Sebab): Peristiwa G30S buat krisis besar. (Akibat): Buka jalan Orde Baru.", opts: ["Sebab-Akibat Benar", "Benar tidak berhubungan", "Sebab Benar", "Akibat Benar", "Salah Semua"], ans: 0, exp: "Titik balik perubahan rezim." },
+    { q: "(Sebab): Ekonomi Orde Baru tumbuh pesat. (Akibat): Muncul ketimpangan & ketergantungan.", opts: ["Sebab-Akibat Benar", "Benar tidak berhubungan", "Sebab Benar", "Akibat Benar", "Salah Semua"], ans: 0, exp: "Pertumbuhan yang tidak merata." },
+    { q: "(Sebab): Reformasi dorong Amandemen UUD. (Akibat): Sistem lebih demokratis & checks-balances.", opts: ["Sebab-Akibat Benar", "Benar tidak berhubungan", "Sebab Benar", "Akibat Benar", "Salah Semua"], ans: 0, exp: "Konstitusi membatasi absolutisme." }
 ];
 
 let curIdx = 0, score = 0, time = 0, tActive = false, selected = -1;
@@ -156,8 +145,8 @@ function updateUI() {
     let m = Math.floor(time/60).toString().padStart(2,'0');
     let s = (time%60).toString().padStart(2,'0');
     document.getElementById('timer').innerText = `${m}:${s}`;
-    document.getElementById('q-label').innerText = `ARCHIVE ${curIdx + 1}/${questions.length}`;
-    document.getElementById('p-fill').style.width = `${((curIdx+1)/questions.length)*100}%`;
+    document.getElementById('q-label').innerText = `ARCHIVE ${curIdx + 1}/50`;
+    document.getElementById('p-fill').style.width = `${((curIdx+1)/50)*100}%`;
 }
 
 function renderQ() {
@@ -183,35 +172,20 @@ function selectOpt(i) {
 function processStep() {
     const btn = document.getElementById('btn-next');
     if(btn.innerText === "PERIKSA CATATAN") {
-        if(selected === -1) return alert("Pilihlah satu jawaban terlebih dahulu!");
+        if(selected === -1) return alert("Pilih jawaban!");
         validate();
-        btn.innerText = (curIdx === questions.length - 1) ? "LIHAT HASIL AKHIR" : "ARSIP BERIKUTNYA";
+        btn.innerText = (curIdx === 49) ? "LIHAT HASIL" : "LANJUT";
     } else {
-        if(curIdx < questions.length - 1) {
-            curIdx++;
-            renderQ();
-            updateUI();
-        } else {
-            showResult();
-        }
+        if(curIdx < 49) { curIdx++; renderQ(); updateUI(); } else { showResult(); }
     }
 }
 
 function validate() {
     const q = questions[curIdx], opts = document.querySelectorAll('.option'), fb = document.getElementById('feedback');
-    const correct = (selected === q.ans);
-    
-    // Menampilkan jawaban benar (Hijau)
     opts[q.ans].classList.add('ans-correct');
-    
-    if(!correct) {
-        // Menampilkan jawaban salah (Merah)
-        opts[selected].classList.add('ans-wrong');
-    } else {
-        score++;
-    }
-
-    fb.innerHTML = `<strong>ANALISIS: ${correct ? 'TEPAT' : 'KURANG TEPAT'}</strong><br>${q.exp}`;
+    if(selected !== q.ans) opts[selected].classList.add('ans-wrong');
+    else score++;
+    fb.innerHTML = `<strong>ANALISIS:</strong> ${q.exp}`;
     fb.style.display = 'block';
 }
 
@@ -219,9 +193,8 @@ function showResult() {
     tActive = false;
     document.getElementById('sc-quiz').classList.remove('active');
     document.getElementById('sc-result').classList.add('active');
-    const final = Math.round((score/questions.length)*100);
-    document.getElementById('final-score').innerText = final;
-    document.getElementById('summary').innerText = `Anda telah menelusuri ${questions.length} arsip sejarah dengan ${score} jawaban tepat.`;
+    document.getElementById('final-score').innerText = Math.round((score/50)*100);
+    document.getElementById('summary').innerText = `Tepat ${score} dari 50 soal dalam waktu ${document.getElementById('timer').innerText}`;
 }
 </script>
 </body>
