@@ -3,24 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CHEMISTRY EXAM V4 - SMAN 10 SINJAI</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Plus+Jakarta+Sans:wght@300;400;700;800&display=swap" rel="stylesheet">
+    <title>HISTORY ARCHIVE V5 - SMAN 10 SINJAI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #05070a;
-            --card: #0f172a;
-            --emerald: #10b981;
-            --atom-blue: #38bdf8;
-            --danger: #ef4444;
-            --text: #f1f5f9;
-            --border: #1e293b;
+            --paper: #f4e4bc;
+            --ink: #2c1e12;
+            --gold: #b8860b;
+            --correct: #2d5a27;
+            --wrong: #8b0000;
+            --border: #d2b48c;
         }
 
-        * { box-sizing: border-box; transition: all 0.2s ease; }
+        * { box-sizing: border-box; transition: all 0.3s ease; }
         body { 
-            background-color: var(--bg); 
-            color: var(--text); 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #1a1a1a; 
+            background-image: url('https://www.transparenttextures.com/patterns/dark-leather.png');
+            color: var(--ink); 
+            font-family: 'Cormorant Garamond', serif; 
             margin: 0; 
             display: flex; 
             justify-content: center; 
@@ -29,265 +29,199 @@
 
         .container { width: 100%; max-width: 800px; }
 
-        .glass-card { 
-            background: var(--card); 
-            border: 1px solid var(--border); 
-            border-radius: 24px; 
-            padding: 35px; 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+        .manuscript { 
+            background: var(--paper); 
+            background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+            border: 12px double var(--border); 
+            border-radius: 5px; 
+            padding: 40px; 
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
             display: none;
         }
-        .active { display: block; animation: atomFade 0.5s ease; }
+        .active { display: block; animation: rollIn 0.8s ease; }
 
-        @keyframes atomFade { from { opacity: 0; filter: blur(10px); } to { opacity: 1; filter: blur(0); } }
+        @keyframes rollIn { from { transform: scaleY(0); opacity: 0; } to { transform: scaleY(1); opacity: 1; } }
 
-        .header-box { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        .badge { background: #1e293b; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; color: var(--atom-blue); border: 1px solid var(--atom-blue); }
+        .header { text-align: center; border-bottom: 2px solid var(--gold); margin-bottom: 30px; }
+        h1 { font-family: 'Cinzel', serif; font-size: 2rem; margin: 0; color: var(--gold); letter-spacing: 2px; }
         
-        .timer { font-family: 'Fira Code', monospace; background: rgba(16, 185, 129, 0.1); color: var(--emerald); padding: 5px 15px; border-radius: 8px; border: 1px solid var(--emerald); }
+        .meta-info { display: flex; justify-content: space-between; font-family: 'Cinzel', serif; font-size: 0.9rem; margin: 10px 0; }
 
-        .question-text { font-size: 1.25rem; font-weight: 600; line-height: 1.6; margin-bottom: 25px; color: #fff; }
+        .question-box { font-size: 1.4rem; font-weight: 600; line-height: 1.4; margin-bottom: 25px; border-left: 4px solid var(--gold); padding-left: 15px; }
 
-        .option-list { display: grid; gap: 12px; }
-        .opt {
-            background: rgba(255,255,255,0.03);
+        .opt-list { display: grid; gap: 12px; }
+        .option {
+            background: rgba(0,0,0,0.03);
             border: 1px solid var(--border);
-            padding: 18px;
-            border-radius: 14px;
+            padding: 15px 20px;
+            border-radius: 4px;
             cursor: pointer;
-            font-size: 15px;
-            display: flex;
-            align-items: center;
+            font-size: 1.1rem;
+            position: relative;
         }
-        .opt:hover { background: rgba(56, 189, 248, 0.05); border-color: var(--atom-blue); }
-        .opt.selected { border-color: var(--atom-blue); background: rgba(56, 189, 248, 0.1); }
+        .option:hover { background: rgba(184, 134, 11, 0.1); border-color: var(--gold); }
+        .option.selected { background: rgba(184, 134, 11, 0.15); border: 1px solid var(--gold); font-weight: 600; }
 
-        /* Correction Styles */
-        .correct-v { background: var(--emerald) !important; color: white !important; border-color: var(--emerald) !important; font-weight: 700; }
-        .wrong-v { background: var(--danger) !important; color: white !important; border-color: var(--danger) !important; font-weight: 700; }
+        /* Feedback Colors */
+        .ans-correct { background: var(--correct) !important; color: #fff !important; border-color: #1a3a16 !important; }
+        .ans-wrong { background: var(--wrong) !important; color: #fff !important; border-color: #5a0000 !important; }
 
-        .discussion {
+        .scroll-box {
             margin-top: 25px;
             padding: 20px;
-            border-radius: 16px;
-            background: #020617;
-            border-left: 5px solid var(--atom-blue);
+            background: rgba(0,0,0,0.05);
+            border: 1px dashed var(--gold);
             display: none;
-            font-size: 14px;
-            line-height: 1.6;
+            font-style: italic;
+            line-height: 1.5;
+            animation: fadeIn 0.5s ease;
         }
 
-        .btn {
+        .btn-action {
             width: 100%;
-            padding: 20px;
-            border-radius: 16px;
+            padding: 18px;
+            background: var(--ink);
+            color: var(--paper);
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
             border: none;
-            background: var(--emerald);
-            color: #000;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1px;
             cursor: pointer;
             margin-top: 30px;
+            letter-spacing: 2px;
         }
-        .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3); }
+        .btn-action:hover { background: var(--gold); color: var(--ink); }
 
-        .progress-container { width: 100%; height: 6px; background: #1e293b; border-radius: 10px; margin-bottom: 30px; }
-        .progress-bar { height: 100%; background: linear-gradient(90deg, var(--emerald), var(--atom-blue)); border-radius: 10px; width: 0%; }
-
-        /* Matching Style */
-        .match-row { display: flex; gap: 10px; margin-bottom: 10px; align-items: center; }
-        .match-q { flex: 1; background: #1e293b; padding: 10px; border-radius: 8px; font-size: 14px; }
-        .match-input { width: 60px; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: #000; color: #fff; text-align: center; }
+        .progress-line { width: 100%; height: 3px; background: rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div id="sc-start" class="glass-card active" style="text-align: center;">
-        <div style="font-size: 50px; margin-bottom: 20px;">🧪</div>
-        <h1 style="font-size: 2.5rem; color: var(--emerald);">CHEMISTRY V4</h1>
-        <p style="color: var(--text-p); opacity: 0.7;">SMAN 10 SINJAI • Chemical Principles & Reactions</p>
-        <button class="btn" onclick="initQuiz()">START LABORATORY TEST</button>
+    <div id="sc-start" class="manuscript active" style="text-align: center;">
+        <h1 style="font-size: 3rem;">HISTORIA</h1>
+        <p style="font-style: italic; margin-bottom: 40px;">Ujian Sejarah Indonesia & Dunia • SMAN 10 SINJAI</p>
+        <button class="btn-action" onclick="startQuiz()">BUKA ARSIP SEJARAH</button>
     </div>
 
-    <div id="sc-quiz" class="glass-card">
-        <div class="header-box">
-            <span id="q-info" class="badge">TEST TUBE 1/38</span>
-            <div id="timer" class="timer">00:00</div>
+    <div id="sc-quiz" class="manuscript">
+        <div class="header"><h1>HISTORIA ARCHIVE</h1></div>
+        <div class="meta-info">
+            <span id="q-label">ARCHIVE I</span>
+            <span id="timer">00:00</span>
         </div>
-        <div class="progress-container"><div id="p-bar" class="progress-bar"></div></div>
+        <div class="progress-line"><div id="p-fill" class="progress-fill"></div></div>
         
-        <div id="quiz-content"></div>
-        <div id="discuss-box" class="discussion"></div>
+        <div id="content"></div>
+        <div id="feedback" class="scroll-box"></div>
         
-        <button id="main-btn" class="btn" onclick="handleLogic()">CHECK REACTION</button>
+        <button id="btn-next" class="btn-action" onclick="processStep()">PERIKSA CATATAN</button>
     </div>
 
-    <div id="sc-result" class="glass-card" style="text-align: center;">
-        <h2 class="badge">FINAL EVALUATION</h2>
-        <div id="score-val" style="font-size: 6rem; font-weight: 800; color: var(--atom-blue); margin: 20px 0;">0</div>
-        <p id="time-res" style="opacity: 0.6; margin-bottom: 30px;"></p>
-        <button class="btn" onclick="location.reload()">RE-RUN EXPERIMENT</button>
+    <div id="sc-result" class="manuscript" style="text-align: center;">
+        <h1>HASIL EVALUASI</h1>
+        <div id="final-score" style="font-size: 5rem; font-family: 'Cinzel', serif; color: var(--gold); margin: 20px 0;">0</div>
+        <p id="summary" style="margin-bottom: 30px; font-size: 1.2rem;"></p>
+        <button class="btn-action" onclick="location.reload()">ULANGI SEJARAH</button>
     </div>
 </div>
 
 <script>
-// Data Soal Kimia Lengkap (38 Soal)
-const db = [
-    { type: "pg", q: "Salah satu prinsip kimia hijau adalah mencegah limbah. Tindakan di laboratorium yang bertentangan dengan prinsip ini adalah...", opts: ["Menggunakan katalis", "Ekonomi atom tinggi", "Pelarut air aman", "Suhu kamar", "Membuang reagen asam ke saluran air"], ans: 4, exp: "Membuang asam pekat langsung mencemari lingkungan, melanggar prinsip pencegahan limbah." },
-    { type: "pg", q: "C3H8 + O2 -> CO2 + H2O. Nilai koefisien agar setara adalah...", opts: ["1, 3, 3, 4", "1, 5, 3, 4", "2, 5, 6, 8", "1, 5, 4, 3", "1, 2, 3, 4"], ans: 1, exp: "C3H8 + 5O2 -> 3CO2 + 4H2O (Atom C=3, H=8, O=10 di kedua sisi)." },
-    { type: "pg", q: "10g Mg + Oksigen -> 16g MgO. Berdasarkan Hukum Kekekalan Massa, massa oksigen adalah...", opts: ["6 gram", "10 gram", "16 gram", "26 gram", "4 gram"], ans: 0, exp: "Massa sebelum = sesudah. 10 + x = 16. Maka x = 6g." },
-    { type: "pg", q: "Fe:S = 7:4. Jika ada 21g Fe dan 15g S, massa FeS yang terbentuk...", opts: ["36g", "30g", "33g", "28g", "11g"], ans: 2, exp: "Fe 21g butuh 12g S. Fe habis (pembatas). FeS = 21 + 12 = 33g." },
-    { type: "pg", q: "n=3, l=1, m=0, s=-1/2. Nomor atom unsur tersebut adalah...", opts: ["13", "15", "16", "17", "18"], ans: 3, exp: "n=3, l=1 adalah 3p. m=0, s=-1/2 adalah elektron ke-5 di 3p (3p5). Konfigurasi: 1s2 2s2 2p6 3s2 3p5 (Total 17: Klorin)." },
-    { type: "pg", q: "Konfigurasi [Ar] 4s2 3d10 4p3 terletak pada...", opts: ["IIIA, Per 4", "VA, Per 4", "VB, Per 4", "VIIA, Per 3", "VA, Per 3"], ans: 1, exp: "Elektron valensi 4s2 4p3 (5 elektron) = Gol VA. Kulit n=4 = Periode 4." },
-    { type: "pg", q: "Di antara Li, Na, K, Rb, Cs, yang memiliki jari-jari atom paling besar adalah...", opts: ["Li", "Na", "K", "Rb", "Cs"], ans: 4, exp: "Dalam satu golongan, semakin ke bawah kulit bertambah, jari-jari makin besar." },
-    { type: "pg", q: "Titik didih tinggi, rapuh, lelehannya hantar listrik. Ini ciri senyawa...", opts: ["Ion", "Kovalen polar", "Kovalen nonpolar", "Logam", "Hidrogen"], ans: 0, exp: "Senyawa ionik memiliki kisi kristal kuat (rapuh) dan ion bebas saat cair." },
-    { type: "pg", q: "Bentuk molekul senyawa SF6 adalah...", opts: ["Tetrahedral", "Piramida trigonal", "Oktahedral", "Segiempat planar", "Bipiramida trigonal"], ans: 2, exp: "S dikelilingi 6 domain elektron ikatan tanpa PEB = Oktahedral." },
-    { type: "pg", q: "Jumlah mol dari 4 gram NaOH (Ar Na=23, O=16, H=1) adalah...", opts: ["1,0 mol", "0,5 mol", "0,2 mol", "0,1 mol", "0,05 mol"], ans: 3, exp: "Mr NaOH = 40. Mol = 4/40 = 0,1 mol." },
-    { type: "pg", q: "Senyawa 40% C, 6,6% H, sisa O. Mr=180. Rumus molekulnya...", opts: ["C3H6O3", "C6H12O6", "C2H4O2", "C6H6O3", "C12H22O11"], ans: 1, exp: "Rumus empiris CH2O (Mr 30). n = 180/30 = 6. Maka C6H12O6." },
-    { type: "pg", q: "N2 + 3H2 -> 2NH3. Jika ada 1 mol N2 dan 2 mol H2, pereaksi pembatasnya...", opts: ["N2", "NH3", "H2", "N2 & H2", "Tidak ada"], ans: 2, exp: "1 mol N2 butuh 3 mol H2. Karena hanya ada 2 mol H2, maka H2 habis duluan." },
-    { type: "pg", q: "Nama IUPAC CH3 - CH(CH3) - CH2 - CH3 adalah...", opts: ["2-metilbutana", "Isopentana", "3-metilbutana", "n-pentana", "2,2-dimetilpropana"], ans: 0, exp: "Rantai utama 4C (butana), cabang metil di nomor 2." },
-    { type: "pg", q: "Pasangan isomer fungsi adalah...", opts: ["Propanal & propanon", "Etanol & metana", "Asam etanoat & etil metanoat", "A & C Benar", "B & C Benar"], ans: 3, exp: "Aldehid-Keton dan Asam Karboksilat-Ester adalah pasangan isomer fungsi." },
-    { type: "pg", q: "CH2 = CH2 + H2 -> CH3 - CH3 termasuk reaksi...", opts: ["Substitusi", "Eliminasi", "Oksidasi", "Adisi", "Polimerisasi"], ans: 3, exp: "Pemutusan ikatan rangkap oleh masuknya atom baru disebut adisi." },
-    { type: "pg", q: "Polimer yang terbentuk melalui proses kondensasi adalah...", opts: ["Polietilena", "Protein", "PVC", "Polipropilena", "Polistirena"], ans: 1, exp: "Protein terbentuk dari asam amino dengan melepas molekul air (kondensasi)." },
-    { type: "pg", q: "Prinsip cuci darah memanfaatkan sifat koloid...", opts: ["Tyndall", "Brown", "Adsorpsi", "Koagulasi", "Dialisis"], ans: 4, exp: "Dialisis adalah proses pemurnian koloid dari ion pengganggu lewat membran." },
-    { type: "pg", q: "Pencampuran AgNO3 encer + NaCl encer membuat koloid dengan cara...", opts: ["Kondensasi", "Peptisasi", "Busur Bredig", "Mekanik", "Homogenisasi"], ans: 0, exp: "Reaksi kimia yang membentuk partikel koloid disebut cara kondensasi." },
-    { type: "pg", q: "Titik beku glukosa 0,1 molal (Kf = 1,86) adalah...", opts: ["1,86 C", "0,186 C", "-0,186 C", "-1,86 C", "0 C"], ans: 2, exp: "ΔTf = 1,86 * 0,1 = 0,186. Titik beku = 0 - 0,186 = -0,186 C." },
-    { type: "pg", q: "Cairan infus isotonik artinya...", opts: ["pH sama", "Osmotik sama", "Gula sama", "Suhu sama", "Warna sama"], ans: 1, exp: "Isotonik = Tekanan osmotik sama dengan cairan tubuh." },
-    { type: "pg", q: "Larutan dengan titik didih paling tinggi adalah...", opts: ["Glukosa 0,1M", "Urea 0,1M", "NaCl 0,1M", "Na2SO4 0,1M", "Sukrosa 0,2M"], ans: 3, exp: "Na2SO4 (elektrolit) menghasilkan 3 ion (paling banyak), ΔTb paling besar." },
-    { type: "pg", q: "Biloks Mn tertinggi terdapat pada...", opts: ["MnO2", "K2MnO4", "MnSO4", "MnCl2", "KMnO4"], ans: 4, exp: "Di KMnO4, biloks Mn adalah +7." },
-    { type: "pg", q: "Zn (-0,76V) dan Cu (+0,34V). Potensial sel reaksi Zn + Cu2+ adalah...", opts: ["+1,10V", "-0,42V", "+0,42V", "-1,10V", "+1,50V"], ans: 0, exp: "Esel = Katode - Anode = 0,34 - (-0,76) = +1,10V." },
-    { type: "pg", q: "Elektrolisis AgNO3 elektrode Pt, di katode terjadi...", opts: ["Gas Oksigen", "Gas Hidrogen", "Endapan Perak", "Pelarutan elektrode", "Asam nitrat"], ans: 2, exp: "Ion Ag+ akan tereduksi menjadi logam perak di katode." },
-    { type: "pg", q: "Mencegah korosi pada menara transmisi listrik paling tepat dengan...", opts: ["Mengecat", "Galvanisasi", "Oli", "Plastik", "Mg"], ans: 1, exp: "Galvanisasi (lapisan Zink) tahan cuaca untuk struktur baja besar." },
-    { type: "pgk", q: "Manakah tindakan yang mendukung Kimia Hijau?", opts: ["Tas kain pengganti plastik", "Bakar plastik", "Kompos limbah dapur", "Sepeda/Transport umum", "Baterai ke sampah umum"], ans: [0, 2, 3], exp: "1, 3, dan 4 benar. Membakar plastik & buang baterai sembarangan merusak lingkungan." },
-    { type: "pgk", q: "Pernyataan mekanika kuantum yang benar?", opts: ["Energi terendah (Aufbau)", "Orbital isi 3 elektron", "Spin berlawanan (Pauli)", "Satu-satu dulu (Hund)", "Orbital d isi 10"], ans: [0, 2, 3, 4], exp: "Semua benar kecuali orbital isi 3 (maksimal hanya 2)." },
-    { type: "pgk", q: "Senyawa dengan Ikatan Hidrogen?", opts: ["H2O", "NH3", "CH4", "HCl", "HF"], ans: [0, 1, 4], exp: "H berikatan dengan F, O, atau N menghasilkan ikatan hidrogen." },
-    { type: "pgk", q: "Contoh koloid jenis emulsi?", opts: ["Mentega", "Susu", "Santan", "Asap", "Batu apung"], ans: [0, 1, 2], exp: "Susu, santan, dan mentega adalah emulsi (cair-cair/cair-padat)." },
-    { type: "pgk", q: "Penyepuhan besi dengan emas, pernyataan yang benar:", opts: ["Besi di Katode", "Emas di Katode", "Elektrolit ion emas", "Anode berkurang", "Arus DC"], ans: [0, 2, 3, 4], exp: "Besi (katode), Emas (anode), AuCl3 (elektrolit), butuh arus searah (DC)." },
-    { type: "match", q: "Jodohkan istilah berikut (Ketik Huruf Pasangannya):", items: [
-        {q: "Lavoisier", a: "B", label: "Bapak Kekekalan Massa"},
-        {q: "Adsorpsi", a: "C", label: "Penyerapan Permukaan"},
-        {q: "Glikol", a: "D", label: "Antibeku Radiator"},
-        {q: "Polistirena", a: "E", label: "Bahan Styrofoam"},
-        {q: "Isotonik", a: "F", label: "Tekanan Osmotik Sama"},
-        {q: "Hukum Dalton", a: "G", label: "Kelipatan Perbandingan"},
-        {q: "Penurunan P", a: "A", label: "Tekanan Uap Rendah"},
-        {q: "Korosi", a: "H", label: "Oksidasi Logam"}
-    ], exp: "Cocokkan ilmuwan, sifat koloid, dan aplikasi kimia dengan tepat." }
+const questions = [
+    { q: "Seorang sejarawan menemukan laporan pejabat kolonial (keamanan) dan babad lokal (keberanian). Kesimpulan yang paling tepat adalah...", opts: ["Isi selalu sama", "Keduanya pasti salah", "Berbeda karena tujuan penulisan tidak sama", "Babad lebih valid", "Laporan kolonial lebih objektif"], ans: 2, exp: "Sumber sejarah dipengaruhi sudut pandang, tujuan, dan kepentingan penulisnya." },
+    { q: "Pernyataan (1) 'Pertempuran 10 Nov di Surabaya' & (2) 'Semangat heroik rakyat'. Mana yang merupakan interpretasi?", opts: ["(1) saja", "(2) saja", "(1) dan (2)", "Tidak keduanya", "Keduanya fakta murni"], ans: 1, exp: "Pernyataan (2) adalah penafsiran (interpretasi), sedangkan (1) adalah fakta waktu dan tempat." },
+    { q: "Surat menyurat berubah jadi pesan instan, tapi fungsi komunikasi tetap ada. Fenomena ini disebut...", opts: ["Perubahan tanpa keberlanjutan", "Keberlanjutan tanpa perubahan", "Perubahan dan keberlanjutan sekaligus", "Stagnasi sosial", "Modernisasi total"], ans: 2, exp: "Bentuknya berubah (pesan instan), tetapi esensi fungsinya tetap ada (keberlanjutan)." },
+    { q: "Ciri paling tepat dari historiografi tradisional Indonesia adalah...", opts: ["Analisis struktur sosial", "Kritis terhadap sumber", "Berpusat pada raja dan legitimasi", "Menggunakan statistik", "Menolak kepercayaan"], ans: 2, exp: "Historiografi tradisional umumnya bersifat istana-sentris dan bertujuan melegitimasi kekuasaan raja." },
+    { q: "Dalam penelitian sejarah, tahap heuristik dilakukan ketika peneliti...", opts: ["Menulis kesimpulan", "Mengumpulkan sumber sejarah relevan", "Membandingkan teori", "Menyusun daftar pustaka", "Menilai benar-salah sumber"], ans: 1, exp: "Heuristik adalah langkah awal mencari dan menemukan sumber sejarah." },
+    { q: "Menganalisis masyarakat Indonesia tahun 1928 tanpa membahas masa sebelum/sesudahnya menggunakan cara berpikir...", opts: ["Diakronik", "Sinkronik", "Kronologis", "Genealogis", "Periodisasi"], ans: 1, exp: "Sinkronik menelaah peristiwa pada satu kurun waktu tertentu secara meluas." },
+    { q: "Tulisan sejarah menyebut abad ke-13 Sriwijaya sudah pakai telepon genggam. Kesalahan ini disebut...", opts: ["Simplifikasi", "Anachronisme", "Generalisasi", "Subjektivitas", "Periodisasi"], ans: 1, exp: "Anachronisme adalah kesalahan menempatkan objek/unsur yang tidak sesuai dengan zamannya." },
+    { q: "Penelitian buruh pabrik abad ke-20 mengenai kondisi kerja dan hubungan kelas menggunakan pendekatan...", opts: ["Politik", "Ekonomi murni", "Sosial", "Biografis", "Diplomatik"], ans: 2, exp: "Pendekatan sosial menyoroti struktur masyarakat dan interaksi antarkelompok." },
+    { q: "Perbedaan paling tepat antara kolonialisme dan imperialisme adalah...", opts: ["Eropa vs Asia", "Penguasaan wilayah vs perluasan kekuasaan luas", "Damai vs Perang", "Budaya vs Ekonomi", "Tidak ada beda"], ans: 1, exp: "Kolonialisme fokus pada pemukiman/penguasaan wilayah, imperialisme pada dominasi politik/ekonomi lebih luas." },
+    { q: "Salah satu dampak penting Politik Etis di Indonesia adalah...", opts: ["Hilangnya pendidikan Barat", "Munculnya golongan terpelajar pribumi", "Berakhirnya eksploitasi", "Kemerdekaan penuh", "Tanah kembali ke pribumi"], ans: 1, exp: "Program edukasi Politik Etis melahirkan kaum intelektual yang nantinya memimpin pergerakan nasional." },
+    // Tambahkan soal lainnya di sini hingga nomor 50 sesuai format ini...
+    { q: "Pernyataan 1: Menjelang Proklamasi, Jepang kalah sehingga terjadi kekosongan kekuasaan. Pernyataan 2: Situasi dimanfaatkan pemimpin Indonesia mempercepat Proklamasi.", opts: ["Sebab-akibat Benar", "Benar tapi tidak berhubungan", "P1 Benar P2 Salah", "P1 Salah P2 Benar", "Keduanya Salah"], ans: 0, exp: "Kekalahan Jepang (Vacuum of Power) menjadi momentum kunci pelaksanaan proklamasi." }
 ];
 
-let cur = 0, score = 0, timer = 0, tActive = false, userPick = null;
+let curIdx = 0, score = 0, time = 0, tActive = false, selected = -1;
 
-function initQuiz() {
+function startQuiz() {
     document.getElementById('sc-start').classList.remove('active');
     document.getElementById('sc-quiz').classList.add('active');
     tActive = true;
-    setInterval(() => { if(tActive) { timer++; updateTime(); } }, 1000);
+    setInterval(() => { if(tActive) { time++; updateUI(); } }, 1000);
     renderQ();
 }
 
-function updateTime() {
-    let m = Math.floor(timer/60).toString().padStart(2,'0');
-    let s = (timer%60).toString().padStart(2,'0');
+function updateUI() {
+    let m = Math.floor(time/60).toString().padStart(2,'0');
+    let s = (time%60).toString().padStart(2,'0');
     document.getElementById('timer').innerText = `${m}:${s}`;
+    document.getElementById('q-label').innerText = `ARCHIVE ${curIdx + 1}/${questions.length}`;
+    document.getElementById('p-fill').style.width = `${((curIdx+1)/questions.length)*100}%`;
 }
 
 function renderQ() {
-    const q = db[cur], c = document.getElementById('quiz-content');
-    document.getElementById('q-info').innerText = `TEST TUBE ${cur+1}/${db.length}`;
-    document.getElementById('p-bar').style.width = `${((cur+1)/db.length)*100}%`;
-    document.getElementById('discuss-box').style.display = 'none';
-    document.getElementById('main-btn').innerText = "CHECK REACTION";
-    userPick = (q.type === 'pgk') ? [] : null;
-
-    let html = `<div class="question-text">${q.q}</div><div class="option-list">`;
-    
-    if(q.type === 'pg' || q.type === 'pgk') {
-        q.opts.forEach((o, i) => {
-            html += `<div class="opt" id="opt-${i}" onclick="handleSelect(${i})">${o}</div>`;
-        });
-    } else if(q.type === 'match') {
-        q.items.forEach((item, i) => {
-            html += `<div class="match-row">
-                <div class="match-q">${i+31}. ${item.q}</div>
-                <input type="text" maxlength="1" class="match-input" id="match-${i}" placeholder="?">
-            </div>`;
-        });
-        html += `<div style="font-size:12px; margin-top:10px; opacity:0.6">Petunjuk: A (Tekanan uap), B (Lavoisier), C (Adsorpsi), D (Glikol), E (Styrofoam), F (Osmotik), G (Dalton), H (Korosi)</div>`;
-    }
-
-    html += `</div>`;
-    c.innerHTML = html;
+    const q = questions[curIdx], container = document.getElementById('content');
+    let h = `<div class="question-box">${q.q}</div><div class="opt-list">`;
+    q.opts.forEach((o, i) => {
+        h += `<div class="option" id="opt-${i}" onclick="selectOpt(${i})">${o}</div>`;
+    });
+    h += `</div>`;
+    container.innerHTML = h;
+    document.getElementById('feedback').style.display = 'none';
+    document.getElementById('btn-next').innerText = "PERIKSA CATATAN";
+    selected = -1;
 }
 
-function handleSelect(i) {
-    if(document.getElementById('discuss-box').style.display === 'block') return;
-    const q = db[cur];
-    if(q.type === 'pg') {
-        document.querySelectorAll('.opt').forEach(el => el.classList.remove('selected'));
-        document.getElementById(`opt-${i}`).classList.add('selected');
-        userPick = i;
-    } else {
-        const el = document.getElementById(`opt-${i}`);
-        if(userPick.includes(i)) {
-            userPick = userPick.filter(x => x !== i);
-            el.classList.remove('selected');
-        } else {
-            userPick.push(i);
-            el.classList.add('selected');
-        }
-    }
+function selectOpt(i) {
+    if(document.getElementById('feedback').style.display === 'block') return;
+    document.querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
+    document.getElementById(`opt-${i}`).classList.add('selected');
+    selected = i;
 }
 
-function handleLogic() {
-    const btn = document.getElementById('main-btn');
-    if(btn.innerText === "CHECK REACTION") {
+function processStep() {
+    const btn = document.getElementById('btn-next');
+    if(btn.innerText === "PERIKSA CATATAN") {
+        if(selected === -1) return alert("Pilihlah satu jawaban terlebih dahulu!");
         validate();
-        btn.innerText = (cur === db.length-1) ? "SEE REPORT" : "NEXT TUBE";
+        btn.innerText = (curIdx === questions.length - 1) ? "LIHAT HASIL AKHIR" : "ARSIP BERIKUTNYA";
     } else {
-        if(cur < db.length-1) { cur++; renderQ(); } else { finish(); }
+        if(curIdx < questions.length - 1) {
+            curIdx++;
+            renderQ();
+            updateUI();
+        } else {
+            showResult();
+        }
     }
 }
 
 function validate() {
-    const q = db[cur], box = document.getElementById('discuss-box');
-    let correct = false;
-
-    if(q.type === 'pg') {
-        const opts = document.querySelectorAll('.opt');
-        opts[q.ans].classList.add('correct-v');
-        if(userPick !== q.ans) {
-            if(userPick !== null) opts[userPick].classList.add('wrong-v');
-        } else { correct = true; }
-    } else if(q.type === 'pgk') {
-        const opts = document.querySelectorAll('.opt');
-        q.ans.forEach(a => opts[a].classList.add('correct-v'));
-        correct = JSON.stringify(userPick.sort()) === JSON.stringify(q.ans.sort());
-        if(!correct) {
-            userPick.forEach(p => { if(!q.ans.includes(p)) opts[p].classList.add('wrong-v'); });
-        }
-    } else if(q.type === 'match') {
-        let matchCorrect = 0;
-        q.items.forEach((item, i) => {
-            const val = document.getElementById(`match-${i}`).value.toUpperCase();
-            if(val === item.a) { matchCorrect++; }
-        });
-        if(matchCorrect === q.items.length) correct = true;
+    const q = questions[curIdx], opts = document.querySelectorAll('.option'), fb = document.getElementById('feedback');
+    const correct = (selected === q.ans);
+    
+    // Menampilkan jawaban benar (Hijau)
+    opts[q.ans].classList.add('ans-correct');
+    
+    if(!correct) {
+        // Menampilkan jawaban salah (Merah)
+        opts[selected].classList.add('ans-wrong');
+    } else {
+        score++;
     }
 
-    if(correct) score++;
-    box.innerHTML = `<strong>REACTION STATUS: ${correct ? 'STABLE (CORRECT)' : 'UNSTABLE (WRONG)'}</strong><br>${q.exp}`;
-    box.style.display = 'block';
+    fb.innerHTML = `<strong>ANALISIS: ${correct ? 'TEPAT' : 'KURANG TEPAT'}</strong><br>${q.exp}`;
+    fb.style.display = 'block';
 }
 
-function finish() {
+function showResult() {
     tActive = false;
     document.getElementById('sc-quiz').classList.remove('active');
     document.getElementById('sc-result').classList.add('active');
-    const final = Math.round((score/db.length)*100);
-    document.getElementById('score-val').innerText = final;
-    document.getElementById('time-res').innerText = `Experiment completed in ${document.getElementById('timer').innerText}`;
+    const final = Math.round((score/questions.length)*100);
+    document.getElementById('final-score').innerText = final;
+    document.getElementById('summary').innerText = `Anda telah menelusuri ${questions.length} arsip sejarah dengan ${score} jawaban tepat.`;
 }
 </script>
 </body>
