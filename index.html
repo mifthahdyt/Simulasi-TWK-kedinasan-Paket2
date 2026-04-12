@@ -3,199 +3,249 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HISTORY ARCHIVE V5.1 - 50 QUESTIONS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <title>PKWU SMART EXAM - SMAN 10 SINJAI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Montserrat:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --paper: #f4e4bc; --ink: #2c1e12; --gold: #b8860b;
-            --correct: #2d5a27; --wrong: #8b0000; --border: #d2b48c;
+            --primary: #1e3a8a; /* Navy Business */
+            --accent: #d4af37;  /* Gold Success */
+            --bg: #f8fafc;
+            --text: #1e293b;
+            --correct: #10b981;
+            --wrong: #ef4444;
         }
-        * { box-sizing: border-box; transition: all 0.3s ease; }
-        body { 
-            background-color: #1a1a1a; color: var(--ink); 
-            font-family: 'Cormorant Garamond', serif; margin: 0; 
-            display: flex; justify-content: center; padding: 20px;
+
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg); color: var(--text); margin: 0; padding: 20px; display: flex; justify-content: center; }
+        
+        .container { width: 100%; max-width: 700px; }
+
+        .card { 
+            background: white; border-radius: 16px; padding: 30px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;
+            display: none; animation: slideUp 0.5s ease;
         }
-        .container { width: 100%; max-width: 850px; }
-        .manuscript { 
-            background: var(--paper); border: 12px double var(--border); 
-            border-radius: 5px; padding: 40px; box-shadow: 0 0 50px rgba(0,0,0,0.8);
-            display: none; position: relative;
+        .active { display: block; }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .header { text-align: center; margin-bottom: 30px; }
+        h1 { font-family: 'Montserrat', sans-serif; color: var(--primary); margin: 0; font-size: 1.5rem; letter-spacing: 1px; }
+        
+        .progress-bar { width: 100%; height: 8px; background: #e2e8f0; border-radius: 10px; margin: 20px 0; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.4s; }
+
+        .question-text { font-size: 1.2rem; font-weight: 600; margin-bottom: 20px; color: #0f172a; line-height: 1.5; }
+
+        .options-grid { display: grid; gap: 12px; }
+        .opt-btn { 
+            padding: 16px; border: 2px solid #e2e8f0; border-radius: 12px; 
+            cursor: pointer; background: white; text-align: left; font-size: 1rem;
+            font-weight: 500; transition: 0.2s;
         }
-        .active { display: block; animation: rollIn 0.8s ease; }
-        @keyframes rollIn { from { transform: scaleY(0); opacity: 0; } to { transform: scaleY(1); opacity: 1; } }
-        .header { text-align: center; border-bottom: 2px solid var(--gold); margin-bottom: 20px; }
-        h1 { font-family: 'Cinzel', serif; color: var(--gold); margin: 0; }
-        .meta { display: flex; justify-content: space-between; font-family: 'Cinzel', serif; font-size: 0.8rem; margin-bottom: 10px; }
-        .progress-line { width: 100%; height: 3px; background: rgba(0,0,0,0.1); margin-bottom: 20px; }
-        .progress-fill { height: 100%; background: var(--gold); width: 0%; }
-        .question-box { font-size: 1.3rem; font-weight: 600; line-height: 1.4; margin-bottom: 20px; border-left: 4px solid var(--gold); padding-left: 15px; }
-        .opt-list { display: grid; gap: 10px; }
-        .option {
-            background: rgba(0,0,0,0.03); border: 1px solid var(--border);
-            padding: 12px 18px; border-radius: 4px; cursor: pointer; font-size: 1.05rem;
+        .opt-btn:hover { border-color: var(--primary); background: #eff6ff; }
+        .selected { border-color: var(--primary) !important; background: #dbeafe !important; }
+
+        /* Feedback Colors */
+        .is-correct { background: var(--correct) !important; color: white !important; border-color: #059669 !important; }
+        .is-wrong { background: var(--wrong) !important; color: white !important; border-color: #dc2626 !important; }
+
+        .explanation { 
+            margin-top: 20px; padding: 15px; border-radius: 10px; 
+            background: #f1f5f9; border-left: 5px solid var(--accent);
+            display: none; font-size: 0.95rem; line-height: 1.5;
         }
-        .option:hover { background: rgba(184, 134, 11, 0.1); }
-        .option.selected { background: rgba(184, 134, 11, 0.15); border: 1px solid var(--gold); font-weight: 600; }
-        .ans-correct { background: var(--correct) !important; color: #fff !important; }
-        .ans-wrong { background: var(--wrong) !important; color: #fff !important; }
-        .scroll-box {
-            margin-top: 20px; padding: 15px; background: rgba(0,0,0,0.05);
-            border: 1px dashed var(--gold); display: none; font-style: italic; font-size: 0.95rem;
+
+        .action-btn { 
+            width: 100%; padding: 16px; margin-top: 25px; border: none; 
+            border-radius: 12px; background: var(--primary); color: white;
+            font-weight: 700; font-size: 1rem; cursor: pointer; transition: 0.3s;
         }
-        .btn-action {
-            width: 100%; padding: 15px; background: var(--ink); color: var(--paper);
-            font-family: 'Cinzel', serif; border: none; cursor: pointer; margin-top: 20px;
-        }
-        .btn-action:hover { background: var(--gold); color: var(--ink); }
+        .action-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        .score-display { font-size: 4rem; font-weight: 800; color: var(--primary); margin: 20px 0; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div id="sc-start" class="manuscript active" style="text-align: center;">
-        <h1>HISTORIA INDONESIA</h1>
-        <p>Arsip Lengkap: 50 Soal Sejarah</p>
-        <button class="btn-action" onclick="startQuiz()">MULAI ANALISIS SEJARAH</button>
+    <div id="screen-start" class="card active" style="text-align: center;">
+        <div style="font-size: 4rem; margin-bottom: 10px;">💼</div>
+        <h1>PRAKARYA & KEWIRAUSAHAAN</h1>
+        <p style="color: #64748b;">Ujian Akhir Semester - 50 Soal Latihan</p>
+        <button class="action-btn" onclick="startQuiz()">MULAI UJIAN</button>
     </div>
 
-    <div id="sc-quiz" class="manuscript">
-        <div class="header"><h1>HISTORY ARCHIVE</h1></div>
-        <div class="meta"><span id="q-label">ARCHIVE 1/50</span><span id="timer">00:00</span></div>
-        <div class="progress-line"><div id="p-fill" class="progress-fill"></div></div>
-        <div id="content"></div>
-        <div id="feedback" class="scroll-box"></div>
-        <button id="btn-next" class="btn-action" onclick="processStep()">PERIKSA CATATAN</button>
+    <div id="screen-quiz" class="card">
+        <div class="header">
+            <span id="q-count" style="font-weight: 700; color: var(--accent);">SOAL 1/50</span>
+        </div>
+        <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
+        
+        <div id="question-area">
+            <div class="question-text" id="q-text">Loading...</div>
+            <div class="options-grid" id="opt-container"></div>
+        </div>
+
+        <div id="explanation-box" class="explanation"></div>
+        
+        <button id="next-btn" class="action-btn" onclick="handleNext()">PERIKSA JAWABAN</button>
     </div>
 
-    <div id="sc-result" class="manuscript" style="text-align: center;">
-        <h1>HASIL AKHIR</h1>
-        <div id="final-score" style="font-size: 4rem; color: var(--gold); margin: 20px 0;">0</div>
-        <p id="summary"></p>
-        <button class="btn-action" onclick="location.reload()">ULANGI UJIAN</button>
+    <div id="screen-result" class="card" style="text-align: center;">
+        <h1>HASIL UJIAN</h1>
+        <div class="score-display" id="final-score">0</div>
+        <p id="result-msg" style="font-size: 1.1rem; color: #64748b;"></p>
+        <button class="action-btn" onclick="location.reload()">ULANGI DARI AWAL</button>
     </div>
 </div>
 
 <script>
-const questions = [
-    { q: "Sumber kolonial menekankan ketertiban, babad lokal menekankan keberanian. Kesimpulan tepat:", opts: ["Isi sama", "Keduanya salah", "Berbeda karena tujuan penulisan", "Babad lebih valid", "Kolonial lebih objektif"], ans: 2, exp: "Sumber sejarah dipengaruhi sudut pandang dan tujuan penulisnya." },
-    { q: "Mana yang merupakan interpretasi sejarah?", opts: ["(1) Pertempuran 10 Nov di Surabaya", "(2) Pertempuran menunjukkan semangat heroik", "Keduanya fakta", "Keduanya interpretasi", "Hanya (1)"], ans: 1, exp: "Pernyataan (2) adalah penafsiran makna peristiwa." },
-    { q: "Surat berubah jadi pesan instan, tapi fungsi komunikasi tetap. Disebut...", opts: ["Perubahan tanpa keberlanjutan", "Keberlanjutan tanpa perubahan", "Perubahan & keberlanjutan sekaligus", "Stagnasi", "Modernisasi total"], ans: 2, exp: "Bentuk berubah, esensi tetap." },
-    { q: "Ciri historiografi tradisional Indonesia:", opts: ["Analisis sosial", "Kritis sumber", "Berpusat pada raja & istana", "Gunakan statistik", "Tolak kepercayaan"], ans: 2, exp: "Bersifat istana-sentris." },
-    { q: "Tahap heuristik adalah...", opts: ["Tulis kesimpulan", "Kumpul sumber sejarah", "Bandingkan teori", "Daftar pustaka", "Menilai sumber"], ans: 1, exp: "Heuristik = pengumpulan sumber." },
-    { q: "Menganalisis tahun 1928 secara meluas tanpa waktu lain disebut...", opts: ["Diakronik", "Sinkronik", "Kronologis", "Genealogis", "Periodisasi"], ans: 1, exp: "Sinkronik = meluas dalam ruang, terbatas waktu." },
-    { q: "Abad 13 Sriwijaya pakai HP. Kesalahan ini disebut...", opts: ["Simplifikasi", "Anachronisme", "Generalisasi", "Subjektivitas", "Periodisasi"], ans: 1, exp: "Anachronisme = ketidaksesuaian zaman." },
-    { q: "Meneliti buruh pabrik (kondisi kerja & kelas sosial) menggunakan pendekatan...", opts: ["Politik", "Ekonomi", "Sosial", "Biografis", "Diplomatik"], ans: 2, exp: "Pendekatan sosial fokus pada interaksi masyarakat." },
-    { q: "Bedanya kolonialisme & imperialisme...", opts: ["Eropa vs Asia", "Penguasaan wilayah vs perluasan kekuasaan", "Damai vs Perang", "Budaya vs Ekonomi", "Sama saja"], ans: 1, exp: "Kolonialisme pendudukan, imperialisme dominasi politik." },
-    { q: "Dampak Politik Etis:", opts: ["Hilang pendidikan", "Muncul golongan terpelajar", "Akhir eksploitasi", "Kemerdekaan penuh", "Tanah kembali"], ans: 1, exp: "Lahirnya kaum intelektual pergerakan." },
-    { q: "Sebab perlawanan daerah sering gagal:", opts: ["Senjata modern", "Terpisah & dipecah belah", "Koordinasi kuat", "Belanda tak punya strategi", "Rakyat menolak tokoh"], ans: 1, exp: "Kurang persatuan memudahkan devide et impera." },
-    { q: "Pentingnya Budi Utomo 1908:", opts: ["Akhir penjajahan", "Lahir kesadaran nasional modern", "Perang fisik", "Ganti Belanda", "Bentuk negara"], ans: 1, exp: "Tonggak Kebangkitan Nasional." },
-    { q: "Sumpah Pemuda 1928 mengarahkan perjuangan pada...", opts: ["Kerajaan daerah", "Persatuan & identitas kebangsaan", "Kekuasaan Belanda", "Hapus organisasi", "Negara federal"], ans: 1, exp: "Satu tanah air, bangsa, bahasa." },
-    { q: "Perubahan strategi dari senjata ke organisasi bertujuan...", opts: ["Gagal total", "Sesuaikan dengan kolonial modern", "Tolak nasionalisme", "Kembali ke kerajaan", "Hapus tujuan merdeka"], ans: 1, exp: "Beradaptasi dengan metode modern." },
-    { q: "Dampak utama Tanam Paksa:", opts: ["Sejahtera", "Kurang produksi", "Penderitaan rakyat", "Hilang dagang", "Petani bebas"], ans: 2, exp: "Beban berat bagi rakyat jelata." },
-    { q: "Dampak Perang Diponegoro bagi Belanda:", opts: ["Biaya kecil", "Untung ekonomi", "Beban keuangan & militer berat", "Belanda pergi", "Semua daerah bebas"], ans: 2, exp: "Sangat menguras kas Belanda." },
-    { q: "Tujuan Devide et Impera:", opts: ["Perkuat persatuan", "Pecah kekuatan lawan", "Tingkatkan edukasi", "Hapus jabatan adat", "Bentuk negara RI"], ans: 1, exp: "Strategi pecah belah." },
-    { q: "Dampak militer pendudukan Jepang:", opts: ["Dilarang latihan", "Muncul kader terlatih (semimiliter)", "Langsung merdeka", "Hapus organisasi", "Serah senjata"], ans: 1, exp: "PETA/Heiho beri pengalaman militer." },
-    { q: "Perkembangan Sarekat Islam dipengaruhi oleh...", opts: ["Hanya bangsawan", "Kepentingan ekonomi & solidaritas umat", "Tolak rakyat", "Olahraga", "Larang aspirasi"], ans: 1, exp: "Menyentuh akar rumput (pedagang & muslim)." },
-    { q: "Beda organisasi Radikal vs Moderat:", opts: ["Radikal dukung Belanda", "Radikal nonkooperatif, Moderat kooperatif", "Budaya vs Militer", "Diam vs Kekerasan", "Sama strategi"], ans: 1, exp: "Perbedaan pada cara kerja sama dengan Belanda." },
-    { q: "Fokus Rengasdengklok:", opts: ["Bentuk negara", "Waktu Proklamasi", "Presiden", "Isi UUD", "Kabinet"], ans: 1, exp: "Muda ingin cepat, tua ingin hati-hati." },
-    { q: "Makna yuridis-politik Proklamasi:", opts: ["Akhir budaya", "Dasar lahir negara berdaulat", "Seremoni saja", "Bentuk kolonial baru", "Kuasai Jepang"], ans: 1, exp: "Pernyataan hukum berdirinya negara." },
-    { q: "Pentingnya Pertempuran Surabaya:", opts: ["Mudah menyerah", "Semangat pertahankan merdeka", "Awal penjajahan", "Kembalinya Jepang", "Tanpa korban"], ans: 1, exp: "Bukti tekad rakyat." },
-    { q: "Pentingnya diplomasi:", opts: ["Ganti perang fisik", "Pengakuan internasional", "Hanya tentara", "Hapus konflik", "Tak berhubungan"], ans: 1, exp: "Agar kemerdekaan sah secara global." },
-    { q: "Kelemahan Demokrasi Liberal:", opts: ["Partai stabil", "Kabinet sering ganti", "Presiden terlalu kuat", "Tak punya partai", "Tak ada pemilu"], ans: 1, exp: "Ketidakstabilan pemerintahan (parlementer)." },
-    { q: "Dampak Dekrit Presiden 5 Juli 1959:", opts: ["Hapus RI", "Kembali ke UUD 1945", "Bubar lembaga", "Negara kolonial", "Hapus Presiden"], ans: 1, exp: "Kembali ke konstitusi awal." },
-    { q: "Wujud Bebas Aktif era Soekarno:", opts: ["Tolak kerja sama", "Pihak salah satu blok", "KAA & Non-Blok", "Bubar diplomatik", "Keluar organisasi"], ans: 2, exp: "Aktif dalam perdamaian dunia tanpa memihak." },
-    { q: "Dampak politik G30S 1965:", opts: ["Perkuat Orde Lama", "Lahirnya Orde Baru", "Bubar RI", "Kembali Belanda", "Hapus militer"], ans: 1, exp: "Peralihan kekuasaan ke Soeharto." },
-    { q: "Strategi Orde Baru:", opts: ["Tolak investasi", "Stabilisasi politik & Ekonomi", "Hapus pembangunan", "Barter tradisional", "Tutup dagang"], ans: 1, exp: "Fokus stabilitas & pertumbuhan." },
-    { q: "Sebab runtuhnya Orde Baru 1998:", opts: ["Rakyat puas", "Krisis, Korupsi, Reformasi", "Menang perang", "Hilang partai", "Tak ada masalah"], ans: 1, exp: "Krisis multidimensi." },
-    { q: "Krisis moneter 90-an pengaruhi politik karena...", opts: ["Ekonomi baik", "Harga naik & rakyat tak puas", "Rakyat kaya", "Tak ada kebijakan", "Tak pengaruh"], ans: 1, exp: "Beban ekonomi picu protes politik." },
-    { q: "Perubahan Amandemen UUD 1945:", opts: ["Presiden tanpa batas", "Penguatan checks & balances", "Hapus perwakilan", "Kembali kolonial", "Kerajaan"], ans: 1, exp: "Membatasi kekuasaan eksekutif." },
-    { q: "Tujuan Otonomi Daerah:", opts: ["Pusatkan keputusan", "Daerah atur rumah tangga sendiri", "Hapus pemda", "Daerah sama persis", "Tolak lokal"], ans: 1, exp: "Desentralisasi kekuasaan." },
-    { q: "Beda Orde Lama vs Orde Baru:", opts: ["Lama tanpa partai", "Lama dinamis, Baru terpusat/stabil", "Baru tolak ekonomi", "Lama tak punya kebijakan LN", "Sama"], ans: 1, exp: "Baru lebih menekankan stabilitas." },
-    { q: "Peran mahasiswa:", opts: ["Tidak penting", "Civil society penggerak perubahan", "Ganti lembaga", "Dukung kuasa", "Tak terlibat"], ans: 1, exp: "Agen perubahan sosial-politik." },
-    { q: "Tantangan globalisasi:", opts: ["Hilang pengaruh asing", "Melemahnya identitas nasional", "Tak ada komunikasi", "Akhir budaya lokal", "Tak terima info"], ans: 1, exp: "Perlunya selektivitas budaya." },
-    { q: "Indonesia di ASEAN membuktikan Bebas Aktif karena...", opts: ["Tolak regional", "Bangun kerja sama damai & aktif", "Keluar ASEAN", "Ikuti negara besar", "Tak terlibat"], ans: 1, exp: "Aktif membangun kawasan." },
-    { q: "Pemilu langsung menunjukkan...", opts: ["Tak punya hak", "Rakyat pilih pemimpin langsung", "Hanya Presiden", "Partai hapus", "Tak ada awas"], ans: 1, exp: "Kedaulatan rakyat lebih nyata." },
-    { q: "Pentingnya Supersemar:", opts: ["Awal merdeka", "Peralihan kekuasaan", "Bentuk kerajaan", "Akhir Jepang", "Lahir reformasi"], ans: 1, exp: "Dasar perubahan politik 1966." },
-    { q: "Dinamika demokrasi pasca-reformasi:", opts: ["Statis", "Kemajuan & tantangan baru", "Kembali kolonial", "Tolak pemilu", "Tanpa masalah"], ans: 1, exp: "Berkembang tapi masih ada kendala." },
-    // SEBAB AKIBAT 41-50
-    { q: "(Sebab): Penelitian sejarah harus lewat metode ilmiah. (Akibat): Tanpa itu, tulisan sejarah bias.", opts: ["Sebab-Akibat Benar", "Benar tidak berhubungan", "Sebab Benar", "Akibat Benar", "Salah Semua"], ans: 0, exp: "Metode ilmiah menjamin validitas." },
-    { q: "(Sebab): Nenek moyang migrasi jalur laut. (Akibat): Didukung kemampuan perahu prasejarah.", opts: ["Sebab-Akibat Benar", "Benar tidak berhubungan", "Sebab Benar", "Akibat Benar", "Salah Semua"], ans: 0, exp: "Teknologi maritim kunci migrasi." },
-    { q: "(Sebab): Konstantinopel jatuh 1453. (Akibat): Eropa cari jalur langsung ke Asia.", opts: ["Sebab-Akibat Benar", "Benar tidak berhubungan", "Sebab Benar", "Akibat Benar", "Salah Semua"], ans: 0, exp: "Akses tertutup memicu penjelajahan." },
-    { q: "(Sebab): Petani wajib tanam ekspor (Tanam Paksa). (Akibat): Muncul kelaparan & kemiskinan.", opts: ["Sebab-Akibat Benar", "Benar tidak berhubungan", "Sebab Benar", "Akibat Benar", "Salah Semua"], ans: 0, exp: "Eksploitasi mengorbankan pangan." },
-    { q: "(Sebab): Gagal perlawanan daerah. (Akibat): Strategi geser ke organisasi nasional.", opts: ["Sebab-Akibat Benar", "Benar tidak berhubungan", "Sebab Benar", "Akibat Benar", "Salah Semua"], ans: 0, exp: "Evaluasi kegagalan fisik memicu cara modern." },
-    { q: "(Sebab): Jepang kalah (Vacuum of Power). (Akibat): Pemimpin RI percepat Proklamasi.", opts: ["Sebab-Akibat Benar", "Benar tidak berhubungan", "Sebab Benar", "Akibat Benar", "Salah Semua"], ans: 0, exp: "Momentum kekosongan kekuasaan." },
-    { q: "(Sebab): Kabinet era Liberal mudah jatuh. (Akibat): Stabilitas politik terganggu.", opts: ["Sebab-Akibat Benar", "Benar tidak berhubungan", "Sebab Benar", "Akibat Benar", "Salah Semua"], ans: 0, exp: "Sistem parlemen yang rapuh." },
-    { q: "(Sebab): Peristiwa G30S buat krisis besar. (Akibat): Buka jalan Orde Baru.", opts: ["Sebab-Akibat Benar", "Benar tidak berhubungan", "Sebab Benar", "Akibat Benar", "Salah Semua"], ans: 0, exp: "Titik balik perubahan rezim." },
-    { q: "(Sebab): Ekonomi Orde Baru tumbuh pesat. (Akibat): Muncul ketimpangan & ketergantungan.", opts: ["Sebab-Akibat Benar", "Benar tidak berhubungan", "Sebab Benar", "Akibat Benar", "Salah Semua"], ans: 0, exp: "Pertumbuhan yang tidak merata." },
-    { q: "(Sebab): Reformasi dorong Amandemen UUD. (Akibat): Sistem lebih demokratis & checks-balances.", opts: ["Sebab-Akibat Benar", "Benar tidak berhubungan", "Sebab Benar", "Akibat Benar", "Salah Semua"], ans: 0, exp: "Konstitusi membatasi absolutisme." }
+const quizData = [
+    { q: "Apa tujuan utama mata pelajaran PKWU?", a: ["Menghafal istilah", "Mengembangkan keterampilan & jiwa wirausaha", "Teori ekonomi murni", "Menulis laporan saja", "Menghafal definisi"], c: 1, e: "PKWU menekankan praktik nyata agar peserta didik memiliki kreativitas dan jiwa kewirausahaan." },
+    { q: "Manakah yang termasuk empat aspek utama PKWU?", a: ["Produksi, distribusi, konsumsi", "Kerajinan, rekayasa, budi daya, pengolahan", "Ekonomi, manajemen, akuntansi", "Seni, budaya, olahraga", "Teori, praktik, ujian"], c: 1, e: "Aspek PKWU terdiri dari Kerajinan, Rekayasa, Budi daya, dan Pengolahan." },
+    { q: "Mengapa observasi penting sebelum membuat produk?", a: ["Langsung menjual", "Menentukan harga", "Memahami kebutuhan & peluang pasar", "Membuat kemasan", "Mengurangi biaya"], c: 2, e: "Observasi membantu memastikan apakah produk yang dibuat memang dibutuhkan oleh pasar." },
+    { q: "Apa yang dimaksud dengan HPP (Harga Pokok Produksi)?", a: ["Harga jual", "Biaya promosi", "Total biaya untuk membuat produk", "Keuntungan bersih", "Pajak usaha"], c: 2, e: "HPP adalah total modal atau biaya yang keluar selama proses produksi barang." },
+    { q: "Dalam analisis SWOT, 'Threat' berarti...", a: ["Peluang", "Kekuatan", "Ancaman", "Kelebihan", "Modal"], c: 2, e: "Threat adalah faktor eksternal yang dapat menghambat keberhasilan usaha." },
+    { q: "Fungsi utama kemasan produk adalah...", a: ["Ganti isi", "Melindungi & menarik konsumen", "Kurangi kualitas", "Tambah berat", "Hapus promosi"], c: 1, e: "Kemasan berfungsi sebagai pelindung fisik sekaligus identitas visual (marketing)." },
+    { q: "Apa yang dimaksud dengan kearifan lokal dalam PKWU?", a: ["Produk impor", "Penggunaan budaya & potensi daerah", "Produk digital", "Produk instan", "Produk luar negeri"], c: 1, e: "Kearifan lokal memberikan identitas unik pada produk berdasarkan keunggulan daerah." },
+    { q: "Apa tujuan dari refleksi dalam PKWU?", a: ["Hafal materi", "Nilai teman", "Evaluasi kelebihan & kekurangan", "Ganti produk", "Hapus kesalahan"], c: 2, e: "Refleksi dilakukan untuk menilai hasil kerja dan memperbaiki proses ke depannya." },
+    { q: "Budikdamber merupakan contoh dari...", a: ["Kerajinan", "Rekayasa", "Budi daya", "Pengolahan", "Pemasaran"], c: 2, e: "Budikdamber (Budi daya Ikan Dalam Ember) masuk dalam kategori aspek budi daya." },
+    { q: "Apa langkah setelah produk selesai dibuat?", a: ["Jual tanpa cek", "Diuji dan dievaluasi", "Dibuang", "Disimpan", "Diganti"], c: 1, e: "Produk harus melalui tahap uji kualitas sebelum sampai ke tangan konsumen." },
+    { q: "Produk kerajinan yang baik harus memiliki...", a: ["Harga tinggi", "Nilai fungsi dan estetika", "Warna mencolok saja", "Ukuran besar", "Banyak tulisan"], c: 1, e: "Prinsip kerajinan adalah keseimbangan antara kegunaan (fungsi) dan keindahan (estetika)." },
+    { q: "Purwarupa dalam rekayasa berarti...", a: ["Produk jadi", "Contoh awal produk (prototype)", "Produk gagal", "Kemasan", "Harga"], c: 1, e: "Purwarupa dibuat untuk menguji fungsionalitas sebelum diproduksi masal." },
+    { q: "Faktor utama dalam menentukan harga jual adalah...", a: ["Jumlah teman", "HPP dan keuntungan", "Warna produk", "Bentuk kemasan", "Nama produk"], c: 1, e: "Harga jual = HPP + Target Keuntungan (Laba)." },
+    { q: "Eco enzyme dibuat dari...", a: ["Plastik", "Kulit buah dan sayur", "Logam", "Air saja", "Kertas"], c: 1, e: "Eco enzyme adalah hasil fermentasi limbah organik dapur seperti sisa buah/sayur." },
+    { q: "Tujuan promosi adalah...", a: ["Tambah biaya", "Mengenalkan produk ke konsumen", "Kurangi kualitas", "Sulitkan pembeli", "Simpan produk"], c: 1, e: "Promosi bertujuan untuk meningkatkan awareness dan menarik minat beli konsumen." },
+    { q: "Apa tujuan analisis pasar?", a: ["Tentukan warna", "Mengetahui kebutuhan konsumen", "Kurangi produksi", "Tambah biaya", "Hapus produk"], c: 1, e: "Analisis pasar membantu memetakan target konsumen dan strategi persaingan." },
+    { q: "Produk pangan harus memperhatikan...", a: ["Harga saja", "Higienitas", "Warna saja", "Nama saja", "Ukuran saja"], c: 1, e: "Keamanan dan kebersihan pangan (higienitas) adalah prioritas mutlak." },
+    { q: "SWOT bagian 'Strength' berarti...", a: ["Kelemahan", "Ancaman", "Kekuatan", "Peluang", "Risiko"], c: 2, e: "Strength adalah keunggulan kompetitif yang dimiliki internal perusahaan." },
+    { q: "Bahan lokal murah tapi tetap menarik menonjolkan...", a: ["Biaya tinggi", "Efisiensi dan nilai jual", "Produksi rumit", "Kemasan besar", "Harga tidak terjangkau"], c: 1, e: "Ini menunjukkan efisiensi dalam memanfaatkan potensi lokal menjadi nilai ekonomi." },
+    { q: "Apa fungsi utama label produk?", a: ["Hiasan", "Memberi informasi penting", "Ganti isi", "Tambah berat", "Kurangi promosi"], c: 1, e: "Label berisi keterangan produk, komposisi, hingga tanggal kedaluwarsa." },
+    { q: "Motif daerah pada kerajinan bertujuan...", a: ["Tiru produk luar", "Tambah nilai budaya & identitas", "Kurangi minat", "Bikin berat", "Hapus fungsi"], c: 1, e: "Motif daerah memperkuat identitas budaya Nusantara pada produk." },
+    { q: "Rekayasa paling dekat dengan kegiatan...", a: ["Membuat alat/teknologi sederhana", "Menulis cerita", "Gambar pemandangan", "Hafal rumus", "Susun jadwal"], c: 0, e: "Rekayasa fokus pada perancangan solusi teknis/alat bantu." },
+    { q: "Efisiensi dalam usaha berarti...", a: ["Biaya sebesar-besarnya", "Gunakan sumber daya secara tepat", "Abaikan biaya", "Tambah limbah", "Produksi tanpa rencana"], c: 1, e: "Efisiensi adalah mencapai hasil maksimal dengan penggunaan modal/bahan yang tepat." },
+    { q: "Mengapa evaluasi penting?", a: ["Biar tak praktik", "Ketahui keberhasilan & kekurangan", "Biar cepat", "Tak usah dijual", "Nilai tak dihitung"], c: 1, e: "Evaluasi adalah bahan perbaikan untuk siklus produksi berikutnya." },
+    { q: "Contoh produk olahan pangan adalah...", a: ["Tas anyaman", "Lampu otomatis", "Keripik singkong", "Pot tanaman", "Rak kayu"], c: 2, e: "Keripik singkong adalah hasil olahan bahan nabati." },
+    { q: "Tahap awal budi daya adalah...", a: ["Panen", "Pemasaran", "Observasi kondisi & kebutuhan", "Pengemasan", "Laporan"], c: 2, e: "Riset kondisi lingkungan sangat penting agar tanaman/hewan budi daya hidup." },
+    { q: "Contoh produk rekayasa Kelas XII...", a: ["Bakpao", "Oven otomatis", "Tas kain", "Minuman herbal", "Kerupuk"], c: 1, e: "Sistem otomatisasi masuk dalam cakupan aspek rekayasa." },
+    { q: "Pendeteksi pencemaran udara digunakan untuk...", a: ["Ukur suhu", "Mendeteksi kualitas udara", "Kemas makanan", "Hitung laba", "Siram tanaman"], c: 1, e: "Alat ini mengukur kadar polutan di lingkungan sekitar." },
+    { q: "Manfaat sistem budi daya terintegrasi...", a: ["Tambah limbah", "Meningkatkan efisiensi & hasil", "Kurangi bahan", "Hapus rencana", "Kurangi nilai jual"], c: 1, e: "Sistem terpadu meminimalkan limbah dengan memutar sumber daya (misal: pupuk dari kotoran)." },
+    { q: "Jika usaha tidak laku, langkah pertama:", a: ["Tutup langsung", "Ganti bahan tanpa cek", "Analisis penyebab & kebutuhan konsumen", "Tambah harga", "Kurangi kualitas"], c: 2, e: "Harus dilakukan audit pasar untuk menemukan solusi yang tepat." },
+    { q: "Produk herbal nonpangan adalah...", a: ["Bisa dimakan", "Tidak untuk dikonsumsi sebagai makanan utama", "Selalu plastik", "Bahan logam", "Pasti impor"], c: 1, e: "Produk ini fokus pada manfaat kesehatan luar/tambahan, bukan pangan." },
+    { q: "Contoh produk herbal nonpangan:", a: ["Minyak cengkih", "Bakso", "Roti", "Es krim", "Nasi goreng"], c: 0, e: "Minyak atsiri seperti cengkih digunakan untuk kesehatan/aroma terapi." },
+    { q: "Ciri pangan oriental:", a: ["Tak butuh bahan", "Tradisi masakan Asia Timur/sekitar", "Selalu lokal", "Tak boleh makan", "Tak bisa jual"], c: 1, e: "Oriental merujuk pada kekhasan kuliner dari negara-negara Asia." },
+    { q: "Contoh olahan pangan oriental:", a: ["Bakpao isi ayam", "Gado-gado", "Rendang", "Pepes ikan", "Lontong sayur"], c: 0, e: "Bakpao berasal dari kebudayaan kuliner Tiongkok (oriental)." },
+    { q: "Pengawetan pangan bertujuan untuk...", a: ["Percepat busuk", "Memperpanjang daya simpan", "Hilang rasa", "Tambah limbah", "Turun kualitas"], c: 1, e: "Pengawetan menghambat aktivitas mikroba agar makanan tahan lama." },
+    { q: "Kemasan makanan yang baik harus...", a: ["Sulit buka", "Melindungi isi dan menarik", "Informasi dikit", "Tanpa identitas", "Warna gelap saja"], c: 1, e: "Packaging harus fungsional (melindungi) dan estetis (menarik)." },
+    { q: "Minat pasar adalah...", a: ["Ingin produsen", "Ketertarikan konsumen terhadap produk", "Banyak bahan", "Jumlah alat", "Besar modal"], c: 1, e: "Market interest menunjukkan seberapa besar produk diinginkan pembeli." },
+    { q: "Bahan daur ulang digunakan untuk...", a: ["Tambah limbah", "Kurangi kreatif", "Manfaatkan bahan bekas jadi barang baru", "Hilang fungsi", "Biaya tinggi"], c: 2, e: "Daur ulang meningkatkan nilai ekonomi limbah." },
+    { q: "Ciri usaha yang baik:", a: ["Tak ada rencana", "Tak ada evaluasi", "Ada analisis pasar & hitung biaya", "Hanya meniru", "Abaikan konsumen"], c: 2, e: "Bisnis yang sehat dikelola dengan data dan perencanaan." },
+    { q: "Mengapa promosi media sosial penting?", a: ["Biar biaya naik", "Agar lebih banyak dikenal", "Biar tak ada pembeli", "Biar sulit jangkau", "Biar berhenti"], c: 1, e: "Media sosial memberikan jangkauan promosi yang luas tanpa batas geografis." },
+    { q: "Alat dan bahan dipilih berdasarkan...", a: ["Warna favorit", "Kebutuhan dan fungsi", "Jumlah huruf", "Nama bagus", "Ukuran kelas"], c: 1, e: "Spesifikasi alat harus mendukung proses teknis produksi." },
+    { q: "Kualitas baik tapi tak dikenal, perbaiki...", a: ["Fungsi", "Promosi", "Bahan baku", "Nama siswa", "Ruang kelas"], c: 1, e: "Masalah ini berkaitan dengan kurangnya strategi pemasaran." },
+    { q: "Tujuan utama perancangan produk?", a: ["Tambah rumit", "Tentukan bentuk & fungsi sejak awal", "Hindari produksi", "Hapus biaya", "Kurangi manfaat"], c: 1, e: "Design menentukan kerangka kerja sebelum eksekusi fisik." },
+    { q: "Alat penyiram tanaman otomatis termasuk aspek...", a: ["Kerajinan", "Rekayasa", "Budi daya", "Pengolahan", "Pemasaran"], c: 1, e: "Pembuatan sistem otomatis masuk dalam kategori Rekayasa." },
+    { q: "Pangan nabati berasal dari...", a: ["Hewan", "Tumbuhan", "Logam", "Plastik", "Kain"], c: 1, e: "Nabati = bersumber dari tumbuh-tumbuhan." },
+    { q: "Manfaat pengolahan pangan:", a: ["Turun nilai jual", "Menambah variasi & nilai ekonomi", "Kurangi menarik", "Mudah rusak", "Hilang rasa"], c: 1, e: "Pengolahan mengubah bahan mentah menjadi produk bernilai tambah." },
+    { q: "Konsumen perhatian utama karena...", a: ["Tak penting", "Tentukan keberhasilan penjualan", "Hanya lihat kemasan", "Tak memengaruhi", "Beli semua"], c: 1, e: "Konsumen adalah target akhir yang menentukan aliran pendapatan usaha." },
+    { q: "Jika produk kurang menarik, solusinya:", a: ["Abaikan", "Perbaiki desain, kemasan, atau promosi", "Tambah harga", "Kurangi kualitas", "Stop produksi"], c: 1, e: "Inovasi pada tampilan dan teknik marketing adalah kunci." },
+    { q: "Budi daya berbasis ekologi memperhatikan...", a: ["Cepat panen", "Keseimbangan antara produksi & lingkungan", "Iklan", "Warna alat", "Besar ruang"], c: 1, e: "Ekologi berarti memastikan alam tidak rusak akibat proses budi daya." },
+    { q: "Ide usaha terbaik untuk daerah limbah organik:", a: ["Tanpa analisis", "Tak pakai potensi daerah", "Olah limbah jadi produk bernilai tambah", "Meniru", "Abaikan konsumen"], c: 2, e: "Mengubah masalah (limbah) menjadi solusi (produk) adalah inti kewirausahaan." }
 ];
 
-let curIdx = 0, score = 0, time = 0, tActive = false, selected = -1;
+let currentQ = 0;
+let score = 0;
+let userSelected = -1;
+let answered = false;
 
 function startQuiz() {
-    document.getElementById('sc-start').classList.remove('active');
-    document.getElementById('sc-quiz').classList.add('active');
-    tActive = true;
-    setInterval(() => { if(tActive) { time++; updateUI(); } }, 1000);
-    renderQ();
+    document.getElementById('screen-start').classList.remove('active');
+    document.getElementById('screen-quiz').classList.add('active');
+    loadQuestion();
 }
 
-function updateUI() {
-    let m = Math.floor(time/60).toString().padStart(2,'0');
-    let s = (time%60).toString().padStart(2,'0');
-    document.getElementById('timer').innerText = `${m}:${s}`;
-    document.getElementById('q-label').innerText = `ARCHIVE ${curIdx + 1}/50`;
-    document.getElementById('p-fill').style.width = `${((curIdx+1)/50)*100}%`;
-}
+function loadQuestion() {
+    answered = false;
+    userSelected = -1;
+    const data = quizData[currentQ];
+    document.getElementById('q-count').innerText = `SOAL ${currentQ + 1}/${quizData.length}`;
+    document.getElementById('progress-fill').style.width = `${((currentQ + 1) / quizData.length) * 100}%`;
+    document.getElementById('q-text').innerText = data.q;
+    document.getElementById('explanation-box').style.display = 'none';
+    document.getElementById('next-btn').innerText = "PERIKSA JAWABAN";
 
-function renderQ() {
-    const q = questions[curIdx], container = document.getElementById('content');
-    let h = `<div class="question-box">${q.q}</div><div class="opt-list">`;
-    q.opts.forEach((o, i) => {
-        h += `<div class="option" id="opt-${i}" onclick="selectOpt(${i})">${o}</div>`;
+    const container = document.getElementById('opt-container');
+    container.innerHTML = "";
+    data.a.forEach((option, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'opt-btn';
+        btn.innerText = option;
+        btn.onclick = () => selectOption(index);
+        container.appendChild(btn);
     });
-    h += `</div>`;
-    container.innerHTML = h;
-    document.getElementById('feedback').style.display = 'none';
-    document.getElementById('btn-next').innerText = "PERIKSA CATATAN";
-    selected = -1;
 }
 
-function selectOpt(i) {
-    if(document.getElementById('feedback').style.display === 'block') return;
-    document.querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
-    document.getElementById(`opt-${i}`).classList.add('selected');
-    selected = i;
+function selectOption(index) {
+    if (answered) return;
+    userSelected = index;
+    const buttons = document.querySelectorAll('.opt-btn');
+    buttons.forEach((btn, i) => {
+        btn.classList.toggle('selected', i === index);
+    });
 }
 
-function processStep() {
-    const btn = document.getElementById('btn-next');
-    if(btn.innerText === "PERIKSA CATATAN") {
-        if(selected === -1) return alert("Pilih jawaban!");
-        validate();
-        btn.innerText = (curIdx === 49) ? "LIHAT HASIL" : "LANJUT";
+function handleNext() {
+    if (userSelected === -1) {
+        alert("Pilih salah satu jawaban dulu, Miftha!");
+        return;
+    }
+
+    if (!answered) {
+        checkAnswer();
     } else {
-        if(curIdx < 49) { curIdx++; renderQ(); updateUI(); } else { showResult(); }
+        currentQ++;
+        if (currentQ < quizData.length) {
+            loadQuestion();
+        } else {
+            showResult();
+        }
     }
 }
 
-function validate() {
-    const q = questions[curIdx], opts = document.querySelectorAll('.option'), fb = document.getElementById('feedback');
-    opts[q.ans].classList.add('ans-correct');
-    if(selected !== q.ans) opts[selected].classList.add('ans-wrong');
-    else score++;
-    fb.innerHTML = `<strong>ANALISIS:</strong> ${q.exp}`;
-    fb.style.display = 'block';
+function checkAnswer() {
+    answered = true;
+    const data = quizData[currentQ];
+    const buttons = document.querySelectorAll('.opt-btn');
+    const expBox = document.getElementById('explanation-box');
+
+    buttons[data.c].classList.add('is-correct');
+    if (userSelected !== data.c) {
+        buttons[userSelected].classList.add('is-wrong');
+    } else {
+        score++;
+    }
+
+    expBox.innerHTML = `<strong>PEMBAHASAN:</strong><br>${data.e}`;
+    expBox.style.display = 'block';
+    document.getElementById('next-btn').innerText = currentQ === quizData.length - 1 ? "LIHAT SKOR AKHIR" : "SOAL SELANJUTNYA";
 }
 
 function showResult() {
-    tActive = false;
-    document.getElementById('sc-quiz').classList.remove('active');
-    document.getElementById('sc-result').classList.add('active');
-    document.getElementById('final-score').innerText = Math.round((score/50)*100);
-    document.getElementById('summary').innerText = `Tepat ${score} dari 50 soal dalam waktu ${document.getElementById('timer').innerText}`;
+    document.getElementById('screen-quiz').classList.remove('active');
+    document.getElementById('screen-result').classList.add('active');
+    
+    const finalScore = Math.round((score / quizData.length) * 100);
+    document.getElementById('final-score').innerText = finalScore;
+    
+    let msg = "";
+    if (finalScore >= 80) msg = "Luar biasa! Jiwa entrepreneur kamu sangat kuat! 🔥";
+    else if (finalScore >= 60) msg = "Bagus! Terus asah kreativitas dan mental bisnismu! 🚀";
+    else msg = "Jangan menyerah, setiap pengusaha besar mulai dari belajar hal kecil! 💪";
+    
+    document.getElementById('result-msg').innerText = msg;
 }
 </script>
+
 </body>
 </html>
