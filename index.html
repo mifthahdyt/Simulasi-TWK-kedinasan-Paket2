@@ -22,36 +22,20 @@
             border-bottom: 4px solid var(--accent); position: sticky; top: 0; z-index: 100;
         }
 
-        /* TAMPILAN AWAL / INTRUKSI */
         #halaman-instruksi {
-            max-width: 700px;
-            margin: 50px auto;
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            text-align: center;
-            border-top: 6px solid var(--primary);
+            max-width: 700px; margin: 50px auto; background: white; padding: 40px;
+            border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center; border-top: 6px solid var(--primary);
         }
 
         .btn-start {
-            background: var(--success);
-            color: white;
-            padding: 15px 40px;
-            font-size: 1.2rem;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
-            margin-top: 20px;
+            background: var(--success); color: white; padding: 15px 40px;
+            font-size: 1.2rem; border: none; border-radius: 8px; cursor: pointer;
+            font-weight: bold; transition: 0.3s; margin-top: 20px;
         }
 
         .btn-start:hover { transform: scale(1.05); background: #059669; }
 
-        .rules { text-align: left; background: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0; }
-
-        /* KONTEN KUIS (Sembunyikan di awal) */
         #quiz-container { display: none; padding: 20px; gap: 20px; max-width: 1300px; margin: auto; }
 
         .main-quiz { flex: 3; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); min-height: 400px; }
@@ -64,20 +48,19 @@
         .option-item:hover { background: #f8fafc; border-color: var(--primary); }
         .option-item.selected { background: #e0e7ff; border-color: var(--primary); font-weight: 600; }
         .nav-buttons { margin-top: 40px; display: flex; justify-content: space-between; }
+        
         .btn { padding: 12px 25px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.3s; }
         .btn-next { background: var(--primary); color: white; }
         .btn-prev { background: #64748b; color: white; }
         .btn-flag { background: var(--warning); color: white; }
+
         .grid-container { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 15px; }
         .grid-item { padding: 10px 0; text-align: center; border: 1px solid #ccc; cursor: pointer; border-radius: 4px; font-size: 0.85rem; font-weight: bold; }
         .grid-item.active { border: 2px solid var(--primary); transform: scale(1.1); }
         .grid-item.answered { background: var(--success); color: white; border-color: var(--success); }
         .grid-item.flagged { background: var(--warning); color: white; border-color: var(--warning); }
-        #result-page { display: none; background: white; padding: 40px; border-radius: 8px; text-align: center; }
-        .score-circle { width: 150px; height: 150px; border-radius: 50%; border: 10px solid var(--primary); display: flex; align-items: center; justify-content: center; font-size: 3rem; margin: 20px auto; font-weight: bold; }
-        .eval-table { width: 100%; border-collapse: collapse; margin-top: 30px; text-align: left; }
-        .eval-table th, .eval-table td { border: 1px solid #ddd; padding: 12px; }
-        .eval-table th { background: var(--primary); color: white; }
+        
+        #result-page { display: none; background: white; padding: 40px; border-radius: 8px; text-align: center; margin: 20px auto; max-width: 800px; }
     </style>
 </head>
 <body>
@@ -88,19 +71,8 @@
 </header>
 
 <div id="halaman-instruksi">
-    <h1 style="color: var(--primary)">Selamat Datang</h1>
-    <p>Simulasi Tes Wawasan Kebangsaan (TWK) - Materi Pancasila</p>
-    
-    <div class="rules">
-        <strong>Aturan Simulasi:</strong>
-        <ul>
-            <li>Jumlah Soal: 50 Butir</li>
-            <li>Waktu: 45 Menit</li>
-            <li>Sistem Penilaian: Benar (+5), Salah (0)</li>
-            <li>Klik "Ragu-Ragu" jika belum yakin dengan jawaban</li>
-        </ul>
-    </div>
-
+    <h1 style="color: var(--primary)">Persiapan Ujian</h1>
+    <p>Pastikan koneksi stabil dan fokus pada soal TWK Pancasila.</p>
     <button class="btn-start" onclick="mulaiSimulasi()">MULAI UJIAN SEKARANG</button>
 </div>
 
@@ -110,7 +82,7 @@
             <div class="current-num">Soal No. <span id="soal-nomor">1</span></div>
             <button class="btn btn-flag" onclick="toggleFlag()">Ragu-Ragu</button>
         </div>
-        <div class="question-text" id="soal-teks">Sedang memuat soal...</div>
+        <div class="question-text" id="soal-teks"></div>
         <div class="options-list" id="pilihan-jawaban"></div>
         <div class="nav-buttons">
             <button class="btn btn-prev" id="prevBtn" onclick="prevSoal()">Sebelumnya</button>
@@ -119,25 +91,143 @@
     </div>
 
     <div class="sidebar">
-        <h3>Navigasi Soal</h3>
+        <h3>Navigasi</h3>
         <div class="grid-container" id="soal-grid"></div>
-        <hr style="margin: 20px 0;">
+        <hr>
         <button class="btn" style="width:100%; background: var(--danger); color:white;" onclick="konfirmasiSelesai()">Selesai Ujian</button>
     </div>
 </div>
 
-<div class="container" id="result-page">
-    <h2>Hasil Simulasi SKD</h2>
+<div id="result-page">
+    <h2>Hasil Simulasi</h2>
     <div class="score-circle" id="final-score">0</div>
-    <p id="score-status" style="font-size: 1.2rem; font-weight: bold;"></p>
-    <table class="eval-table">
-        <thead>
-            <tr><th>No</th><th>Status</th><th>Kunci</th></tr>
-        </thead>
-        <tbody id="eval-body"></tbody>
-    </table>
-    <button class="btn btn-next" onclick="location.reload()" style="margin-top: 20px;">Ulangi Simulasi</button>
+    <p id="score-status"></p>
+    <button class="btn btn-next" onclick="location.reload()">Ulangi</button>
 </div>
+
+<script>
+    // DATA SOAL
+    const rawData = [
+        ["Apa lambang sila pertama Pancasila?", ["Pohon Beringin", "Bintang", "Rantai", "Kepala Banteng", "Padi dan Kapas"], 1],
+        ["Sila 'Keadilan Sosial bagi Seluruh Rakyat Indonesia' adalah sila ke-...", ["1", "2", "3", "4", "5"], 4],
+        ["Siapa yang mengusulkan istilah Pancasila pada 1 Juni 1945?", ["Moh. Hatta", "Soepomo", "Moh. Yamin", "Soekarno", "Agus Salim"], 3]
+        // Tambahkan soal lainnya di sini mengikuti format: ["Pertanyaan", ["A", "B", "C", "D", "E"], index_jawaban_benar]
+    ];
+
+    let currentIdx = 0;
+    let userAnswers = new Array(rawData.length).fill(null);
+    let flagged = new Array(rawData.length).fill(false);
+    let timeLeft = 45 * 60;
+    let timerInterval;
+
+    // FUNGSI UTAMA UNTUK PINDAH HALAMAN
+    function mulaiSimulasi() {
+        document.getElementById('halaman-instruksi').style.display = 'none';
+        document.getElementById('quiz-container').style.display = 'flex';
+        renderGrid();
+        displaySoal();
+        startTimer();
+    }
+
+    function renderGrid() {
+        const grid = document.getElementById('soal-grid');
+        grid.innerHTML = '';
+        rawData.forEach((_, i) => {
+            const item = document.createElement('div');
+            item.className = 'grid-item';
+            item.id = `grid-${i}`;
+            item.innerText = i + 1;
+            item.onclick = () => jumpTo(i);
+            grid.appendChild(item);
+        });
+    }
+
+    function displaySoal() {
+        const [question, options] = rawData[currentIdx];
+        document.getElementById('soal-nomor').innerText = currentIdx + 1;
+        document.getElementById('soal-teks').innerText = question;
+        
+        const container = document.getElementById('pilihan-jawaban');
+        container.innerHTML = '';
+        
+        options.forEach((opt, idx) => {
+            const div = document.createElement('div');
+            div.className = `option-item ${userAnswers[currentIdx] === idx ? 'selected' : ''}`;
+            div.innerText = opt;
+            div.onclick = () => selectOption(idx);
+            container.appendChild(div);
+        });
+
+        document.querySelectorAll('.grid-item').forEach(el => el.classList.remove('active'));
+        document.getElementById(`grid-${currentIdx}`).classList.add('active');
+        document.getElementById('prevBtn').disabled = currentIdx === 0;
+    }
+
+    function selectOption(idx) {
+        userAnswers[currentIdx] = idx;
+        const gridItem = document.getElementById(`grid-${currentIdx}`);
+        if(!flagged[currentIdx]) gridItem.classList.add('answered');
+        displaySoal();
+    }
+
+    function toggleFlag() {
+        flagged[currentIdx] = !flagged[currentIdx];
+        const gridItem = document.getElementById(`grid-${currentIdx}`);
+        gridItem.classList.toggle('flagged', flagged[currentIdx]);
+    }
+
+    function nextSoal() {
+        if(currentIdx < rawData.length - 1) {
+            currentIdx++;
+            displaySoal();
+        }
+    }
+
+    function prevSoal() {
+        if(currentIdx > 0) {
+            currentIdx--;
+            displaySoal();
+        }
+    }
+
+    function jumpTo(i) {
+        currentIdx = i;
+        displaySoal();
+    }
+
+    function startTimer() {
+        const timerEl = document.getElementById('timer');
+        timerInterval = setInterval(() => {
+            const mins = Math.floor(timeLeft / 60);
+            const secs = timeLeft % 60;
+            timerEl.innerText = `Sisa Waktu: ${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            if(timeLeft <= 0) {
+                clearInterval(timerInterval);
+                selesaiUjian();
+            }
+            timeLeft--;
+        }, 1000);
+    }
+
+    function konfirmasiSelesai() {
+        if(confirm("Selesaikan ujian?")) selesaiUjian();
+    }
+
+    function selesaiUjian() {
+        clearInterval(timerInterval);
+        document.getElementById('quiz-container').style.display = 'none';
+        document.getElementById('result-page').style.display = 'block';
+        
+        let score = 0;
+        rawData.forEach((item, i) => {
+            if(userAnswers[i] === item[2]) score += 5;
+        });
+        document.getElementById('final-score').innerText = score;
+    }
+</script>
+
+</body>
+</html>
 
 
 <script>
