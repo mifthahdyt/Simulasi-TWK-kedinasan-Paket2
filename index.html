@@ -3,329 +3,444 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulasi CAT SKD - TWK Pancasila</title>
+    <title>CAT Simulation - Bhinneka Tunggal Ika</title>
     <style>
         :root {
-            --primary: #1e3a8a; /* Navy Blue */
-            --accent: #d4af37;  /* Gold */
-            --bg: #f0f2f5;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
+            --primary: #0056b3;
+            --secondary: #6c757d;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
 
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); margin: 0; color: #333; }
-        
-        header { 
-            background: var(--primary); color: white; padding: 15px 30px;
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 4px solid var(--accent); position: sticky; top: 0; z-index: 100;
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: var(--dark);
+            overflow-x: hidden;
         }
 
-        .container { display: flex; padding: 20px; gap: 20px; max-width: 1300px; margin: auto; }
+        .fade-in { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .main-quiz { flex: 3; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); min-height: 400px; }
-
-        .sidebar { flex: 1; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); height: fit-content; position: sticky; top: 100px; }
-
-        .question-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; margin-bottom: 20px; padding-bottom: 10px; }
-        
-        .current-num { font-weight: bold; font-size: 1.4rem; color: var(--primary); }
-
-        .question-text { font-size: 1.15rem; margin-bottom: 25px; line-height: 1.7; text-align: justify; }
-
-        .option-item { 
-            margin-bottom: 15px; padding: 15px; border: 1px solid #ddd; 
-            border-radius: 8px; cursor: pointer; transition: 0.2s; display: flex; align-items: center;
+        /* Intro Screen */
+        #intro-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
         }
 
-        .option-item:hover { background: #f8fafc; border-color: var(--primary); }
-        .option-item.selected { background: #e0e7ff; border-color: var(--primary); font-weight: 600; }
-
-        .nav-buttons { margin-top: 40px; display: flex; justify-content: space-between; }
-
-        .btn { padding: 12px 25px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        .btn-next { background: var(--primary); color: white; }
-        .btn-prev { background: #64748b; color: white; }
-        .btn-flag { background: var(--warning); color: white; }
-
-        .grid-container { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 15px; }
-
-        .grid-item { 
-            padding: 10px 0; text-align: center; border: 1px solid #ccc; 
-            cursor: pointer; border-radius: 4px; font-size: 0.85rem; font-weight: bold;
+        .card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            max-width: 650px;
+            width: 100%;
+            text-align: center;
         }
 
-        .grid-item.active { border: 2px solid var(--primary); transform: scale(1.1); }
-        .grid-item.answered { background: var(--success); color: white; border-color: var(--success); }
-        .grid-item.flagged { background: var(--warning); color: white; border-color: var(--warning); }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
 
-        #timer { font-size: 1.2rem; font-weight: bold; letter-spacing: 1px; }
+        .btn-start { background: var(--primary); color: white; width: 100%; margin-top: 25px; font-size: 1.1rem; box-shadow: 0 4px 14px rgba(0,86,179,0.4); }
+        .btn-start:hover { background: #004494; transform: scale(1.02); }
 
-        /* Result Styles */
-        #result-page { display: none; background: white; padding: 40px; border-radius: 8px; text-align: center; }
-        .score-circle { width: 150px; height: 150px; border-radius: 50%; border: 10px solid var(--primary); display: flex; align-items: center; justify-content: center; font-size: 3rem; margin: 20px auto; font-weight: bold; }
-        .eval-table { width: 100%; border-collapse: collapse; margin-top: 30px; text-align: left; }
-        .eval-table th, .eval-table td { border: 1px solid #ddd; padding: 12px; }
-        .eval-table th { background: var(--primary); color: white; }
+        /* Exam Screen */
+        #exam-screen { display: none; flex-direction: column; height: 100vh; }
+
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+        }
+
+        .timer-badge {
+            background: #fff;
+            color: var(--danger);
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-weight: 800;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.4rem;
+            border: 2px solid var(--danger);
+        }
+
+        .main-content {
+            display: flex;
+            flex: 1;
+            padding: 25px;
+            gap: 25px;
+            overflow: hidden;
+        }
+
+        @media (max-width: 900px) {
+            .main-content { flex-direction: column; overflow-y: auto; }
+            #exam-screen { height: auto; }
+            header { padding: 10px 15px; }
+        }
+
+        .question-card {
+            flex: 3;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 35px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .question-text { font-size: 1.25rem; font-weight: 600; margin-bottom: 30px; color: #222; }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            padding: 18px;
+            margin-bottom: 12px;
+            border: 2px solid #edf0f2;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-item:hover { background: #f8fbff; border-color: var(--primary); }
+        .option-item.selected { background: #eef6ff; border-color: var(--primary); box-shadow: 0 2px 8px rgba(0,86,179,0.1); }
+        .opt-label { width: 35px; font-weight: 800; color: var(--primary); }
+
+        /* Sidebar Nav */
+        .nav-sidebar {
+            flex: 1;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            max-height: 100%;
+            overflow-y: auto;
+        }
+
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .nav-num {
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #d1d9e0;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            background: #fff;
+            transition: 0.2s;
+        }
+
+        .nav-num.answered { background: var(--success) !important; color: white; border-color: var(--success); }
+        .nav-num.doubt { background: var(--warning) !important; color: black; border-color: var(--warning); }
+        .nav-num.active { border: 3px solid var(--dark); transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+
+        .controls { display: flex; justify-content: space-between; margin-top: auto; padding-top: 30px; gap: 15px; }
+        .btn-nav { background: var(--secondary); color: white; flex: 1; }
+        .btn-finish { background: var(--danger); color: white; flex: 1; }
+
+        #modal-overlay {
+            display: none; position: fixed; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.7); z-index:9999; justify-content:center; align-items:center;
+        }
+
+        #result-screen, #review-screen { display: none; padding: 50px 20px; }
+        .review-card { background: white; margin-bottom: 20px; padding: 25px; border-radius: 12px; border-left: 8px solid var(--primary); box-shadow: var(--shadow); }
     </style>
 </head>
 <body>
 
-<header>
-    <div><strong>SIMULASI CAT SKD (TWK PANCASILA)</strong></div>
-    <div id="timer">Sisa Waktu: 45:00</div>
-</header>
-
-<div class="container" id="quiz-container">
-    <div class="main-quiz">
-        <div class="question-header">
-            <div class="current-num">Soal No. <span id="soal-nomor">1</span></div>
-            <button class="btn btn-flag" onclick="toggleFlag()">Ragu-Ragu</button>
+<div id="intro-screen" class="fade-in">
+    <div class="card">
+        <h1 style="color: var(--primary); margin-bottom: 10px;">Simulasi TWK CAT</h1>
+        <h3 style="color: var(--secondary); margin-bottom: 25px;">Topik: Bhinneka Tunggal Ika</h3>
+        <div style="text-align: left; background: var(--light); padding: 20px; border-radius: 10px; border-left: 5px solid var(--primary);">
+            <p><strong>Ketentuan Ujian:</strong></p>
+            <ul style="margin-left: 20px; margin-top: 10px; font-size: 0.95rem; line-height: 1.8;">
+                <li>Jumlah Soal: <strong>50 Butir</strong></li>
+                <li>Waktu: <strong>30 Menit</strong></li>
+                <li>Sistem Skor: Benar <strong>+5</strong>, Salah <strong>0</strong></li>
+                <li>Passing Grade: <strong>65</strong></li>
+            </ul>
         </div>
-        
-        <div class="question-text" id="soal-teks">Sedang memuat soal...</div>
-        
-        <div class="options-list" id="pilihan-jawaban"></div>
-
-        <div class="nav-buttons">
-            <button class="btn btn-prev" id="prevBtn" onclick="prevSoal()">Sebelumnya</button>
-            <button class="btn btn-next" id="nextBtn" onclick="nextSoal()">Selanjutnya</button>
-        </div>
-    </div>
-
-    <div class="sidebar">
-        <h3>Navigasi Soal</h3>
-        <div class="grid-container" id="soal-grid"></div>
-        <hr style="margin: 20px 0;">
-        <div style="font-size: 0.8rem; margin-bottom: 10px;">
-            <span style="color: var(--success)">●</span> Sudah Dijawab &nbsp;
-            <span style="color: var(--warning)">●</span> Ragu-Ragu
-        </div>
-        <button class="btn" style="width:100%; background: var(--danger); color:white;" onclick="konfirmasiSelesai()">Selesai Ujian</button>
+        <button class="btn btn-start" onclick="startExam()">Mulai Ujian Sekarang</button>
     </div>
 </div>
 
-<div class="container" id="result-page">
-    <h2>Hasil Simulasi SKD</h2>
-    <div class="score-circle" id="final-score">0</div>
-    <p id="score-status" style="font-size: 1.2rem; font-weight: bold;"></p>
-    <p>Passing Grade TWK: 65 poin</p>
-    
-    <h3>Evaluasi Jawaban</h3>
-    <table class="eval-table" id="eval-table">
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Status</th>
-                <th>Jawaban Anda</th>
-                <th>Kunci Jawaban</th>
-            </tr>
-        </thead>
-        <tbody id="eval-body"></tbody>
-    </table>
-    <br>
-    <button class="btn btn-next" onclick="location.reload()">Ulangi Simulasi</button>
+<div id="exam-screen">
+    <header>
+        <div>
+            <h2 style="font-size: 1.1rem; letter-spacing: 1px;">TWK SIMULATION</h2>
+            <p id="progress-header" style="font-size: 0.8rem; opacity: 0.8;">Soal 1 dari 50</p>
+        </div>
+        <div class="timer-badge" id="timer">30:00</div>
+    </header>
+
+    <div class="main-content">
+        <div class="question-card fade-in">
+            <div style="color: var(--primary); font-weight: 800; font-size: 0.9rem; margin-bottom: 15px;" id="q-label">SOAL NOMOR 1</div>
+            <div class="question-text" id="q-text">Loading question...</div>
+            <div id="options-container"></div>
+            
+            <div class="controls">
+                <button class="btn btn-nav" onclick="changeQuestion(-1)">← Sebelumnya</button>
+                <button class="btn btn-nav" style="background: var(--warning); color: black;" onclick="markDoubt()">Ragu-Ragu</button>
+                <button class="btn btn-nav" id="btn-next" style="background: var(--primary);" onclick="changeQuestion(1)">Selanjutnya →</button>
+                <button class="btn btn-finish" id="btn-finish" style="display:none;" onclick="showConfirm()">Selesai Ujian</button>
+            </div>
+        </div>
+
+        <div class="nav-sidebar">
+            <h4 style="font-size: 0.9rem; border-bottom: 2px solid #f0f2f5; padding-bottom: 10px;">Navigasi Soal</h4>
+            <div class="nav-grid" id="nav-grid"></div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-overlay">
+    <div class="card" style="max-width: 450px;">
+        <h2 style="color: var(--danger);">Konfirmasi Selesai</h2>
+        <p style="margin: 20px 0; color: var(--secondary);">Apakah Anda yakin ingin mengakhiri sesi ujian ini? Pastikan semua soal telah diperiksa.</p>
+        <div style="display: flex; gap: 15px;">
+            <button class="btn btn-finish" onclick="finishExam()">Ya, Selesai</button>
+            <button class="btn btn-nav" onclick="hideConfirm()">Batal</button>
+        </div>
+    </div>
+</div>
+
+<div id="result-screen" class="fade-in">
+    <div class="card" style="margin: auto;">
+        <h2 id="status-tag">HASIL EVALUASI</h2>
+        <div style="font-size: 5rem; font-weight: 900; margin: 20px 0; color: var(--primary);" id="score-text">0</div>
+        <p id="stats-detail" style="font-size: 1.1rem; color: var(--secondary); margin-bottom: 30px;"></p>
+        <div style="display: flex; gap: 15px;">
+            <button class="btn btn-start" onclick="showReview()" style="margin:0; flex:1;">Review Jawaban</button>
+            <button class="btn btn-nav" onclick="location.reload()" style="flex:1;">Ulangi Tes</button>
+        </div>
+    </div>
+</div>
+
+<div id="review-screen" class="fade-in">
+    <h1 style="text-align: center; margin-bottom: 40px; color: var(--primary);">Analisis Hasil Ujian</h1>
+    <div id="review-content" style="max-width: 850px; margin: auto;"></div>
+    <div style="text-align: center; padding: 40px;">
+        <button class="btn btn-nav" onclick="location.reload()" style="padding: 15px 40px;">Kembali ke Menu Utama</button>
+    </div>
 </div>
 
 <script>
-    const rawData = [
-        ["Kata Pancasila secara harfiah paling tepat dimaknai sebagai ....", ["lima dasar", "lima tujuan", "satu kesatuan", "empat pilar", "nilai bersama"], 0],
-        ["BPUPKI dibentuk dengan tugas utama untuk ....", ["mengesahkan UUD 1945", "menyusun sistem pemilu", "mempersiapkan dasar negara dan konstitusi", "memilih presiden pertama", "menetapkan simbol negara"], 2],
-        ["Perilaku yang paling mencerminkan sila kelima adalah ....", ["menolak perbedaan pendapat", "memberi kesempatan beribadah sesuai agama", "mendahulukan kelompok sendiri", "bermusyawarah sebelum keputusan diambil", "membagi tugas secara adil di rumah"], 4],
-        ["Sidang pertama BPUPKI yang membahas dasar negara berlangsung pada ....", ["18 Agustus 1945", "29 Mei–1 Juni 1945", "22 Juni 1945", "17 Agustus 1945", "1 Juni–22 Juni 1945"], 1],
-        ["Bhinneka Tunggal Ika paling sejalan dengan nilai pada sila ....", ["pertama", "kedua", "keempat", "ketiga", "kelima"], 3],
-        ["Gagasan negara integralistik dikemukakan oleh ....", ["Soepomo", "Soekarno", "Muhammad Yamin", "Moh. Hatta", "Ki Hajar Dewantara"], 0],
-        ["Tanggal yang identik dengan lahirnya istilah Pancasila adalah ....", ["22 Juni 1945", "18 Agustus 1945", "29 Mei 1945", "1 Juni 1945", "17 Agustus 1945"], 3],
-        ["Sikap menghormati kebebasan beribadah sesuai agama masing-masing merupakan pengamalan sila ....", ["kedua", "pertama", "ketiga", "keempat", "kelima"], 1],
-        ["UUD 1945 dalam hubungan ketatanegaraan paling tepat dipahami sebagai ....", ["dasar negara", "pandangan hidup bangsa", "hukum adat nasional", "semboyan persatuan", "konstitusi atau hukum dasar tertulis"], 4],
-        ["Piagam Jakarta merupakan hasil rumusan dari ....", ["BPUPKI", "PPKI", "Panitia Sembilan", "MPR", "KNIP"], 2],
-        ["Perbuatan yang paling sesuai dengan sila kedua adalah ....", ["tidak membully teman yang berbeda latar belakang", "memaksakan kehendak dalam musyawarah", "mengutamakan kepentingan kelompok sendiri", "menolak semua kritik", "memilih berdasarkan suara terbanyak tanpa musyawarah"], 0],
-        ["Lembaga yang mengesahkan UUD 1945 pada 18 Agustus 1945 adalah ....", ["BPUPKI", "Panitia Sembilan", "MPR", "KNIP", "PPKI"], 4],
-        ["Pancasila disebut sebagai ....", ["hukum dasar tertulis", "sumber dari segala sumber hukum", "semboyan negara", "sistem pemerintahan", "aturan teknis lembaga negara"], 1],
-        ["Musyawarah mufakat, penghargaan terhadap pendapat, dan demokrasi bertanggung jawab terutama tercermin dalam sila ....", ["pertama", "kedua", "ketiga", "keempat", "kelima"], 3],
-        ["Menjaga keutuhan NKRI dan menolak perpecahan merupakan pengamalan utama sila ....", ["pertama", "kedua", "ketiga", "keempat", "kelima"], 2],
-        ["Rumusan Pancasila yang resmi dalam ujian terdapat pada ....", ["Pembukaan UUD 1945 alinea ke-4", "Batang tubuh UUD 1945", "Piagam Jakarta", "Proklamasi Kemerdekaan", "TAP MPR tentang GBHN"], 0],
-        ["Sikap yang menunjukkan penghargaan terhadap perbedaan pendapat adalah ....", ["memaksakan hasil voting", "menolak dialog agar cepat selesai", "mengabaikan pendapat minoritas", "mendengarkan dan menanggapi pendapat orang lain dengan sopan", "hanya menerima pendapat yang sama"], 3],
-        ["Keadilan dalam bidang ekonomi, sosial, dan hukum paling terkait dengan sila ....", ["pertama", "kedua", "ketiga", "keempat", "kelima"], 4],
-        ["Tokoh yang mempopulerkan istilah Pancasila melalui pidato 1 Juni 1945 adalah ....", ["Muhammad Yamin", "Soekarno", "Soepomo", "Agus Salim", "Ki Bagus Hadikusumo"], 1],
-        ["Sikap menghargai suku, agama, budaya, dan bahasa yang berbeda merupakan pengamalan sila ....", ["pertama", "kedua", "ketiga", "keempat", "kelima"], 2],
-        ["Pemerintah yang membuat kebijakan tanpa diskriminasi terhadap warga mencerminkan Pancasila dalam bidang ....", ["penyelenggaraan pemerintahan", "kebudayaan daerah", "sejarah perjuangan", "diplomasi luar negeri", "penegakan tradisi adat"], 0],
-        ["Dalam asal kata Pancasila, kata “sila” berarti ....", ["lima", "negara", "aturan", "prinsip/dasar/sendi", "persatuan"], 3],
-        ["Tokoh yang mengusulkan dasar negara pada 29 Mei 1945 adalah ....", ["Soekarno", "Muhammad Yamin", "Soepomo", "H. Agus Salim", "Ki Hajar Dewantara"], 1],
-        ["Pernyataan yang paling tepat tentang Piagam Jakarta adalah ....", ["Piagam Jakarta ditetapkan sebagai konstitusi final Indonesia", "Piagam Jakarta adalah rumusan final Pancasila yang sama persis dengan sekarang", "Piagam Jakarta disusun setelah pengesahan UUD 1945", "Piagam Jakarta muncul pada 18 Agustus 1945", "Piagam Jakarta menjadi cikal bakal Pembukaan UUD 1945"], 4],
-        ["Pasangan hubungan yang paling tepat adalah ....", ["Pancasila = hukum dasar tertulis; UUD 1945 = dasar negara", "Pancasila = semboyan persatuan; Bhinneka Tunggal Ika = dasar negara", "Pancasila = dasar nilai; UUD 1945 = hukum dasar; NKRI = bentuk negara; Bhinneka Tunggal Ika = semboyan persatuan", "Pancasila = bentuk negara; NKRI = sumber hukum", "Pancasila = aturan teknis; UUD 1945 = pandangan hidup"], 2],
-        ["Pernyataan “hasil pembangunan harus dinikmati seluruh rakyat” paling sesuai dengan sila ....", ["kelima", "ketiga", "keempat", "kedua", "pertama"], 0],
-        ["Contoh sikap yang sesuai dengan sila pertama adalah ....", ["menolak beribadah karena perbedaan agama", "mengutamakan suara terbanyak tanpa musyawarah", "membagi hasil kerja secara sama rata tanpa mempertimbangkan kebutuhan", "memaksakan pendapat pribadi kepada kelompok", "tidak memaksakan agama kepada orang lain"], 4],
-        ["Sikap berikut yang paling bertentangan dengan sila ketiga adalah ....", ["menghargai keberagaman budaya", "mendahulukan kepentingan golongan sendiri", "menjaga keutuhan bangsa", "menolak perpecahan", "mencintai tanah air"], 1],
-        ["Pernyataan yang tepat tentang sila keempat adalah ....", ["menekankan pembagian kekayaan", "menekankan persatuan dalam keberagaman", "menekankan kebebasan beragama", "menekankan musyawarah dan kebijaksanaan, bukan sekadar voting", "menekankan kekuasaan mayoritas tanpa pertimbangan"], 3],
-        ["Sikap “tidak semena-mena” paling erat dengan sila ....", ["pertama", "ketiga", "kedua", "keempat", "kelima"], 2],
-        ["Piagam Jakarta dirumuskan oleh ....", ["Panitia Sembilan", "PPKI", "BPUPKI", "MPR", "KNIP"], 0],
-        ["Menjaga keutuhan Negara Kesatuan Republik Indonesia merupakan pengamalan dari sila ....", ["pertama", "kedua", "keempat", "ketiga", "kelima"], 3],
-        ["Perilaku yang paling mencerminkan penerapan Pancasila dalam kehidupan bernegara adalah ....", ["mengabaikan hukum demi kepentingan pribadi", "memilih pemimpin karena hubungan kekerabatan", "menolak semua kebijakan pemerintah", "menyebarkan perpecahan untuk keuntungan kelompok", "taat hukum dan ikut pemilu secara jujur"], 4],
-        ["Gotong royong dan solidaritas sosial paling erat dengan sila ....", ["ketiga", "kelima", "pertama", "kedua", "keempat"], 1],
-        ["Pancasila disebut sebagai perjanjian luhur bangsa Indonesia karena ....", ["dibuat untuk kepentingan satu golongan", "lahir dari keputusan satu tokoh", "menjadi kesepakatan dasar yang diterima bangsa", "ditetapkan melalui referendum modern", "hanya berlaku pada masa perang kemerdekaan"], 2],
-        ["Gagasan integralistik disampaikan pada sidang BPUPKI oleh ....", ["Soepomo pada 31 Mei 1945", "Muhammad Yamin pada 1 Juni 1945", "Soekarno pada 22 Juni 1945", "Soepomo pada 18 Agustus 1945", "Yamin pada 29 Mei 1945"], 0],
-        ["Fungsi Pancasila sebagai arah kehidupan berbangsa menunjukkan bahwa Pancasila berperan sebagai ....", ["aturan teknis administrasi negara", "alat memilih pejabat", "sumber data sejarah", "arah kehidupan berbangsa", "simbol budaya daerah"], 3],
-        ["Nilai “religius” dan “toleran” paling tepat dikaitkan dengan sila ....", ["ketiga", "pertama", "kedua", "keempat", "kelima"], 1],
-        ["Pancasila mempersatukan keberagaman Indonesia. Hubungan ini paling tepat dikaitkan dengan ....", ["fungsi UUD 1945 sebagai hukum dasar", "prinsip musyawarah dalam sila keempat", "keadilan sosial dalam sila kelima", "kedudukan Pancasila sebagai dasar negara", "nilai Bhinneka Tunggal Ika yang sejalan dengan sila ketiga"], 4],
-        ["Tanggal 22 Juni 1945 dalam proses lahirnya Pancasila merujuk pada ....", ["pengesahan UUD 1945", "pidato Soekarno tentang Pancasila", "lahirnya Piagam Jakarta", "pembentukan BPUPKI", "sidang pertama PPKI"], 2],
-        ["Menghormati martabat manusia dan tidak diskriminatif merupakan inti dari sila ....", ["pertama", "ketiga", "keempat", "kedua", "kelima"], 3],
-        ["Pancasila digunakan sebagai dasar dalam penyusunan undang-undang dan kebijakan publik. Hal itu menunjukkan fungsi Pancasila sebagai ....", ["pedoman menyusun hukum dan kebijakan", "alat memenangkan pemilu", "aturan adat masyarakat", "simbol nasional semata", "dasar pembentukan daerah otonom"], 0],
-        ["Kebijakan pemerintah yang melindungi keberagaman dan memberi hak yang sama kepada warga mencerminkan penerapan Pancasila pada ....", ["sejarah perjuangan bangsa", "kehidupan keluarga", "dunia pendidikan saja", "hubungan antardaerah", "penyelenggaraan pemerintahan"], 4],
-        ["Pancasila sebagai “cita-cita dan tujuan bangsa” termasuk dalam ....", ["isi pokok Pancasila", "kedudukan Pancasila", "rumusan Piagam Jakarta", "urutan lahirnya Pancasila", "penerapan di sekolah"], 1],
-        ["Makna sila ketiga tidak hanya cinta tanah air, tetapi juga ....", ["kebebasan beribadah", "keadilan sosial", "persatuan, menjaga keberagaman, dan menolak perpecahan", "voting sebagai satu-satunya cara mengambil keputusan", "kesamaan ekonomi semua warga"], 2],
-        ["Pancasila ditetapkan secara resmi sebagai dasar negara pada tanggal ....", ["18 Agustus 1945", "1 Juni 1945", "22 Juni 1945", "29 Mei 1945", "17 Agustus 1945"], 0],
-        ["Pernyataan yang tepat tentang 1 Juni 1945 adalah ....", ["tanggal pengesahan UUD 1945", "tanggal lahirnya Piagam Jakarta", "tanggal pembentukan BPUPKI", "tanggal Soekarno menyampaikan pidato tentang Pancasila", "tanggal pengesahan NKRI"], 3],
-        ["Soepomo dikenal dengan gagasan tentang ....", ["demokrasi liberal", "negara integralistik", "sosialisme demokratis", "federalisme", "politik luar negeri bebas aktif"], 1],
-        ["Bangsa Indonesia percaya dan bertakwa kepada Tuhan serta saling menghormati antarumat beragama. Nilai ini merupakan isi sila ....", ["kedua", "ketiga", "keempat", "kelima", "pertama"], 4],
-        ["Sikap yang menunjukkan bahwa hasil pembangunan harus dinikmati seluruh rakyat adalah ....", ["memusatkan manfaat hanya pada kelompok tertentu", "membiarkan ketimpangan tetap berlangsung", "membagi manfaat pembangunan secara merata", "mengutamakan kepentingan pribadi", "menunda pemerataan demi keuntungan jangka pendek"], 2]
+    const questions = [
+        { q: "Makna utama semboyan Bhinneka Tunggal Ika adalah ....", o: ["semua warga harus memiliki pendapat yang sama", "berbeda-beda tetapi tetap satu", "satu agama untuk semua", "satu budaya untuk seluruh daerah", "keseragaman demi ketertiban"], a: 1 },
+        { q: "Sikap yang paling sesuai dengan semangat Bhinneka Tunggal Ika di lingkungan sekolah adalah ....", o: ["hanya berteman dengan siswa yang berasal dari daerah yang sama", "menghindari diskusi agar tidak terjadi perbedaan pendapat", "menghormati teman yang berbeda suku dan agama", "meminta semua teman mengikuti kebiasaan pribadi", "menertawakan perbedaan bahasa daerah teman"], a: 2 },
+        { q: "Bhinneka Tunggal Ika berasal dari kitab ....", o: ["Negarakertagama", "Pararaton", "Sutasoma", "Bharatayudha", "Ramayana"], a: 2 },
+        { q: "Seorang ketua kelas membagi tugas kelompok hanya kepada siswa yang satu daerah dengannya karena dianggap lebih cocok bekerja sama. Tindakan tersebut paling tepat dikategorikan sebagai ....", o: ["musyawarah", "toleransi", "gotong royong", "diskriminasi", "persatuan"], a: 3 },
+        { q: "Kata “Bhinneka” berarti ....", o: ["satu", "itu", "beraneka ragam", "bersama", "damai"], a: 2 },
+        { q: "Berikut ini yang termasuk bentuk keberagaman di Indonesia adalah ....", o: ["suku, agama, ras, budaya, dan bahasa", "usia, pekerjaan, status sosial, dan hobi", "warna rumah, jenis kendaraan, dan tinggi badan", "makanan favorit, nomor rumah, dan warna pakaian", "cara berbicara, jenis sepatu, dan kebiasaan tidur"], a: 0 },
+        { q: "Pengarang Kitab Sutasoma adalah ....", o: ["Mpu Prapanca", "Mpu Tantular", "Mpu Sedah", "Mpu Kanwa", "Mpu Dharmaja"], a: 1 },
+        { q: "Bhinneka Tunggal Ika dalam kehidupan berbangsa berfungsi terutama untuk ....", o: ["menyeragamkan semua perbedaan", "menghilangkan budaya daerah", "mempersatukan bangsa yang majemuk", "membatasi kebebasan warga", "mengutamakan kelompok tertentu"], a: 2 },
+        { q: "Kata “Tunggal” berarti ....", o: ["banyak", "berbeda", "satu", "itu", "sama"], a: 2 },
+        { q: "Dalam sebuah rapat warga, keputusan diambil setelah seluruh peserta diberi kesempatan menyampaikan pendapat. Sikap tersebut mencerminkan prinsip ....", o: ["diskriminasi", "musyawarah", "individualisme", "fanatisme", "konflik"], a: 1 },
+        { q: "Bahasa persatuan bangsa Indonesia adalah ....", o: ["Bahasa Jawa", "Bahasa Sunda", "Bahasa Indonesia", "Bahasa daerah", "Bahasa Melayu klasik"], a: 2 },
+        { q: "Pernyataan yang paling tepat mengenai toleransi adalah ....", o: ["menghapus semua perbedaan", "memaksakan keyakinan sendiri kepada orang lain", "menghormati perbedaan tanpa harus menyamakan semuanya", "menolak bergaul dengan kelompok berbeda", "membiarkan konflik berkembang"], a: 2 },
+        { q: "Bhinneka Tunggal Ika kini menjadi ....", o: ["lambang daerah", "semboyan negara Indonesia", "motto sekolah", "nama kitab suci", "aturan hukum daerah"], a: 1 },
+        { q: "Sila Pancasila yang paling erat hubungannya dengan Bhinneka Tunggal Ika adalah ....", o: ["sila pertama", "sila kedua", "sila ketiga", "sila keempat", "sila kelima"], a: 2 },
+        { q: "Seseorang menolak bekerja sama dengan tetangganya karena berbeda agama, padahal kegiatan tersebut bersifat sosial dan tidak berkaitan dengan ibadah. Sikap tersebut bertentangan dengan ....", o: ["persamaan kedudukan warga negara", "semangat persatuan dalam keberagaman", "kebebasan berpendapat", "musyawarah mufakat", "hak memilih pemimpin"], a: 1 },
+        { q: "Makna keseluruhan Bhinneka Tunggal Ika adalah bahwa Indonesia ....", o: ["terdiri atas satu budaya saja", "memiliki banyak perbedaan tetapi tetap satu bangsa", "harus menghapus semua suku daerah", "hanya mengakui satu bahasa daerah", "menolak keberagaman"], a: 1 },
+        { q: "Contoh penerapan Bhinneka Tunggal Ika di masyarakat adalah ....", o: ["memilih teman berdasarkan suku", "menghormati kegiatan keagamaan orang lain", "mengejek adat istiadat yang berbeda", "menolak kerja bakti bersama", "mengutamakan golongan sendiri"], a: 1 },
+        { q: "Bhinneka Tunggal Ika berasal dari bahasa ....", o: ["Sansekerta modern", "Jawa Kuno", "Melayu modern", "Jawa Baru", "Sanskerta campuran"], a: 1 },
+        { q: "Salah satu ancaman terhadap persatuan bangsa adalah ....", o: ["gotong royong", "toleransi", "diskriminasi", "musyawarah", "saling menghargai"], a: 2 },
+        { q: "Seorang siswa berpendapat bahwa karena Indonesia memiliki banyak budaya, maka seharusnya semua budaya itu diseragamkan agar tidak terjadi perbedaan. Pendapat tersebut tidak tepat karena bertentangan dengan makna ....", o: ["kesatuan yang meniadakan identitas", "keberagaman sebagai kekuatan", "persamaan dalam perbedaan", "penyeragaman budaya nasional", "dominasi budaya mayoritas"], a: 1 },
+        { q: "Salah satu contoh keberagaman budaya di Indonesia adalah ....", o: ["warna kulit yang sama", "rumah adat dan tarian daerah", "satu jenis makanan di seluruh daerah", "satu bentuk pakaian di semua wilayah", "satu bahasa daerah di seluruh nusantara"], a: 1 },
+        { q: "Pernyataan berikut yang paling sesuai dengan semangat persatuan adalah ....", o: ["kelompok kami harus selalu menang", "perbedaan harus dijadikan alasan untuk berpisah", "kepentingan bangsa lebih utama daripada kepentingan golongan", "setiap daerah harus berjalan sendiri", "kerja sama hanya dilakukan dengan yang sama pendapat"], a: 2 },
+        { q: "Bhinneka Tunggal Ika menegaskan bahwa keberagaman bukan alasan untuk ....", o: ["bekerja sama", "saling menghargai", "bersatu", "terpecah belah", "bermusyawarah"], a: 3 },
+        { q: "Dalam kehidupan sehari-hari, sikap tidak diskriminatif berarti ....", o: ["memilih teman berdasarkan status sosial", "memperlakukan orang secara adil tanpa membedakan suku, agama, atau latar belakang", "memberi perhatian hanya kepada kelompok sendiri", "mengutamakan orang yang sama daerah", "menolak orang yang berbeda pendapat"], a: 1 },
+        { q: "Perhatikan situasi berikut: sebuah acara sekolah melibatkan siswa dari berbagai daerah, lalu panitia membagi tugas secara adil dan memberi kesempatan yang sama kepada semua peserta. Tindakan panitia tersebut paling mencerminkan ....", o: ["keseragaman", "diskriminasi positif", "persatuan dalam keberagaman", "dominasi mayoritas", "persaingan kelompok"], a: 2 },
+        { q: "Semboyan Bhinneka Tunggal Ika menekankan pentingnya ....", o: ["perpecahan", "toleransi", "persaingan antarkelompok", "kesamaan mutlak", "pengutamaan golongan"], a: 1 },
+        { q: "Hubungan Bhinneka Tunggal Ika dengan UUD 1945 adalah bahwa UUD 1945 ....", o: ["menghapus keberagaman di Indonesia", "tidak mengatur hak warga negara", "menjamin persamaan kedudukan dan kebebasan beragama", "hanya berlaku untuk kelompok tertentu", "menolak hak berserikat"], a: 2 },
+        { q: "Kata “Ika” berarti ....", o: ["berbeda", "satu", "itu", "damai", "bangsa"], a: 2 },
+        { q: "Di bawah ini yang bukan contoh penerapan Bhinneka Tunggal Ika di sekolah adalah ....", o: ["menghargai pendapat teman saat diskusi", "bekerja kelompok dengan baik", "mengejek bahasa daerah teman", "tidak melakukan bullying", "bertemen tanpa membedakan asal daerah"], a: 2 },
+        { q: "Jika terjadi konflik antarkelompok di masyarakat, upaya yang paling tepat untuk menjaga semangat Bhinneka Tunggal Ika adalah ....", o: ["membiarkan konflik berkembang agar kelompok kuat sendiri", "membalas tindakan kelompok lain", "mengutamakan dialog, musyawarah, dan saling menghargai", "memisahkan semua kelompok secara permanen", "menghilangkan identitas masing-masing kelompok"], a: 2 },
+        { q: "Fungsi Bhinneka Tunggal Ika dalam kehidupan berbangsa adalah ....", o: ["mendorong perpecahan", "menjadi pedoman hidup dalam keberagaman", "mengganti Pancasila", "menghapus adat istiadat", "membatasi persatuan nasional"], a: 1 },
+        { q: "Sikap yang menunjukkan gotong royong adalah ....", o: ["bekerja sendiri dan menolak bantuan", "menyelesaikan masalah bersama-sama", "memaksakan keputusan pribadi", "menghindari interaksi dengan kelompok lain", "mengabaikan kepentingan umum"], a: 1 },
+        { q: "Bhinneka Tunggal Ika mengandung pesan bahwa perbedaan keyakinan tidak boleh menimbulkan ....", o: ["penghormatan", "kerja sama", "permusuhan", "toleransi", "persaudaraan"], a: 2 },
+        { q: "Keberagaman Indonesia tidak hanya mencakup suku, tetapi juga ....", o: ["musim dan cuaca", "agama, ras, budaya, dan bahasa", "jenis kendaraan dan pakaian", "makanan cepat saji dan minuman", "pekerjaan dan usia"], a: 1 },
+        { q: "Seorang pejabat daerah membuat kebijakan yang hanya menguntungkan kelompok asalnya dan mengabaikan warga lain. Kebijakan tersebut bertentangan dengan nilai ....", o: ["keadilan dan persatuan", "kebebasan beragama", "musyawarah dan gotong royong", "persamaan kedudukan dalam masyarakat", "seluruh jawaban benar"], a: 4 },
+        { q: "Bhinneka Tunggal Ika merupakan simbol ....", o: ["keragaman tanpa persatuan", "persatuan Indonesia", "kekuasaan daerah", "keunggulan satu suku", "kesamaan semua warga"], a: 1 },
+        { q: "Seseorang yang menghormati tetangga meskipun berbeda agama menunjukkan sikap ....", o: ["intoleran", "diskriminatif", "toleran", "provokatif", "eksklusif"], a: 2 },
+        { q: "Pancasila dan Bhinneka Tunggal Ika memiliki hubungan karena keduanya sama-sama menekankan ....", o: ["perpecahan", "persatuan", "keseragaman mutlak", "dominasi satu kelompok", "penolakan terhadap keberagaman"], a: 1 },
+        { q: "Contoh ancaman terhadap persatuan yang sering muncul dalam kehidupan sosial adalah ....", o: ["musyawarah", "toleransi", "ujaran kebencian", "kerja sama", "saling menghormati"], a: 2 },
+        { q: "Dalam suatu wilayah, terdapat banyak suku dan agama. Agar tercipta kerukunan, kebijakan yang paling sesuai dengan semangat Bhinneka Tunggal Ika adalah ....", o: ["memberi hak lebih besar kepada kelompok mayoritas", "membatasi kegiatan kelompok tertentu", "melindungi semua golongan secara adil", "menyeragamkan semua adat dan tradisi", "menghilangkan identitas daerah"], a: 2 },
+        { q: "Salah satu prinsip menjaga Bhinneka Tunggal Ika adalah ....", o: ["diskriminasi", "toleransi", "individualisme", "fanatisme", "permusuhan"], a: 1 },
+        { q: "Berikut ini yang paling tepat menggambarkan persatuan dalam keberagaman adalah ....", o: ["semua orang harus sama agar rukun", "berbeda pendapat berarti tidak bisa bekerja sama", "perbedaan tidak menghalangi kerja sama", "perbedaan harus dihindari", "persatuan hanya mungkin jika seragam"], a: 2 },
+        { q: "Semboyan Bhinneka Tunggal Ika diambil dari ....", o: ["Undang-Undang Dasar 1945", "Kitab Sutasoma", "Piagam Jakarta", "Pancasila", "Proklamasi Kemerdekaan"], a: 1 },
+        { q: "Sikap yang tepat saat berdiskusi dengan teman yang berbeda pendapat adalah ....", o: ["memotong pembicaraan teman", "menghormati pendapat yang berbeda dan mencari solusi bersama", "memaksakan pendapat sendiri", "meninggalkan forum diskusi", "mengejek perbedaan pandangan"], a: 1 },
+        { q: "Terdapat dua kelompok masyarakat yang sering berselisih karena perbedaan adat. Langkah paling tepat untuk menjaga keutuhan bangsa adalah ....", o: ["membiarkan perselisihan berlangsung lama", "memperkuat stereotip antar kelompok", "membangun dialog, saling menghormati, dan kerja sama", "memisahkan kedua kelompok tanpa komunikasi", "menghapus adat salah satu kelompok"], a: 2 },
+        { q: "Bhinneka Tunggal Ika berarti ....", o: ["satu bangsa tanpa perbedaan", "berbeda-beda tetapi tetap satu", "satu budaya untuk semua", "semua orang harus sama", "perbedaan adalah kelemahan"], a: 1 },
+        { q: "Dalam konteks NKRI, Bhinneka Tunggal Ika berperan untuk ....", o: ["memperkuat perpecahan daerah", "menjaga keutuhan negara", "mengganti dasar negara", "menghapus pemerintahan pusat", "menonjolkan daerah tertentu"], a: 1 },
+        { q: "Salah satu contoh penerapan Bhinneka Tunggal Ika di rumah adalah ....", o: ["membeda-bedakan anggota keluarga", "menghormati anggota keluarga yang berbeda pendapat", "memaksa semua saudara mengikuti kehendak satu orang", "menolak membantu saudara", "menertawakan kebiasaan keluarga lain"], a: 1 },
+        { q: "Sikap cinta tanah air dalam keberagaman dapat diwujudkan dengan ....", o: ["merendahkan budaya daerah lain", "menjaga persatuan dan menghargai perbedaan", "mengutamakan kelompok sendiri", "menolak hidup bersama dengan orang berbeda", "menolak simbol negara"], a: 1 },
+        { q: "Manakah pernyataan yang paling tepat mengenai hubungan Pancasila, UUD 1945, NKRI, dan Bhinneka Tunggal Ika?", o: ["Pancasila adalah bentuk negara, UUD 1945 adalah semboyan, NKRI adalah nilai dasar", "Pancasila adalah dasar nilai, UUD 1945 adalah aturan dasar, NKRI adalah bentuk negara, dan Bhinneka Tunggal Ika adalah semboyan pemersatu", "Pancasila adalah simbol budaya, UUD 1945 adalah adat istiadat, NKRI adalah bahasa persatuan", "Pancasila adalah semboyan negara, UUD 1945 adalah lambang negara, NKRI adalah aturan daerah", "Semuanya tidak saling berhubungan"], a: 1 }
     ];
 
     let currentIdx = 0;
-    let userAnswers = new Array(rawData.length).fill(null);
-    let flagged = new Array(rawData.length).fill(false);
-    let timeLeft = 45 * 60; // 45 menit
+    let userAnswers = new Array(questions.length).fill(null);
+    let userDoubts = new Array(questions.length).fill(false);
+    let timeLeft = 30 * 60;
+    let timerInterval;
 
-    function init() {
-        renderGrid();
-        displaySoal();
-        startTimer();
+    function startExam() {
+        document.getElementById('intro-screen').style.display = 'none';
+        document.getElementById('exam-screen').style.display = 'flex';
+        renderNav();
+        showQuestion(0);
+        timerInterval = setInterval(updateTimer, 1000);
     }
 
-    function renderGrid() {
-        const grid = document.getElementById('soal-grid');
+    function renderNav() {
+        const grid = document.getElementById('nav-grid');
         grid.innerHTML = '';
-        rawData.forEach((_, i) => {
-            const item = document.createElement('div');
-            item.className = 'grid-item';
-            item.id = `grid-${i}`;
-            item.innerText = i + 1;
-            item.onclick = () => jumpTo(i);
-            grid.appendChild(item);
+        questions.forEach((_, i) => {
+            const div = document.createElement('div');
+            div.className = 'nav-num';
+            div.id = `nav-${i}`;
+            div.innerText = i + 1;
+            div.onclick = () => showQuestion(i);
+            grid.appendChild(div);
         });
     }
 
-    function displaySoal() {
-        const [question, options] = rawData[currentIdx];
-        document.getElementById('soal-nomor').innerText = currentIdx + 1;
-        document.getElementById('soal-teks').innerText = question;
-        
-        const container = document.getElementById('pilihan-jawaban');
+    function showQuestion(idx) {
+        currentIdx = idx;
+        const q = questions[idx];
+        document.getElementById('q-label').innerText = `SOAL NOMOR ${idx + 1}`;
+        document.getElementById('q-text').innerText = q.q;
+        document.getElementById('progress-header').innerText = `Soal ${idx + 1} dari ${questions.length}`;
+
+        const container = document.getElementById('options-container');
         container.innerHTML = '';
         
-        const labels = ['A', 'B', 'C', 'D', 'E'];
-        options.forEach((opt, idx) => {
+        ['A','B','C','D','E'].forEach((label, i) => {
             const div = document.createElement('div');
-            div.className = `option-item ${userAnswers[currentIdx] === idx ? 'selected' : ''}`;
-            div.innerHTML = `<span style="margin-right:10px; font-weight:bold">${labels[idx]}.</span> ${opt}`;
-            div.onclick = () => selectOption(idx);
+            div.className = `option-item ${userAnswers[idx] === i ? 'selected' : ''}`;
+            div.onclick = () => selectOption(i);
+            div.innerHTML = `<span class="opt-label">${label}.</span> <span>${q.o[i]}</span>`;
             container.appendChild(div);
         });
 
-        // Update Grid styling
-        document.querySelectorAll('.grid-item').forEach(el => el.classList.remove('active'));
-        document.getElementById(`grid-${currentIdx}`).classList.add('active');
-        
-        // Disable buttons at edges
-        document.getElementById('prevBtn').disabled = currentIdx === 0;
-        document.getElementById('nextBtn').innerText = currentIdx === rawData.length - 1 ? 'Selesai' : 'Selanjutnya';
+        document.getElementById('btn-next').style.display = (idx === questions.length - 1) ? 'none' : 'block';
+        document.getElementById('btn-finish').style.display = (idx === questions.length - 1) ? 'block' : 'none';
+        updateNavStyles();
     }
 
-    function selectOption(idx) {
-        userAnswers[currentIdx] = idx;
-        const gridItem = document.getElementById(`grid-${currentIdx}`);
-        if(!flagged[currentIdx]) gridItem.classList.add('answered');
-        displaySoal();
+    function selectOption(i) {
+        userAnswers[currentIdx] = i;
+        userDoubts[currentIdx] = false;
+        showQuestion(currentIdx);
     }
 
-    function toggleFlag() {
-        flagged[currentIdx] = !flagged[currentIdx];
-        const gridItem = document.getElementById(`grid-${currentIdx}`);
-        if(flagged[currentIdx]) {
-            gridItem.classList.remove('answered');
-            gridItem.classList.add('flagged');
-        } else {
-            gridItem.classList.remove('flagged');
-            if(userAnswers[currentIdx] !== null) gridItem.classList.add('answered');
-        }
+    function markDoubt() {
+        userDoubts[currentIdx] = !userDoubts[currentIdx];
+        updateNavStyles();
     }
 
-    function nextSoal() {
-        if(currentIdx < rawData.length - 1) {
-            currentIdx++;
-            displaySoal();
-        } else {
-            konfirmasiSelesai();
-        }
+    function changeQuestion(dir) {
+        let newIdx = currentIdx + dir;
+        if(newIdx >= 0 && newIdx < questions.length) showQuestion(newIdx);
     }
 
-    function prevSoal() {
-        if(currentIdx > 0) {
-            currentIdx--;
-            displaySoal();
-        }
-    }
-
-    function jumpTo(i) {
-        currentIdx = i;
-        displaySoal();
-    }
-
-    function startTimer() {
-        const timerEl = document.getElementById('timer');
-        const interval = setInterval(() => {
-            const mins = Math.floor(timeLeft / 60);
-            const secs = timeLeft % 60;
-            timerEl.innerText = `Sisa Waktu: ${mins}:${secs < 10 ? '0' : ''}${secs}`;
-            if(timeLeft <= 0) {
-                clearInterval(interval);
-                selesaiUjian();
-            }
-            timeLeft--;
-        }, 1000);
-    }
-
-    function konfirmasiSelesai() {
-        if(confirm("Yakin ingin menyelesaikan ujian? Pastikan semua soal telah terjawab.")) {
-            selesaiUjian();
-        }
-    }
-
-    function selesaiUjian() {
-        document.getElementById('quiz-container').style.display = 'none';
-        document.getElementById('result-page').style.display = 'block';
-        window.scrollTo(0,0);
-
-        let correctCount = 0;
-        const body = document.getElementById('eval-body');
-        const labels = ['A', 'B', 'C', 'D', 'E'];
-
-        rawData.forEach((item, i) => {
-            const isCorrect = userAnswers[i] === item[2];
-            if(isCorrect) correctCount++;
-
-            const row = `
-                <tr>
-                    <td>${i+1}</td>
-                    <td style="color: ${isCorrect ? 'green' : 'red'}; font-weight:bold">${isCorrect ? 'BENAR' : 'SALAH'}</td>
-                    <td>${userAnswers[i] !== null ? labels[userAnswers[i]] : '-'}</td>
-                    <td>${labels[item[2]]}</td>
-                </tr>
-            `;
-            body.innerHTML += row;
+    function updateNavStyles() {
+        questions.forEach((_, i) => {
+            const el = document.getElementById(`nav-${i}`);
+            if(!el) return;
+            el.className = 'nav-num';
+            if(userAnswers[i] !== null) el.classList.add('answered');
+            if(userDoubts[i]) el.classList.add('doubt');
+            if(i === currentIdx) el.classList.add('active');
         });
-
-        const finalScore = correctCount * 5; // Standar SKD: Benar +5, Salah 0
-        document.getElementById('final-score').innerText = finalScore;
-        
-        const status = finalScore >= 65 ? "LULUS (MEMENUHI PASSING GRADE)" : "TIDAK LULUS (DI BAWAH PASSING GRADE)";
-        const statusEl = document.getElementById('score-status');
-        statusEl.innerText = status;
-        statusEl.style.color = finalScore >= 65 ? 'var(--success)' : 'var(--danger)';
     }
 
-    init();
+    function updateTimer() {
+        timeLeft--;
+        if(timeLeft <= 0) finishExam();
+        const m = Math.floor(timeLeft / 60);
+        const s = timeLeft % 60;
+        document.getElementById('timer').innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+    }
+
+    function showConfirm() { document.getElementById('modal-overlay').style.display = 'flex'; }
+    function hideConfirm() { document.getElementById('modal-overlay').style.display = 'none'; }
+
+    function finishExam() {
+        clearInterval(timerInterval);
+        hideConfirm();
+        let correct = 0;
+        userAnswers.forEach((ans, i) => { if(ans === questions[i].a) correct++; });
+        let score = correct * 5;
+
+        document.getElementById('exam-screen').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'block';
+        document.getElementById('score-text').innerText = score;
+        
+        const status = document.getElementById('status-tag');
+        if(score >= 65) {
+            status.innerText = "LULUS (MEMENUHI SYARAT)";
+            status.style.color = "#28a745";
+        } else {
+            status.innerText = "TIDAK LULUS (DI BAWAH PASSING GRADE)";
+            status.style.color = "#dc3545";
+        }
+        document.getElementById('stats-detail').innerText = `Benar: ${correct} | Salah: ${questions.length - correct} | Total: ${score}/250`;
+    }
+
+    function showReview() {
+        document.getElementById('result-screen').style.display = 'none';
+        document.getElementById('review-screen').style.display = 'block';
+        const container = document.getElementById('review-content');
+        container.innerHTML = '';
+        const labels = ['A','B','C','D','E'];
+
+        questions.forEach((q, i) => {
+            const isCorrect = userAnswers[i] === q.a;
+            const div = document.createElement('div');
+            div.className = 'review-card';
+            div.style.borderColor = isCorrect ? '#28a745' : '#dc3545';
+            div.innerHTML = `
+                <p style="margin-bottom:10px;"><strong>Soal ${i+1}:</strong> ${q.q}</p>
+                <div style="background:#f9f9f9; padding:10px; border-radius:5px;">
+                    <p>Jawaban Anda: <span style="color:${isCorrect ? 'green' : 'red'}; font-weight:bold;">${userAnswers[i] !== null ? labels[userAnswers[i]] + '. ' + q.o[userAnswers[i]] : 'Tidak Dijawab'}</span></p>
+                    <p>Kunci Jawaban: <strong style="color:green">${labels[q.a]}. ${q.o[q.a]}</strong></p>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+    }
 </script>
 
 </body>
