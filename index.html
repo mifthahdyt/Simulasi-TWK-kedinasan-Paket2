@@ -1,447 +1,1103 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CAT Simulation - Bhinneka Tunggal Ika</title>
-    <style>
-        :root {
-            --primary: #0056b3;
-            --secondary: #6c757d;
-            --success: #28a745;
-            --warning: #ffc107;
-            --danger: #dc3545;
-            --light: #f8f9fa;
-            --dark: #343a40;
-            --shadow: 0 4px 10px rgba(0,0,0,0.15);
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulasi TWK SKD Kedinasan V2 Paket 2</title>
+  <style>
+    :root {
+      --bg: #eef4fb;
+      --bg2: #f8fbff;
+      --surface: rgba(255,255,255,.88);
+      --card: #ffffff;
+      --text: #122033;
+      --muted: #64748b;
+      --line: #d6e0ec;
+      --primary: #1d4ed8;
+      --primary2: #2563eb;
+      --primary3: #60a5fa;
+      --success: #16a34a;
+      --warning: #f59e0b;
+      --danger: #dc2626;
+      --shadow: 0 20px 55px rgba(15, 23, 42, .10);
+      --radius: 22px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; background: radial-gradient(circle at top left, #dbeafe 0, transparent 35%), linear-gradient(180deg, #eef4fb 0%, #f6f9ff 100%); color: var(--text); font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    body { overflow-x: hidden; }
+    button, input { font: inherit; }
+    .hidden { display: none !important; }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+    .app { min-height: 100vh; }
+    .wrap { width: min(1400px, calc(100% - 32px)); margin: 0 auto; }
 
-        body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f0f2f5;
-            color: var(--dark);
-            overflow-x: hidden;
-        }
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before, .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(18px);
+      opacity: .55;
+      pointer-events: none;
+    }
+    .hero::before {
+      width: 320px; height: 320px; left: -80px; top: 60px;
+      background: radial-gradient(circle, rgba(37,99,235,.22), rgba(37,99,235,0));
+    }
+    .hero::after {
+      width: 360px; height: 360px; right: -120px; bottom: -80px;
+      background: radial-gradient(circle, rgba(96,165,250,.22), rgba(96,165,250,0));
+    }
 
-        .fade-in { animation: fadeIn 0.4s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .hero-card {
+      position: relative;
+      z-index: 1;
+      width: min(1220px, 100%);
+      background: var(--surface);
+      backdrop-filter: blur(18px);
+      border: 1px solid rgba(255,255,255,.8);
+      box-shadow: var(--shadow);
+      border-radius: 30px;
+      padding: 28px;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+    .hero-left {
+      border-radius: 26px;
+      padding: 26px;
+      background: linear-gradient(135deg, rgba(29,78,216,.97), rgba(37,99,235,.88) 56%, rgba(96,165,250,.86));
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+      min-height: 100%;
+    }
+    .hero-left::after {
+      content: "";
+      position: absolute;
+      inset: auto -40px -50px auto;
+      width: 220px; height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,.35), rgba(255,255,255,0) 70%);
+      filter: blur(8px);
+    }
+    .top-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.16);
+      border: 1px solid rgba(255,255,255,.22);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .2px;
+      margin-bottom: 18px;
+    }
+    .logo-dot {
+      width: 11px; height: 11px; border-radius: 50%; background: #fff;
+      box-shadow: 0 0 0 4px rgba(255,255,255,.16);
+    }
+    .hero-title {
+      margin: 0;
+      font-size: clamp(32px, 5vw, 52px);
+      line-height: 1.02;
+      letter-spacing: -.03em;
+    }
+    .hero-sub {
+      margin: 14px 0 0;
+      font-size: 16px;
+      line-height: 1.7;
+      max-width: 62ch;
+      color: rgba(255,255,255,.92);
+    }
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 22px;
+    }
+    .stat {
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 18px;
+      padding: 14px 16px;
+      min-height: 86px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .stat .label { font-size: 12px; opacity: .82; }
+    .stat .value { font-size: 26px; font-weight: 800; letter-spacing: -.03em; }
+    .stat .hint { font-size: 12px; opacity: .88; }
+    .hero-cta {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 22px;
+    }
+    .btn {
+      border: 0;
+      border-radius: 16px;
+      padding: 13px 18px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease, opacity .15s ease;
+      box-shadow: 0 12px 26px rgba(0,0,0,.08);
+      user-select: none;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+    .btn-primary { background: #fff; color: var(--primary); }
+    .btn-ghost {
+      background: rgba(255,255,255,.14);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.22);
+      box-shadow: none;
+    }
+    .btn-danger { background: #ef4444; color: #fff; }
+    .btn-soft { background: #eef4ff; color: #1d4ed8; border: 1px solid #dbeafe; box-shadow: none; }
+    .btn-secondary { background: #eef2f7; color: #0f172a; border: 1px solid #dbe3ee; box-shadow: none; }
+    .btn:disabled { opacity: .55; cursor: not-allowed; transform: none !important; }
 
-        /* Intro Screen */
-        #intro-screen {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
+    .hero-right {
+      display: grid;
+      gap: 14px;
+    }
+    .panel {
+      background: rgba(255,255,255,.88);
+      border: 1px solid rgba(214,224,236,.9);
+      border-radius: 22px;
+      box-shadow: 0 10px 30px rgba(15,23,42,.05);
+      padding: 18px;
+    }
+    .panel h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      letter-spacing: -.02em;
+    }
+    .list {
+      margin: 0;
+      padding-left: 18px;
+      color: #334155;
+    }
+    .list li { margin: 8px 0; }
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .mini {
+      background: linear-gradient(180deg, #f8fbff, #eef4fb);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      min-height: 86px;
+    }
+    .mini .label { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+    .mini .value { font-size: 18px; font-weight: 800; letter-spacing: -.02em; }
+    .mini .sub { margin-top: 4px; font-size: 12px; color: var(--muted); line-height: 1.45; }
 
-        .card {
-            background: white;
-            padding: 2.5rem;
-            border-radius: 15px;
-            box-shadow: var(--shadow);
-            max-width: 650px;
-            width: 100%;
-            text-align: center;
-        }
+    .exam-shell, .result-shell {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(214,224,236,.92);
+    }
+    .topbar-inner {
+      width: min(1400px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 14px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+    .brand-mark {
+      width: 46px; height: 46px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--primary), var(--primary3));
+      color: #fff;
+      font-weight: 900;
+      box-shadow: 0 14px 30px rgba(37,99,235,.22);
+      flex: none;
+    }
+    .brand-text { min-width: 0; }
+    .brand-title {
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: -.02em;
+      line-height: 1.15;
+      margin: 0;
+    }
+    .brand-sub {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 620px;
+    }
+    .timer-box {
+      text-align: right;
+      flex: none;
+    }
+    .timer-label { font-size: 12px; color: var(--muted); margin-bottom: 3px; }
+    .timer {
+      font-size: 28px;
+      line-height: 1;
+      font-weight: 900;
+      color: var(--primary);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: .02em;
+    }
+    .progress-row {
+      width: min(1400px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 0 0 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .progress-bar {
+      height: 10px;
+      flex: 1 1 320px;
+      border-radius: 999px;
+      background: #e7edf5;
+      overflow: hidden;
+      border: 1px solid #dfe7f1;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary), var(--primary3));
+      transition: width .25s ease;
+    }
+    .progress-text {
+      color: var(--muted);
+      font-size: 13px;
+      white-space: nowrap;
+    }
 
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: 0.3s;
-            text-transform: uppercase;
-            font-size: 0.9rem;
-        }
+    .content {
+      width: min(1400px, calc(100% - 32px));
+      margin: 18px auto 28px;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 295px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+    .card {
+      background: rgba(255,255,255,.94);
+      border: 1px solid rgba(214,224,236,.94);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .sidebar {
+      position: sticky;
+      top: 110px;
+      padding: 16px;
+    }
+    .legend {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: #f8fbff;
+      border: 1px solid var(--line);
+      font-size: 12px;
+      color: #334155;
+    }
+    .dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      display: inline-block;
+    }
+    .dot.blue { background: var(--primary); }
+    .dot.green { background: var(--success); }
+    .dot.yellow { background: var(--warning); }
+    .dot.gray { background: #9ca3af; }
+    .nav-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+      max-height: 68vh;
+      overflow: auto;
+      padding-right: 2px;
+    }
+    .nav-btn {
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      padding: 10px 0;
+      background: #edf2f7;
+      color: #0f172a;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 13px;
+      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    }
+    .nav-btn:hover { transform: translateY(-1px); }
+    .nav-btn.active {
+      outline: 2px solid var(--primary);
+      outline-offset: 1px;
+    }
+    .nav-btn.answered { background: rgba(22,163,74,.15); border-color: rgba(22,163,74,.30); }
+    .nav-btn.doubtful { background: rgba(245,158,11,.18); border-color: rgba(245,158,11,.40); }
+    .nav-btn.unanswered { background: #edf2f7; }
 
-        .btn-start { background: var(--primary); color: white; width: 100%; margin-top: 25px; font-size: 1.1rem; box-shadow: 0 4px 14px rgba(0,86,179,0.4); }
-        .btn-start:hover { background: #004494; transform: scale(1.02); }
+    .main {
+      padding: 18px;
+    }
+    .question-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .question-count {
+      font-weight: 900;
+      color: var(--primary);
+      letter-spacing: -.01em;
+    }
+    .difficulty {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 7px 12px;
+      border: 1px solid var(--line);
+      background: #f8fbff;
+      color: #334155;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .question-box {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: #fff;
+      padding: 20px;
+    }
+    .question-text {
+      font-size: 18px;
+      line-height: 1.55;
+      font-weight: 900;
+      letter-spacing: -.01em;
+      margin: 0 0 16px;
+    }
+    .options {
+      display: grid;
+      gap: 10px;
+    }
+    .option {
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 14px 14px 54px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      cursor: pointer;
+      background: #fff;
+      transition: transform .15s ease, border-color .15s ease, background .15s ease;
+    }
+    .option:hover {
+      transform: translateY(-1px);
+      border-color: #cbd8ea;
+      background: #fafdff;
+    }
+    .option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .option .letter {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      border: 1px solid #d8e0ea;
+      background: #edf2f7;
+      font-weight: 900;
+      color: #1f2937;
+      flex: none;
+    }
+    .option .text { color: #0f172a; line-height: 1.5; }
+    .option.selected {
+      border-color: rgba(37,99,235,.80);
+      background: rgba(37,99,235,.06);
+    }
+    .option.selected .letter {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    .status-note {
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    .controls-left, .controls-right {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .btn-block {
+      min-width: 128px;
+    }
 
-        /* Exam Screen */
-        #exam-screen { display: none; flex-direction: column; height: 100vh; }
+    .result-head {
+      padding: 22px;
+    }
+    .result-title {
+      margin: 0;
+      font-size: 30px;
+      letter-spacing: -.03em;
+    }
+    .result-sub {
+      margin-top: 6px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+    .summary-card {
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #f8fbff, #eef4fb);
+      padding: 16px;
+      min-height: 104px;
+    }
+    .summary-card .label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .summary-card .value {
+      font-size: 28px;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: -.03em;
+    }
+    .summary-card .hint {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .pass { color: var(--success); }
+    .fail { color: var(--danger); }
 
-        header {
-            background: var(--primary);
-            color: white;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: var(--shadow);
-        }
+    .review-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .review-item {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fff;
+    }
+    .review-item.correct {
+      border-left: 6px solid var(--success);
+    }
+    .review-item.wrong {
+      border-left: 6px solid var(--danger);
+    }
+    .review-title {
+      font-weight: 900;
+      line-height: 1.55;
+      margin: 0 0 10px;
+      letter-spacing: -.01em;
+    }
+    .review-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #f8fbff;
+      font-size: 12px;
+      color: #334155;
+    }
+    .review-options {
+      margin-top: 10px;
+      display: grid;
+      gap: 6px;
+      color: #334155;
+      font-size: 14px;
+    }
+    .review-options strong {
+      color: #0f172a;
+    }
+    .review-expl {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid #dbeafe;
+      background: #eff6ff;
+      color: #1e3a8a;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+    .footer-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 18px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .empty {
+      padding: 24px;
+      text-align: center;
+      color: var(--muted);
+    }
 
-        .timer-badge {
-            background: #fff;
-            color: var(--danger);
-            padding: 8px 20px;
-            border-radius: 8px;
-            font-weight: 800;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 1.4rem;
-            border: 2px solid var(--danger);
-        }
-
-        .main-content {
-            display: flex;
-            flex: 1;
-            padding: 25px;
-            gap: 25px;
-            overflow: hidden;
-        }
-
-        @media (max-width: 900px) {
-            .main-content { flex-direction: column; overflow-y: auto; }
-            #exam-screen { height: auto; }
-            header { padding: 10px 15px; }
-        }
-
-        .question-card {
-            flex: 3;
-            background: white;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            padding: 35px;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-        .question-text { font-size: 1.25rem; font-weight: 600; margin-bottom: 30px; color: #222; }
-
-        .option-item {
-            display: flex;
-            align-items: center;
-            padding: 18px;
-            margin-bottom: 12px;
-            border: 2px solid #edf0f2;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .option-item:hover { background: #f8fbff; border-color: var(--primary); }
-        .option-item.selected { background: #eef6ff; border-color: var(--primary); box-shadow: 0 2px 8px rgba(0,86,179,0.1); }
-        .opt-label { width: 35px; font-weight: 800; color: var(--primary); }
-
-        /* Sidebar Nav */
-        .nav-sidebar {
-            flex: 1;
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: var(--shadow);
-            max-height: 100%;
-            overflow-y: auto;
-        }
-
-        .nav-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .nav-num {
-            height: 45px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #d1d9e0;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            background: #fff;
-            transition: 0.2s;
-        }
-
-        .nav-num.answered { background: var(--success) !important; color: white; border-color: var(--success); }
-        .nav-num.doubt { background: var(--warning) !important; color: black; border-color: var(--warning); }
-        .nav-num.active { border: 3px solid var(--dark); transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-
-        .controls { display: flex; justify-content: space-between; margin-top: auto; padding-top: 30px; gap: 15px; }
-        .btn-nav { background: var(--secondary); color: white; flex: 1; }
-        .btn-finish { background: var(--danger); color: white; flex: 1; }
-
-        #modal-overlay {
-            display: none; position: fixed; top:0; left:0; width:100%; height:100%;
-            background: rgba(0,0,0,0.7); z-index:9999; justify-content:center; align-items:center;
-        }
-
-        #result-screen, #review-screen { display: none; padding: 50px 20px; }
-        .review-card { background: white; margin-bottom: 20px; padding: 25px; border-radius: 12px; border-left: 8px solid var(--primary); box-shadow: var(--shadow); }
-    </style>
+    @media (max-width: 1100px) {
+      .hero-grid, .layout { grid-template-columns: 1fr; }
+      .sidebar { position: relative; top: 0; }
+      .nav-grid { max-height: none; }
+      .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 780px) {
+      .hero-card { padding: 14px; border-radius: 24px; }
+      .hero-left { padding: 20px; }
+      .hero-stats { grid-template-columns: 1fr; }
+      .mini-grid { grid-template-columns: 1fr; }
+      .topbar-inner { flex-direction: column; align-items: flex-start; }
+      .timer-box { text-align: left; }
+      .question-text { font-size: 16px; }
+      .controls { flex-direction: column; }
+      .controls-left, .controls-right { width: 100%; }
+      .controls-left > .btn, .controls-right > .btn { flex: 1 1 140px; }
+      .summary-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
+  <div class="app">
+    <section id="landingScreen" class="hero">
+      <div class="wrap">
+        <div class="hero-card">
+          <div class="hero-grid">
+            <div class="hero-left">
+              <div class="top-pill"><span class="logo-dot"></span> SIMULASI TWK · V2 PAKET 2 · CAT STYLE</div>
+              <h1 class="hero-title">Latihan TWK yang terasa seperti portal seleksi kedinasan.</h1>
+              <p class="hero-sub">
+                Halaman pembuka dibuat lebih modern, bersih, dan profesional agar terasa seperti sistem CAT.
+                Setelah tombol mulai ditekan, kamu langsung masuk ke ujian 100 soal dengan navigasi nomor, timer stabil, status ragu-ragu, dan hasil review lengkap.
+              </p>
 
-<div id="intro-screen" class="fade-in">
-    <div class="card">
-        <h1 style="color: var(--primary); margin-bottom: 10px;">Simulasi TWK CAT</h1>
-        <h3 style="color: var(--secondary); margin-bottom: 25px;">Topik: Bhinneka Tunggal Ika</h3>
-        <div style="text-align: left; background: var(--light); padding: 20px; border-radius: 10px; border-left: 5px solid var(--primary);">
-            <p><strong>Ketentuan Ujian:</strong></p>
-            <ul style="margin-left: 20px; margin-top: 10px; font-size: 0.95rem; line-height: 1.8;">
-                <li>Jumlah Soal: <strong>50 Butir</strong></li>
-                <li>Waktu: <strong>30 Menit</strong></li>
-                <li>Sistem Skor: Benar <strong>+5</strong>, Salah <strong>0</strong></li>
-                <li>Passing Grade: <strong>65</strong></li>
-            </ul>
-        </div>
-        <button class="btn btn-start" onclick="startExam()">Mulai Ujian Sekarang</button>
-    </div>
-</div>
+              <div class="hero-stats">
+                <div class="stat">
+                  <div class="label">Jumlah Soal</div>
+                  <div class="value">100</div>
+                  <div class="hint">Format fleksibel untuk 100+ soal</div>
+                </div>
+                <div class="stat">
+                  <div class="label">Durasi</div>
+                  <div class="value">30:00</div>
+                  <div class="hint">Countdown otomatis</div>
+                </div>
+                <div class="stat">
+                  <div class="label">Skor Lulus</div>
+                  <div class="value">65</div>
+                  <div class="hint">Benar +5, salah/kosong 0</div>
+                </div>
+              </div>
 
-<div id="exam-screen">
-    <header>
-        <div>
-            <h2 style="font-size: 1.1rem; letter-spacing: 1px;">TWK SIMULATION</h2>
-            <p id="progress-header" style="font-size: 0.8rem; opacity: 0.8;">Soal 1 dari 50</p>
-        </div>
-        <div class="timer-badge" id="timer">30:00</div>
-    </header>
-
-    <div class="main-content">
-        <div class="question-card fade-in">
-            <div style="color: var(--primary); font-weight: 800; font-size: 0.9rem; margin-bottom: 15px;" id="q-label">SOAL NOMOR 1</div>
-            <div class="question-text" id="q-text">Loading question...</div>
-            <div id="options-container"></div>
-            
-            <div class="controls">
-                <button class="btn btn-nav" onclick="changeQuestion(-1)">← Sebelumnya</button>
-                <button class="btn btn-nav" style="background: var(--warning); color: black;" onclick="markDoubt()">Ragu-Ragu</button>
-                <button class="btn btn-nav" id="btn-next" style="background: var(--primary);" onclick="changeQuestion(1)">Selanjutnya →</button>
-                <button class="btn btn-finish" id="btn-finish" style="display:none;" onclick="showConfirm()">Selesai Ujian</button>
+              <div class="hero-cta">
+                <button id="startBtn" class="btn btn-primary btn-block">Mulai Ujian</button>
+                <button id="previewBtn" class="btn btn-ghost btn-block" type="button">Lihat Aturan</button>
+              </div>
             </div>
+
+            <div class="hero-right">
+              <div class="panel">
+                <h3>Aturan Pengerjaan</h3>
+                <ol class="list">
+                  <li>Pilih satu jawaban A–E untuk setiap soal.</li>
+                  <li>Gunakan nomor soal untuk pindah cepat.</li>
+                  <li>Tombol ragu-ragu tetap mempertahankan jawaban yang sudah dipilih.</li>
+                  <li>Jika waktu habis, ujian otomatis selesai.</li>
+                </ol>
+              </div>
+
+              <div class="panel">
+                <h3>Tata Cara Menjawab</h3>
+                <div class="mini-grid">
+                  <div class="mini">
+                    <div class="label">Langkah 1</div>
+                    <div class="value">Pilih soal</div>
+                    <div class="sub">Klik nomor di panel kiri atau gunakan Next/Previous.</div>
+                  </div>
+                  <div class="mini">
+                    <div class="label">Langkah 2</div>
+                    <div class="value">Tandai</div>
+                    <div class="sub">Ragu-ragu jika ingin kembali mengecek jawaban.</div>
+                  </div>
+                  <div class="mini">
+                    <div class="label">Langkah 3</div>
+                    <div class="value">Selesaikan</div>
+                    <div class="sub">Klik Submit / Selesai setelah semua jawaban diisi.</div>
+                  </div>
+                  <div class="mini">
+                    <div class="label">Langkah 4</div>
+                    <div class="value">Review</div>
+                    <div class="sub">Cek skor, status lulus, dan pembahasan setiap nomor.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel">
+                <h3>Keterangan Penilaian</h3>
+                <ol class="list">
+                  <li>Jawaban benar = +5 poin.</li>
+                  <li>Jawaban salah atau kosong = 0 poin.</li>
+                  <li>Status <strong>LULUS</strong> bila skor ≥ 65.</li>
+                  <li>Status <strong>TIDAK LULUS</strong> bila skor &lt; 65.</li>
+                </ol>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
+    </section>
 
-        <div class="nav-sidebar">
-            <h4 style="font-size: 0.9rem; border-bottom: 2px solid #f0f2f5; padding-bottom: 10px;">Navigasi Soal</h4>
-            <div class="nav-grid" id="nav-grid"></div>
+    <section id="examScreen" class="exam-shell hidden">
+      <header class="topbar">
+        <div class="topbar-inner">
+          <div class="brand">
+            <div class="brand-mark">TWK</div>
+            <div class="brand-text">
+              <h2 class="brand-title">Simulasi TWK CAT BKN · V2 Paket 2</h2>
+              <div class="brand-sub">Gunakan navigasi nomor untuk berpindah cepat. Semua jawaban tersimpan otomatis saat berganti soal.</div>
+            </div>
+          </div>
+          <div class="timer-box">
+            <div class="timer-label">Sisa Waktu</div>
+            <div id="timer" class="timer">30:00</div>
+          </div>
         </div>
-    </div>
-</div>
-
-<div id="modal-overlay">
-    <div class="card" style="max-width: 450px;">
-        <h2 style="color: var(--danger);">Konfirmasi Selesai</h2>
-        <p style="margin: 20px 0; color: var(--secondary);">Apakah Anda yakin ingin mengakhiri sesi ujian ini? Pastikan semua soal telah diperiksa.</p>
-        <div style="display: flex; gap: 15px;">
-            <button class="btn btn-finish" onclick="finishExam()">Ya, Selesai</button>
-            <button class="btn btn-nav" onclick="hideConfirm()">Batal</button>
+        <div class="progress-row">
+          <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+          <div id="progressText" class="progress-text">0/100 dijawab • 0 ragu-ragu</div>
         </div>
-    </div>
-</div>
+      </header>
 
-<div id="result-screen" class="fade-in">
-    <div class="card" style="margin: auto;">
-        <h2 id="status-tag">HASIL EVALUASI</h2>
-        <div style="font-size: 5rem; font-weight: 900; margin: 20px 0; color: var(--primary);" id="score-text">0</div>
-        <p id="stats-detail" style="font-size: 1.1rem; color: var(--secondary); margin-bottom: 30px;"></p>
-        <div style="display: flex; gap: 15px;">
-            <button class="btn btn-start" onclick="showReview()" style="margin:0; flex:1;">Review Jawaban</button>
-            <button class="btn btn-nav" onclick="location.reload()" style="flex:1;">Ulangi Tes</button>
+      <div class="content">
+        <div class="layout">
+          <aside class="card sidebar">
+            <div class="legend">
+              <span class="legend-item"><span class="dot blue"></span> Aktif</span>
+              <span class="legend-item"><span class="dot green"></span> Sudah dijawab</span>
+              <span class="legend-item"><span class="dot yellow"></span> Ragu-ragu</span>
+              <span class="legend-item"><span class="dot gray"></span> Belum dijawab</span>
+            </div>
+            <div id="navGrid" class="nav-grid"></div>
+          </aside>
+
+          <main class="card main">
+            <div class="question-meta">
+              <div id="questionCount" class="question-count">Soal 1 dari 100</div>
+              <div id="difficultyBadge" class="difficulty">Mudah</div>
+            </div>
+
+            <div class="question-box">
+              <div id="questionText" class="question-text"></div>
+              <div id="optionsContainer" class="options"></div>
+              <div id="questionStatus" class="status-note">Belum dijawab.</div>
+            </div>
+
+            <div class="controls">
+              <div class="controls-left">
+                <button id="prevBtn" class="btn btn-secondary btn-block">Previous</button>
+                <button id="nextBtn" class="btn btn-secondary btn-block">Next</button>
+              </div>
+              <div class="controls-right">
+                <button id="doubtBtn" class="btn btn-soft btn-block">Ragu-ragu</button>
+                <button id="submitBtn" class="btn btn-danger btn-block">Submit / Selesai</button>
+              </div>
+            </div>
+          </main>
         </div>
-    </div>
-</div>
+      </div>
+    </section>
 
-<div id="review-screen" class="fade-in">
-    <h1 style="text-align: center; margin-bottom: 40px; color: var(--primary);">Analisis Hasil Ujian</h1>
-    <div id="review-content" style="max-width: 850px; margin: auto;"></div>
-    <div style="text-align: center; padding: 40px;">
-        <button class="btn btn-nav" onclick="location.reload()" style="padding: 15px 40px;">Kembali ke Menu Utama</button>
-    </div>
-</div>
+    <section id="resultScreen" class="result-shell hidden">
+      <header class="topbar">
+        <div class="topbar-inner">
+          <div class="brand">
+            <div class="brand-mark">OK</div>
+            <div class="brand-text">
+              <h2 class="brand-title">Hasil Simulasi TWK V2 Paket 2</h2>
+              <div class="brand-sub">Rekap skor, status kelulusan, jawaban benar, jawaban user, dan pembahasan tiap nomor.</div>
+            </div>
+          </div>
+          <div class="timer-box">
+            <div class="timer-label">Sesi Selesai</div>
+            <div class="timer" style="font-size:22px;color:var(--success);">DONE</div>
+          </div>
+        </div>
+      </header>
 
-<script>
-    const questions = [
-        { q: "Makna utama semboyan Bhinneka Tunggal Ika adalah ....", o: ["semua warga harus memiliki pendapat yang sama", "berbeda-beda tetapi tetap satu", "satu agama untuk semua", "satu budaya untuk seluruh daerah", "keseragaman demi ketertiban"], a: 1 },
-        { q: "Sikap yang paling sesuai dengan semangat Bhinneka Tunggal Ika di lingkungan sekolah adalah ....", o: ["hanya berteman dengan siswa yang berasal dari daerah yang sama", "menghindari diskusi agar tidak terjadi perbedaan pendapat", "menghormati teman yang berbeda suku dan agama", "meminta semua teman mengikuti kebiasaan pribadi", "menertawakan perbedaan bahasa daerah teman"], a: 2 },
-        { q: "Bhinneka Tunggal Ika berasal dari kitab ....", o: ["Negarakertagama", "Pararaton", "Sutasoma", "Bharatayudha", "Ramayana"], a: 2 },
-        { q: "Seorang ketua kelas membagi tugas kelompok hanya kepada siswa yang satu daerah dengannya karena dianggap lebih cocok bekerja sama. Tindakan tersebut paling tepat dikategorikan sebagai ....", o: ["musyawarah", "toleransi", "gotong royong", "diskriminasi", "persatuan"], a: 3 },
-        { q: "Kata “Bhinneka” berarti ....", o: ["satu", "itu", "beraneka ragam", "bersama", "damai"], a: 2 },
-        { q: "Berikut ini yang termasuk bentuk keberagaman di Indonesia adalah ....", o: ["suku, agama, ras, budaya, dan bahasa", "usia, pekerjaan, status sosial, dan hobi", "warna rumah, jenis kendaraan, dan tinggi badan", "makanan favorit, nomor rumah, dan warna pakaian", "cara berbicara, jenis sepatu, dan kebiasaan tidur"], a: 0 },
-        { q: "Pengarang Kitab Sutasoma adalah ....", o: ["Mpu Prapanca", "Mpu Tantular", "Mpu Sedah", "Mpu Kanwa", "Mpu Dharmaja"], a: 1 },
-        { q: "Bhinneka Tunggal Ika dalam kehidupan berbangsa berfungsi terutama untuk ....", o: ["menyeragamkan semua perbedaan", "menghilangkan budaya daerah", "mempersatukan bangsa yang majemuk", "membatasi kebebasan warga", "mengutamakan kelompok tertentu"], a: 2 },
-        { q: "Kata “Tunggal” berarti ....", o: ["banyak", "berbeda", "satu", "itu", "sama"], a: 2 },
-        { q: "Dalam sebuah rapat warga, keputusan diambil setelah seluruh peserta diberi kesempatan menyampaikan pendapat. Sikap tersebut mencerminkan prinsip ....", o: ["diskriminasi", "musyawarah", "individualisme", "fanatisme", "konflik"], a: 1 },
-        { q: "Bahasa persatuan bangsa Indonesia adalah ....", o: ["Bahasa Jawa", "Bahasa Sunda", "Bahasa Indonesia", "Bahasa daerah", "Bahasa Melayu klasik"], a: 2 },
-        { q: "Pernyataan yang paling tepat mengenai toleransi adalah ....", o: ["menghapus semua perbedaan", "memaksakan keyakinan sendiri kepada orang lain", "menghormati perbedaan tanpa harus menyamakan semuanya", "menolak bergaul dengan kelompok berbeda", "membiarkan konflik berkembang"], a: 2 },
-        { q: "Bhinneka Tunggal Ika kini menjadi ....", o: ["lambang daerah", "semboyan negara Indonesia", "motto sekolah", "nama kitab suci", "aturan hukum daerah"], a: 1 },
-        { q: "Sila Pancasila yang paling erat hubungannya dengan Bhinneka Tunggal Ika adalah ....", o: ["sila pertama", "sila kedua", "sila ketiga", "sila keempat", "sila kelima"], a: 2 },
-        { q: "Seseorang menolak bekerja sama dengan tetangganya karena berbeda agama, padahal kegiatan tersebut bersifat sosial dan tidak berkaitan dengan ibadah. Sikap tersebut bertentangan dengan ....", o: ["persamaan kedudukan warga negara", "semangat persatuan dalam keberagaman", "kebebasan berpendapat", "musyawarah mufakat", "hak memilih pemimpin"], a: 1 },
-        { q: "Makna keseluruhan Bhinneka Tunggal Ika adalah bahwa Indonesia ....", o: ["terdiri atas satu budaya saja", "memiliki banyak perbedaan tetapi tetap satu bangsa", "harus menghapus semua suku daerah", "hanya mengakui satu bahasa daerah", "menolak keberagaman"], a: 1 },
-        { q: "Contoh penerapan Bhinneka Tunggal Ika di masyarakat adalah ....", o: ["memilih teman berdasarkan suku", "menghormati kegiatan keagamaan orang lain", "mengejek adat istiadat yang berbeda", "menolak kerja bakti bersama", "mengutamakan golongan sendiri"], a: 1 },
-        { q: "Bhinneka Tunggal Ika berasal dari bahasa ....", o: ["Sansekerta modern", "Jawa Kuno", "Melayu modern", "Jawa Baru", "Sanskerta campuran"], a: 1 },
-        { q: "Salah satu ancaman terhadap persatuan bangsa adalah ....", o: ["gotong royong", "toleransi", "diskriminasi", "musyawarah", "saling menghargai"], a: 2 },
-        { q: "Seorang siswa berpendapat bahwa karena Indonesia memiliki banyak budaya, maka seharusnya semua budaya itu diseragamkan agar tidak terjadi perbedaan. Pendapat tersebut tidak tepat karena bertentangan dengan makna ....", o: ["kesatuan yang meniadakan identitas", "keberagaman sebagai kekuatan", "persamaan dalam perbedaan", "penyeragaman budaya nasional", "dominasi budaya mayoritas"], a: 1 },
-        { q: "Salah satu contoh keberagaman budaya di Indonesia adalah ....", o: ["warna kulit yang sama", "rumah adat dan tarian daerah", "satu jenis makanan di seluruh daerah", "satu bentuk pakaian di semua wilayah", "satu bahasa daerah di seluruh nusantara"], a: 1 },
-        { q: "Pernyataan berikut yang paling sesuai dengan semangat persatuan adalah ....", o: ["kelompok kami harus selalu menang", "perbedaan harus dijadikan alasan untuk berpisah", "kepentingan bangsa lebih utama daripada kepentingan golongan", "setiap daerah harus berjalan sendiri", "kerja sama hanya dilakukan dengan yang sama pendapat"], a: 2 },
-        { q: "Bhinneka Tunggal Ika menegaskan bahwa keberagaman bukan alasan untuk ....", o: ["bekerja sama", "saling menghargai", "bersatu", "terpecah belah", "bermusyawarah"], a: 3 },
-        { q: "Dalam kehidupan sehari-hari, sikap tidak diskriminatif berarti ....", o: ["memilih teman berdasarkan status sosial", "memperlakukan orang secara adil tanpa membedakan suku, agama, atau latar belakang", "memberi perhatian hanya kepada kelompok sendiri", "mengutamakan orang yang sama daerah", "menolak orang yang berbeda pendapat"], a: 1 },
-        { q: "Perhatikan situasi berikut: sebuah acara sekolah melibatkan siswa dari berbagai daerah, lalu panitia membagi tugas secara adil dan memberi kesempatan yang sama kepada semua peserta. Tindakan panitia tersebut paling mencerminkan ....", o: ["keseragaman", "diskriminasi positif", "persatuan dalam keberagaman", "dominasi mayoritas", "persaingan kelompok"], a: 2 },
-        { q: "Semboyan Bhinneka Tunggal Ika menekankan pentingnya ....", o: ["perpecahan", "toleransi", "persaingan antarkelompok", "kesamaan mutlak", "pengutamaan golongan"], a: 1 },
-        { q: "Hubungan Bhinneka Tunggal Ika dengan UUD 1945 adalah bahwa UUD 1945 ....", o: ["menghapus keberagaman di Indonesia", "tidak mengatur hak warga negara", "menjamin persamaan kedudukan dan kebebasan beragama", "hanya berlaku untuk kelompok tertentu", "menolak hak berserikat"], a: 2 },
-        { q: "Kata “Ika” berarti ....", o: ["berbeda", "satu", "itu", "damai", "bangsa"], a: 2 },
-        { q: "Di bawah ini yang bukan contoh penerapan Bhinneka Tunggal Ika di sekolah adalah ....", o: ["menghargai pendapat teman saat diskusi", "bekerja kelompok dengan baik", "mengejek bahasa daerah teman", "tidak melakukan bullying", "bertemen tanpa membedakan asal daerah"], a: 2 },
-        { q: "Jika terjadi konflik antarkelompok di masyarakat, upaya yang paling tepat untuk menjaga semangat Bhinneka Tunggal Ika adalah ....", o: ["membiarkan konflik berkembang agar kelompok kuat sendiri", "membalas tindakan kelompok lain", "mengutamakan dialog, musyawarah, dan saling menghargai", "memisahkan semua kelompok secara permanen", "menghilangkan identitas masing-masing kelompok"], a: 2 },
-        { q: "Fungsi Bhinneka Tunggal Ika dalam kehidupan berbangsa adalah ....", o: ["mendorong perpecahan", "menjadi pedoman hidup dalam keberagaman", "mengganti Pancasila", "menghapus adat istiadat", "membatasi persatuan nasional"], a: 1 },
-        { q: "Sikap yang menunjukkan gotong royong adalah ....", o: ["bekerja sendiri dan menolak bantuan", "menyelesaikan masalah bersama-sama", "memaksakan keputusan pribadi", "menghindari interaksi dengan kelompok lain", "mengabaikan kepentingan umum"], a: 1 },
-        { q: "Bhinneka Tunggal Ika mengandung pesan bahwa perbedaan keyakinan tidak boleh menimbulkan ....", o: ["penghormatan", "kerja sama", "permusuhan", "toleransi", "persaudaraan"], a: 2 },
-        { q: "Keberagaman Indonesia tidak hanya mencakup suku, tetapi juga ....", o: ["musim dan cuaca", "agama, ras, budaya, dan bahasa", "jenis kendaraan dan pakaian", "makanan cepat saji dan minuman", "pekerjaan dan usia"], a: 1 },
-        { q: "Seorang pejabat daerah membuat kebijakan yang hanya menguntungkan kelompok asalnya dan mengabaikan warga lain. Kebijakan tersebut bertentangan dengan nilai ....", o: ["keadilan dan persatuan", "kebebasan beragama", "musyawarah dan gotong royong", "persamaan kedudukan dalam masyarakat", "seluruh jawaban benar"], a: 4 },
-        { q: "Bhinneka Tunggal Ika merupakan simbol ....", o: ["keragaman tanpa persatuan", "persatuan Indonesia", "kekuasaan daerah", "keunggulan satu suku", "kesamaan semua warga"], a: 1 },
-        { q: "Seseorang yang menghormati tetangga meskipun berbeda agama menunjukkan sikap ....", o: ["intoleran", "diskriminatif", "toleran", "provokatif", "eksklusif"], a: 2 },
-        { q: "Pancasila dan Bhinneka Tunggal Ika memiliki hubungan karena keduanya sama-sama menekankan ....", o: ["perpecahan", "persatuan", "keseragaman mutlak", "dominasi satu kelompok", "penolakan terhadap keberagaman"], a: 1 },
-        { q: "Contoh ancaman terhadap persatuan yang sering muncul dalam kehidupan sosial adalah ....", o: ["musyawarah", "toleransi", "ujaran kebencian", "kerja sama", "saling menghormati"], a: 2 },
-        { q: "Dalam suatu wilayah, terdapat banyak suku dan agama. Agar tercipta kerukunan, kebijakan yang paling sesuai dengan semangat Bhinneka Tunggal Ika adalah ....", o: ["memberi hak lebih besar kepada kelompok mayoritas", "membatasi kegiatan kelompok tertentu", "melindungi semua golongan secara adil", "menyeragamkan semua adat dan tradisi", "menghilangkan identitas daerah"], a: 2 },
-        { q: "Salah satu prinsip menjaga Bhinneka Tunggal Ika adalah ....", o: ["diskriminasi", "toleransi", "individualisme", "fanatisme", "permusuhan"], a: 1 },
-        { q: "Berikut ini yang paling tepat menggambarkan persatuan dalam keberagaman adalah ....", o: ["semua orang harus sama agar rukun", "berbeda pendapat berarti tidak bisa bekerja sama", "perbedaan tidak menghalangi kerja sama", "perbedaan harus dihindari", "persatuan hanya mungkin jika seragam"], a: 2 },
-        { q: "Semboyan Bhinneka Tunggal Ika diambil dari ....", o: ["Undang-Undang Dasar 1945", "Kitab Sutasoma", "Piagam Jakarta", "Pancasila", "Proklamasi Kemerdekaan"], a: 1 },
-        { q: "Sikap yang tepat saat berdiskusi dengan teman yang berbeda pendapat adalah ....", o: ["memotong pembicaraan teman", "menghormati pendapat yang berbeda dan mencari solusi bersama", "memaksakan pendapat sendiri", "meninggalkan forum diskusi", "mengejek perbedaan pandangan"], a: 1 },
-        { q: "Terdapat dua kelompok masyarakat yang sering berselisih karena perbedaan adat. Langkah paling tepat untuk menjaga keutuhan bangsa adalah ....", o: ["membiarkan perselisihan berlangsung lama", "memperkuat stereotip antar kelompok", "membangun dialog, saling menghormati, dan kerja sama", "memisahkan kedua kelompok tanpa komunikasi", "menghapus adat salah satu kelompok"], a: 2 },
-        { q: "Bhinneka Tunggal Ika berarti ....", o: ["satu bangsa tanpa perbedaan", "berbeda-beda tetapi tetap satu", "satu budaya untuk semua", "semua orang harus sama", "perbedaan adalah kelemahan"], a: 1 },
-        { q: "Dalam konteks NKRI, Bhinneka Tunggal Ika berperan untuk ....", o: ["memperkuat perpecahan daerah", "menjaga keutuhan negara", "mengganti dasar negara", "menghapus pemerintahan pusat", "menonjolkan daerah tertentu"], a: 1 },
-        { q: "Salah satu contoh penerapan Bhinneka Tunggal Ika di rumah adalah ....", o: ["membeda-bedakan anggota keluarga", "menghormati anggota keluarga yang berbeda pendapat", "memaksa semua saudara mengikuti kehendak satu orang", "menolak membantu saudara", "menertawakan kebiasaan keluarga lain"], a: 1 },
-        { q: "Sikap cinta tanah air dalam keberagaman dapat diwujudkan dengan ....", o: ["merendahkan budaya daerah lain", "menjaga persatuan dan menghargai perbedaan", "mengutamakan kelompok sendiri", "menolak hidup bersama dengan orang berbeda", "menolak simbol negara"], a: 1 },
-        { q: "Manakah pernyataan yang paling tepat mengenai hubungan Pancasila, UUD 1945, NKRI, dan Bhinneka Tunggal Ika?", o: ["Pancasila adalah bentuk negara, UUD 1945 adalah semboyan, NKRI adalah nilai dasar", "Pancasila adalah dasar nilai, UUD 1945 adalah aturan dasar, NKRI adalah bentuk negara, dan Bhinneka Tunggal Ika adalah semboyan pemersatu", "Pancasila adalah simbol budaya, UUD 1945 adalah adat istiadat, NKRI adalah bahasa persatuan", "Pancasila adalah semboyan negara, UUD 1945 adalah lambang negara, NKRI adalah aturan daerah", "Semuanya tidak saling berhubungan"], a: 1 }
-    ];
+      <div class="content">
+        <div class="card result-head">
+          <h1 class="result-title">Hasil Akhir</h1>
+          <div id="resultSubtitle" class="result-sub"></div>
+          <div id="summaryGrid" class="summary-grid"></div>
+          <div class="footer-actions">
+            <button id="restartBtn" class="btn btn-primary">Ulangi Simulasi</button>
+          </div>
+        </div>
+        <div id="reviewList" class="review-list"></div>
+      </div>
+    </section>
+  </div>
 
-    let currentIdx = 0;
-    let userAnswers = new Array(questions.length).fill(null);
-    let userDoubts = new Array(questions.length).fill(false);
-    let timeLeft = 30 * 60;
-    let timerInterval;
+  <script>
+    const questions = [{"question": "Dalam penyusunan kebijakan negara, Pancasila berperan sebagai …", "difficulty": "Mudah", "options": {"A": "sumber nilai", "B": "alat pemisah", "C": "aturan teknis sekolah", "D": "pengganti UUD", "E": "semboyan budaya"}, "answer": "A", "explanation": "Jawaban yang tepat adalah A. sumber nilai."}, {"question": "Seorang ketua kelas mengajak teman-teman yang berbeda pendapat untuk mencari keputusan bersama tanpa memaksakan suara mayoritas. Perilaku tersebut paling sesuai dengan sila …", "difficulty": "Sulit", "options": {"A": "1", "B": "2", "C": "3", "D": "4", "E": "5"}, "answer": "D", "explanation": "Jawaban yang tepat adalah D. 4."}, {"question": "Piagam Jakarta dirumuskan pada tanggal …", "difficulty": "Mudah", "options": {"A": "1 Juni 1945", "B": "22 Juni 1945", "C": "17 Agustus 1945", "D": "18 Agustus 1945", "E": "29 Mei 1945"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. 22 Juni 1945."}, {"question": "Pernyataan yang paling tepat tentang hubungan Pancasila dan UUD 1945 adalah …", "difficulty": "Sulit", "options": {"A": "Pancasila lahir dari UUD", "B": "UUD 1945 adalah penjabaran nilai Pancasila dalam bentuk aturan", "C": "UUD menggantikan Pancasila", "D": "Pancasila hanya berlaku di masyarakat", "E": "keduanya tidak berhubungan"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. UUD 1945 adalah penjabaran nilai Pancasila dalam bentuk aturan."}, {"question": "Urutan peristiwa berikut yang paling tepat adalah …", "difficulty": "Sulit", "options": {"A": "Proklamasi, BPUPKI, Piagam Jakarta, pengesahan UUD 1945", "B": "BPUPKI dibentuk, sidang pertama, usulan tokoh, Piagam Jakarta, pengesahan UUD 1945", "C": "Piagam Jakarta, BPUPKI, sidang pertama, proklamasi, pengesahan UUD 1945", "D": "Sidang kedua BPUPKI, proklamasi, sidang pertama, pengesahan UUD 1945", "E": "Pengesahan UUD 1945, BPUPKI, Piagam Jakarta, proklamasi"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. BPUPKI dibentuk, sidang pertama, usulan tokoh, Piagam Jakarta, pengesahan UUD 1945."}, {"question": "Dalam sistem presidensial Indonesia, Presiden dibantu oleh …", "difficulty": "Sulit", "options": {"A": "hakim agung", "B": "wakil presiden dan menteri", "C": "ketua MPR", "D": "anggota DPD", "E": "komisioner BPK"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. wakil presiden dan menteri."}, {"question": "Arti Bhinneka Tunggal Ika adalah …", "difficulty": "Mudah", "options": {"A": "berbeda-beda tetapi tetap satu", "B": "satu bahasa, satu suku", "C": "banyak negara dalam satu wilayah", "D": "semua harus sama", "E": "bebas tanpa batas"}, "answer": "A", "explanation": "Jawaban yang tepat adalah A. berbeda-beda tetapi tetap satu."}, {"question": "Indonesia disebut NKRI karena bentuk negaranya adalah …", "difficulty": "Mudah", "options": {"A": "federal", "B": "kesatuan", "C": "kerajaan", "D": "konfederasi", "E": "serikat"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. kesatuan."}, {"question": "Jika sebuah aturan diuji karena diduga bertentangan dengan UUD 1945, lembaga yang berwenang memutuskan adalah …", "difficulty": "Sedang", "options": {"A": "MA", "B": "MK", "C": "DPR", "D": "BPK", "E": "DPD"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. MK."}, {"question": "BPK memiliki fungsi utama untuk …", "difficulty": "Sulit", "options": {"A": "menetapkan UUD", "B": "memeriksa keuangan negara", "C": "mengadili sengketa hasil pemilu", "D": "membentuk undang-undang", "E": "memilih Presiden"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. memeriksa keuangan negara."}, {"question": "Sebuah daerah menuntut kewenangan yang jauh melebihi urusan otonomi dan ingin membuat aturan dasar sendiri seperti negara terpisah. Sikap tersebut bertentangan dengan prinsip …", "difficulty": "Sulit", "options": {"A": "kedaulatan rakyat", "B": "negara hukum", "C": "negara kesatuan", "D": "demokrasi langsung", "E": "keadilan sosial"}, "answer": "C", "explanation": "Jawaban yang tepat adalah C. negara kesatuan."}, {"question": "Sumpah Pemuda 1928 menunjukkan bahwa perjuangan bangsa Indonesia telah bergerak dari …", "difficulty": "Sedang", "options": {"A": "kepentingan raja menuju kepentingan rakyat", "B": "perlawanan daerah menuju persatuan nasional", "C": "pemerintahan pusat menuju negara federal", "D": "kebudayaan lokal menuju penghapusan bahasa daerah", "E": "penjajahan menuju kolonialisme baru"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. perlawanan daerah menuju persatuan nasional."}, {"question": "1 Juni 1945 diperingati karena …", "difficulty": "Mudah", "options": {"A": "UUD 1945 disahkan", "B": "lahirnya istilah Pancasila melalui pidato Soekarno", "C": "Piagam Jakarta ditetapkan", "D": "BPUPKI dibubarkan", "E": "Proklamasi dibacakan"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. lahirnya istilah Pancasila melalui pidato Soekarno."}, {"question": "Proklamasi Kemerdekaan Indonesia dibacakan oleh …", "difficulty": "Mudah", "options": {"A": "Soekarno dan Hatta", "B": "Yamin dan Soepomo", "C": "Soebardjo dan Melik", "D": "Maeda dan Hatta", "E": "Soekarno dan Yamin"}, "answer": "A", "explanation": "Jawaban yang tepat adalah A. Soekarno dan Hatta."}, {"question": "Tindakan yang paling mencerminkan sila ke-2 adalah …", "difficulty": "Sulit", "options": {"A": "memaksakan kehendak kepada teman", "B": "menolak berteman dengan yang berbeda suku", "C": "membantu teman yang kesulitan tanpa membeda-bedakan", "D": "membalas penghinaan dengan kekerasan", "E": "memutuskan masalah dengan ancaman"}, "answer": "C", "explanation": "Jawaban yang tepat adalah C. membantu teman yang kesulitan tanpa membeda-bedakan."}, {"question": "Setelah amandemen UUD 1945, pernyataan yang paling tepat adalah …", "difficulty": "Sulit", "options": {"A": "MPR kembali menjadi lembaga tertinggi negara", "B": "Presiden dipilih MPR dan dapat menjabat tanpa batas", "C": "kedudukan lembaga negara lebih sejajar dalam checks and balances", "D": "DPD memiliki kekuasaan membuat undang-undang penuh seperti DPR", "E": "Mahkamah Agung menguji undang-undang terhadap UUD"}, "answer": "C", "explanation": "Jawaban yang tepat adalah C. kedudukan lembaga negara lebih sejajar dalam checks and balances."}, {"question": "Negara hukum berarti …", "difficulty": "Sedang", "options": {"A": "pemerintah bebas bertindak atas kehendaknya", "B": "semua tindakan pemerintah harus berdasarkan hukum", "C": "rakyat tidak perlu taat hukum", "D": "hukum hanya berlaku untuk pejabat", "E": "undang-undang tidak perlu ada"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. semua tindakan pemerintah harus berdasarkan hukum."}, {"question": "Wawasan Nusantara pada dasarnya adalah …", "difficulty": "Sedang", "options": {"A": "semboyan negara", "B": "cara pandang bangsa Indonesia sebagai satu kesatuan", "C": "undang-undang tentang pajak", "D": "lembaga penegak hukum", "E": "dasar negara"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. cara pandang bangsa Indonesia sebagai satu kesatuan."}, {"question": "Tonggak Kebangkitan Nasional 1908 ditandai dengan berdirinya …", "difficulty": "Mudah", "options": {"A": "BPUPKI", "B": "PPKI", "C": "Budi Utomo", "D": "KNIP", "E": "MPR"}, "answer": "C", "explanation": "Jawaban yang tepat adalah C. Budi Utomo."}, {"question": "Salah satu tujuan negara Indonesia yang tercantum dalam Pembukaan UUD 1945 adalah …", "difficulty": "Mudah", "options": {"A": "memperluas wilayah jajahan", "B": "mencerdaskan kehidupan bangsa", "C": "membatasi hak warga", "D": "menghapus musyawarah", "E": "menjadikan daerah terpisah"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. mencerdaskan kehidupan bangsa."}, {"question": "Di kelas, seorang siswa menghargai teman yang menjalankan ibadah sesuai agamanya tanpa mengganggu. Perilaku itu paling tepat dikaitkan dengan sila …", "difficulty": "Sulit", "options": {"A": "1", "B": "2", "C": "3", "D": "4", "E": "5"}, "answer": "A", "explanation": "Jawaban yang tepat adalah A. 1."}, {"question": "Pernyataan yang paling tepat tentang kedudukan MPR, DPR, dan DPD setelah amandemen adalah …", "difficulty": "Sulit", "options": {"A": "MPR lebih tinggi dari lembaga lain, DPD setara DPR", "B": "DPR hanya bersifat seremonial, DPD membuat semua UU", "C": "MPR berwenang mengubah dan menetapkan UUD, DPR membentuk UU bersama Presiden, DPD mewakili daerah", "D": "DPD mengesahkan UUD, MPR membuat APBN, DPR menguji UU", "E": "MPR memilih Presiden secara langsung"}, "answer": "C", "explanation": "Jawaban yang tepat adalah C. MPR berwenang mengubah dan menetapkan UUD, DPR membentuk UU bersama Presiden, DPD mewakili daerah."}, {"question": "Alinea ketiga Pembukaan UUD 1945 menekankan bahwa kemerdekaan Indonesia dipandang sebagai …", "difficulty": "Sulit", "options": {"A": "hadiah negara lain", "B": "hasil perundingan ekonomi", "C": "rahmat Tuhan Yang Maha Kuasa", "D": "akibat perang antarbangsa", "E": "hasil pemungutan suara"}, "answer": "C", "explanation": "Jawaban yang tepat adalah C. rahmat Tuhan Yang Maha Kuasa."}, {"question": "Bentuk ancaman yang paling sesuai dengan konsep ancaman nonfisik terhadap NKRI adalah …", "difficulty": "Sulit", "options": {"A": "invasi militer", "B": "blokade laut", "C": "provokasi hoaks yang memecah belah", "D": "serangan udara", "E": "pendudukan wilayah"}, "answer": "C", "explanation": "Jawaban yang tepat adalah C. provokasi hoaks yang memecah belah."}, {"question": "Pancasila terdiri atas …", "difficulty": "Mudah", "options": {"A": "3 sila", "B": "4 sila", "C": "5 sila", "D": "6 sila", "E": "7 sila"}, "answer": "C", "explanation": "Jawaban yang tepat adalah C. 5 sila."}, {"question": "Wilayah NKRI mencakup …", "difficulty": "Mudah", "options": {"A": "darat saja", "B": "darat dan laut saja", "C": "darat, laut, dan udara", "D": "laut dan udara saja", "E": "pulau besar saja"}, "answer": "C", "explanation": "Jawaban yang tepat adalah C. darat, laut, dan udara."}, {"question": "Pasal 28A sampai 28J dalam UUD 1945 berkaitan dengan …", "difficulty": "Sulit", "options": {"A": "pertahanan negara", "B": "hak asasi manusia", "C": "pendidikan dasar", "D": "pemerintahan daerah", "E": "pemilu"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. hak asasi manusia."}, {"question": "Pemerintah merancang program pembangunan agar hasilnya tidak hanya dinikmati daerah tertentu, tetapi merata di seluruh wilayah. Kebijakan ini paling tepat mencerminkan sila …", "difficulty": "Sulit", "options": {"A": "1", "B": "2", "C": "3", "D": "4", "E": "5"}, "answer": "E", "explanation": "Jawaban yang tepat adalah E. 5."}, {"question": "Tokoh yang ikut merumuskan Piagam Jakarta melalui Panitia Sembilan adalah …", "difficulty": "Sedang", "options": {"A": "Soekarno", "B": "Mpu Tantular", "C": "anggota Panitia Sembilan", "D": "Budi Utomo", "E": "DPR"}, "answer": "C", "explanation": "Jawaban yang tepat adalah C. anggota Panitia Sembilan."}, {"question": "Keputusan penting PPKI pada 18 Agustus 1945 adalah …", "difficulty": "Sedang", "options": {"A": "membentuk Budi Utomo", "B": "membacakan Sumpah Pemuda", "C": "mengesahkan UUD 1945", "D": "membentuk BPUPKI", "E": "menyusun Piagam Jakarta"}, "answer": "C", "explanation": "Jawaban yang tepat adalah C. mengesahkan UUD 1945."}, {"question": "Kata panca dan sila berarti …", "difficulty": "Mudah", "options": {"A": "lima dasar", "B": "satu bangsa", "C": "aturan tertulis", "D": "kebebasan berserikat", "E": "negara kesatuan"}, "answer": "A", "explanation": "Jawaban yang tepat adalah A. lima dasar."}, {"question": "Masa jabatan Presiden dan Wakil Presiden adalah …", "difficulty": "Mudah", "options": {"A": "4 tahun", "B": "5 tahun", "C": "6 tahun", "D": "7 tahun", "E": "10 tahun"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. 5 tahun."}, {"question": "Di rumah, keluarga membagi tugas membersihkan rumah secara adil agar semua ikut bertanggung jawab. Sikap tersebut mencerminkan sila …", "difficulty": "Sulit", "options": {"A": "1", "B": "2", "C": "3", "D": "4", "E": "5"}, "answer": "E", "explanation": "Jawaban yang tepat adalah E. 5."}, {"question": "Pernyataan yang paling tepat mengenai hubungan Pancasila, UUD 1945, NKRI, dan Bhinneka Tunggal Ika adalah …", "difficulty": "Sulit", "options": {"A": "Pancasila adalah semboyan, UUD adalah dasar negara, NKRI adalah konstitusi", "B": "Pancasila adalah dasar nilai, UUD 1945 adalah hukum dasar, NKRI adalah bentuk negara, Bhinneka Tunggal Ika adalah semboyan persatuan", "C": "Bhinneka Tunggal Ika adalah dasar negara, Pancasila adalah semboyan", "D": "NKRI adalah hukum dasar tertulis, UUD 1945 adalah bentuk negara", "E": "semuanya memiliki kedudukan yang sama persis"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. Pancasila adalah dasar nilai, UUD 1945 adalah hukum dasar, NKRI adalah bentuk negara, Bhinneka Tunggal Ika adalah semboyan persatuan."}, {"question": "Musyawarah dalam sila keempat menekankan bahwa keputusan yang baik adalah keputusan yang …", "difficulty": "Sedang", "options": {"A": "diambil sepihak oleh pemimpin", "B": "didasarkan pada ancaman", "C": "dibicarakan bersama secara bijaksana", "D": "mengikuti suara terkeras", "E": "selalu sama tanpa perbedaan"}, "answer": "C", "explanation": "Jawaban yang tepat adalah C. dibicarakan bersama secara bijaksana."}, {"question": "Jika Indonesia menjadi negara federal, ciri yang akan muncul adalah …", "difficulty": "Sedang", "options": {"A": "hanya ada satu pemerintah pusat", "B": "daerah memiliki kedaulatan sendiri seperti negara bagian", "C": "tidak ada pembagian kekuasaan", "D": "Presiden dipilih oleh raja", "E": "UUD 1945 tidak diperlukan"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. daerah memiliki kedaulatan sendiri seperti negara bagian."}, {"question": "Bahasa persatuan Indonesia adalah …", "difficulty": "Mudah", "options": {"A": "Bahasa Jawa", "B": "Bahasa Sunda", "C": "Bahasa Indonesia", "D": "Bahasa Melayu daerah", "E": "Bahasa Inggris"}, "answer": "C", "explanation": "Jawaban yang tepat adalah C. Bahasa Indonesia."}, {"question": "Pancasila berbeda dari UUD 1945 karena Pancasila merupakan …", "difficulty": "Mudah", "options": {"A": "konstitusi tertulis", "B": "dasar negara", "C": "lembaga negara", "D": "peraturan daerah", "E": "bentuk negara"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. dasar negara."}, {"question": "Urutan yang tepat dari tiga momentum berikut adalah …", "difficulty": "Sedang", "options": {"A": "Proklamasi, Sumpah Pemuda, Kebangkitan Nasional", "B": "Kebangkitan Nasional, Sumpah Pemuda, Proklamasi", "C": "Sumpah Pemuda, Kebangkitan Nasional, Proklamasi", "D": "Proklamasi, Kebangkitan Nasional, Sumpah Pemuda", "E": "Kebangkitan Nasional, Proklamasi, Sumpah Pemuda"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. Kebangkitan Nasional, Sumpah Pemuda, Proklamasi."}, {"question": "Tindakan yang paling jelas bertentangan dengan sila ke-2 adalah …", "difficulty": "Sulit", "options": {"A": "menolong teman yang terjatuh", "B": "menghargai pendapat yang berbeda", "C": "menolak kekerasan saat konflik", "D": "membeda-bedakan pelayanan karena status sosial", "E": "menjaga sopan santun saat berbicara"}, "answer": "D", "explanation": "Jawaban yang tepat adalah D. membeda-bedakan pelayanan karena status sosial."}, {"question": "DPD dalam sistem ketatanegaraan Indonesia terutama mewakili …", "difficulty": "Sedang", "options": {"A": "partai politik", "B": "daerah", "C": "lembaga peradilan", "D": "presiden", "E": "organisasi keagamaan"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. daerah."}, {"question": "Salah satu ciri negara kesatuan adalah …", "difficulty": "Sedang", "options": {"A": "daerah memiliki konstitusi sendiri", "B": "hanya ada satu kepala negara", "C": "setiap daerah berdaulat penuh", "D": "tiap provinsi dapat keluar dari negara", "E": "pemerintahan pusat tidak diperlukan"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. hanya ada satu kepala negara."}, {"question": "Pasal yang sering dikaitkan dengan fungsi BPK adalah …", "difficulty": "Mudah", "options": {"A": "Pasal 4", "B": "Pasal 20", "C": "Pasal 23E", "D": "Pasal 24C", "E": "Pasal 28A"}, "answer": "C", "explanation": "Jawaban yang tepat adalah C. Pasal 23E."}, {"question": "UUD 1945 terdiri dari empat bagian utama, yaitu …", "difficulty": "Mudah", "options": {"A": "pembukaan, batang tubuh, aturan peralihan, aturan tambahan", "B": "tujuan, cita-cita, program, anggaran", "C": "proklamasi, piagam, naskah, keputusan", "D": "pasal, ayat, poin, lampiran", "E": "negara, rakyat, wilayah, pemerintahan"}, "answer": "A", "explanation": "Jawaban yang tepat adalah A. pembukaan, batang tubuh, aturan peralihan, aturan tambahan."}, {"question": "Fungsi Pancasila sebagai alat pemersatu bangsa berarti Pancasila …", "difficulty": "Sedang", "options": {"A": "meniadakan keberagaman", "B": "mengutamakan kelompok tertentu", "C": "menyatukan perbedaan dalam kehidupan bersama", "D": "mengganti seluruh hukum", "E": "membatasi musyawarah"}, "answer": "C", "explanation": "Jawaban yang tepat adalah C. menyatukan perbedaan dalam kehidupan bersama."}, {"question": "Dalam konteks Bhinneka Tunggal Ika, sikap yang paling tepat adalah …", "difficulty": "Sulit", "options": {"A": "menilai budaya sendiri paling tinggi", "B": "membatasi pergaulan agar seragam", "C": "menghormati perbedaan tanpa menghilangkan identitas masing-masing", "D": "memaksa semua kelompok mengikuti satu adat", "E": "menganggap perbedaan sebagai ancaman"}, "answer": "C", "explanation": "Jawaban yang tepat adalah C. menghormati perbedaan tanpa menghilangkan identitas masing-masing."}, {"question": "Pada sidang pertama BPUPKI, topik utama yang dibahas adalah …", "difficulty": "Sedang", "options": {"A": "pembentukan kabinet", "B": "dasar negara", "C": "pemilu nasional", "D": "pembagian provinsi", "E": "anggaran negara"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. dasar negara."}, {"question": "Sistem presidensial di Indonesia menempatkan Presiden sebagai …", "difficulty": "Sedang", "options": {"A": "kepala negara sekaligus kepala pemerintahan", "B": "ketua parlemen", "C": "kepala peradilan", "D": "wakil rakyat", "E": "penentu hukum adat"}, "answer": "A", "explanation": "Jawaban yang tepat adalah A. kepala negara sekaligus kepala pemerintahan."}, {"question": "Istilah Pancasila dipopulerkan oleh …", "difficulty": "Mudah", "options": {"A": "Soekarno", "B": "Hatta", "C": "Soepomo", "D": "Yamin", "E": "Maeda"}, "answer": "A", "explanation": "Jawaban yang tepat adalah A. Soekarno."}, {"question": "Sila keempat menekankan pentingnya …", "difficulty": "Mudah", "options": {"A": "musyawarah", "B": "kekerasan", "C": "diskriminasi", "D": "perpecahan", "E": "keserakahan"}, "answer": "A", "explanation": "Jawaban yang tepat adalah A. musyawarah."}, {"question": "Piagam Jakarta dapat dipandang sebagai …", "difficulty": "Sedang", "options": {"A": "hasil akhir yang tidak berubah sama sekali", "B": "cikal bakal Pembukaan UUD 1945", "C": "pengganti Proklamasi", "D": "undang-undang daerah", "E": "semboyan persatuan"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. cikal bakal Pembukaan UUD 1945."}, {"question": "Dalam penerapan sila ke-3, kebijakan publik yang paling tepat adalah kebijakan yang …", "difficulty": "Sulit", "options": {"A": "memberi prioritas hanya kepada satu kelompok", "B": "mendorong perpecahan agar kompetitif", "C": "menjaga persatuan sambil menghargai keberagaman", "D": "meniadakan bahasa daerah", "E": "menutup kerja sama antardaerah"}, "answer": "C", "explanation": "Jawaban yang tepat adalah C. menjaga persatuan sambil menghargai keberagaman."}, {"question": "UUD 1945 disahkan pada tanggal …", "difficulty": "Sedang", "options": {"A": "1 Juni 1945", "B": "22 Juni 1945", "C": "17 Agustus 1945", "D": "18 Agustus 1945", "E": "20 Mei 1908"}, "answer": "D", "explanation": "Jawaban yang tepat adalah D. 18 Agustus 1945."}, {"question": "Mahkamah Konstitusi memiliki kewenangan utama untuk …", "difficulty": "Sedang", "options": {"A": "menguji peraturan di bawah undang-undang", "B": "menguji undang-undang terhadap UUD", "C": "memeriksa keuangan negara", "D": "membentuk undang-undang", "E": "menetapkan Presiden"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. menguji undang-undang terhadap UUD."}, {"question": "Kedaulatan dalam negara Indonesia berada di tangan …", "difficulty": "Mudah", "options": {"A": "presiden", "B": "MPR", "C": "rakyat", "D": "DPR", "E": "MA"}, "answer": "C", "explanation": "Jawaban yang tepat adalah C. rakyat."}, {"question": "Indonesia bukan negara monarki karena …", "difficulty": "Mudah", "options": {"A": "memiliki raja yang memerintah turun-temurun", "B": "pemerintahan tidak berdasarkan kerajaan", "C": "daerah memiliki negara bagian", "D": "hukum tidak tertulis", "E": "tidak ada konstitusi"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. pemerintahan tidak berdasarkan kerajaan."}, {"question": "Keadilan sosial dalam sila ke-5 menuntut agar …", "difficulty": "Sedang", "options": {"A": "pembangunan hanya dinikmati pejabat", "B": "hasil pembangunan dirasakan seluruh rakyat", "C": "hak rakyat dibatasi", "D": "kesenjangan dibiarkan", "E": "persaingan tanpa aturan didukung"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. hasil pembangunan dirasakan seluruh rakyat."}, {"question": "Hubungan antara Pancasila dan Bhinneka Tunggal Ika paling tepat ditunjukkan oleh pernyataan …", "difficulty": "Sedang", "options": {"A": "Bhinneka Tunggal Ika bertentangan dengan Pancasila", "B": "Bhinneka Tunggal Ika selaras terutama dengan sila ke-3", "C": "Bhinneka Tunggal Ika menggantikan Pancasila", "D": "Pancasila meniadakan keberagaman", "E": "sila ke-4 tidak terkait persatuan"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. Bhinneka Tunggal Ika selaras terutama dengan sila ke-3."}, {"question": "Perubahan penting setelah amandemen UUD 1945 adalah …", "difficulty": "Sulit", "options": {"A": "MPR kembali menjadi lembaga tertinggi, Presiden dipilih MPR", "B": "Presiden dipilih langsung rakyat dan sistem checks and balances diperkuat", "C": "DPR tidak lagi berperan dalam legislasi", "D": "BPK tidak lagi ada", "E": "HAM dihapus dari UUD"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. Presiden dipilih langsung rakyat dan sistem checks and balances diperkuat."}, {"question": "Wawasan Nusantara berfungsi untuk …", "difficulty": "Sedang", "options": {"A": "memisahkan daerah berdasarkan kepentingan lokal", "B": "memperkuat pandangan Indonesia sebagai satu kesatuan", "C": "menghapus otonomi daerah", "D": "mengganti UUD 1945", "E": "membatasi kebudayaan daerah"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. memperkuat pandangan Indonesia sebagai satu kesatuan."}, {"question": "Pengarang Kitab Sutasoma adalah …", "difficulty": "Mudah", "options": {"A": "Soekarno", "B": "Mpu Tantular", "C": "Muhammad Yamin", "D": "Soepomo", "E": "Sayuti Melik"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. Mpu Tantular."}, {"question": "Kebangkitan Nasional Indonesia diperingati pada tanggal …", "difficulty": "Sedang", "options": {"A": "17 Agustus", "B": "20 Mei", "C": "28 Oktober", "D": "1 Juni", "E": "18 Agustus"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. 20 Mei."}, {"question": "Mengapa 1 Juni 1945 tidak dipahami sebagai pengesahan Pancasila?", "difficulty": "Sedang", "options": {"A": "karena tidak ada sidang BPUPKI", "B": "karena hari itu hanya lahir istilah Pancasila melalui pidato Soekarno, sedangkan pengesahan terjadi 18 Agustus 1945", "C": "karena Piagam Jakarta sudah menjadi rumusan final", "D": "karena UUD 1945 sudah diubah", "E": "karena Sumpah Pemuda terjadi pada tanggal tersebut"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. karena hari itu hanya lahir istilah Pancasila melalui pidato Soekarno, sedangkan pengesahan terjadi 18 Agustus 1945."}, {"question": "Dalam rapat OSIS, keputusan diambil setelah setiap anggota diberi kesempatan bicara dan hasilnya disepakati bersama. Jika dibandingkan dengan mekanisme demokrasi Pancasila, rapat itu paling mencerminkan …", "difficulty": "Sulit", "options": {"A": "voting tanpa pertimbangan", "B": "musyawarah untuk mufakat", "C": "keputusan sepihak", "D": "dominasi kelompok mayoritas", "E": "penundaan keputusan"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. musyawarah untuk mufakat."}, {"question": "Sikap yang paling tepat untuk menjaga persatuan dalam lingkungan masyarakat adalah …", "difficulty": "Sedang", "options": {"A": "hanya bekerja sama dengan satu suku", "B": "menyebarkan stereotip terhadap kelompok lain", "C": "ikut gotong royong tanpa membedakan latar belakang", "D": "memutus hubungan karena perbedaan pendapat", "E": "menolak bahasa Indonesia"}, "answer": "C", "explanation": "Jawaban yang tepat adalah C. ikut gotong royong tanpa membedakan latar belakang."}, {"question": "Prinsip checks and balances berarti …", "difficulty": "Sedang", "options": {"A": "satu lembaga menguasai semua kekuasaan", "B": "lembaga negara saling mengawasi dan saling melengkapi", "C": "Presiden tidak perlu diawasi", "D": "DPR bekerja sendiri tanpa lembaga lain", "E": "MPR mengatur semua keputusan"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. lembaga negara saling mengawasi dan saling melengkapi."}, {"question": "Arti semboyan Bhinneka Tunggal Ika adalah …", "difficulty": "Mudah", "options": {"A": "berbeda-beda tetapi tetap satu", "B": "satu bangsa tanpa perbedaan", "C": "satu budaya untuk semua", "D": "banyak negara dalam satu daerah", "E": "kebebasan tanpa batas"}, "answer": "A", "explanation": "Jawaban yang tepat adalah A. berbeda-beda tetapi tetap satu."}, {"question": "Pancasila disebut sumber dari segala sumber hukum berarti …", "difficulty": "Mudah", "options": {"A": "semua hukum harus bertentangan dengan Pancasila", "B": "nilai Pancasila menjadi dasar penyusunan hukum", "C": "Pancasila hanya berlaku untuk sejarah", "D": "hukum tidak perlu UUD", "E": "Pancasila menggantikan seluruh lembaga negara"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. nilai Pancasila menjadi dasar penyusunan hukum."}, {"question": "Urutan makna Pembukaan UUD 1945 dari alinea 1 sampai alinea 4 yang paling tepat adalah …", "difficulty": "Sulit", "options": {"A": "hak kemerdekaan, perjuangan bangsa, rahmat Tuhan, tujuan negara dan dasar negara", "B": "perjuangan bangsa, hak kemerdekaan, tujuan negara, rahmat Tuhan", "C": "rahmat Tuhan, hak kemerdekaan, perjuangan bangsa, tujuan negara", "D": "tujuan negara, rahmat Tuhan, perjuangan bangsa, hak kemerdekaan", "E": "hak kemerdekaan, tujuan negara, perjuangan bangsa, rahmat Tuhan"}, "answer": "A", "explanation": "Jawaban yang tepat adalah A. hak kemerdekaan, perjuangan bangsa, rahmat Tuhan, tujuan negara dan dasar negara."}, {"question": "Perbedaan MA dan MK yang tepat adalah …", "difficulty": "Sedang", "options": {"A": "MA menguji UU terhadap UUD, MK menguji peraturan di bawah UU", "B": "MA menguji peraturan di bawah UU terhadap UU, MK menguji UU terhadap UUD", "C": "MA dan MK sama-sama mengadili kasasi", "D": "MA memeriksa keuangan negara, MK melantik Presiden", "E": "MA membentuk UU, MK mengawasi anggaran"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. MA menguji peraturan di bawah UU terhadap UU, MK menguji UU terhadap UUD."}, {"question": "Sikap yang sesuai dengan sila ke-2 dalam kehidupan berbangsa adalah …", "difficulty": "Sedang", "options": {"A": "membalas hinaan dengan kekerasan", "B": "menjunjung martabat manusia dan menolak kekerasan", "C": "membedakan orang berdasarkan status", "D": "membiarkan pelecehan", "E": "menolak hak orang lain"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. menjunjung martabat manusia dan menolak kekerasan."}, {"question": "Hak warga negara yang paling sesuai dengan pasal-pasal HAM dalam UUD 1945 adalah …", "difficulty": "Sedang", "options": {"A": "hak untuk meniadakan hukum", "B": "hak untuk memperoleh pendidikan", "C": "hak untuk membatasi orang lain", "D": "hak untuk memisahkan diri", "E": "hak untuk menghapus musyawarah"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. hak untuk memperoleh pendidikan."}, {"question": "Jika rakyat memiliki kedaulatan tetapi pelaksanaannya dibatasi oleh konstitusi, maka makna yang paling tepat adalah …", "difficulty": "Sulit", "options": {"A": "rakyat berkuasa tanpa aturan", "B": "kekuasaan rakyat dijalankan menurut UUD 1945", "C": "pemerintah bebas menentukan hukum", "D": "MPR di atas konstitusi", "E": "DPD menjadi pemegang kedaulatan"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. kekuasaan rakyat dijalankan menurut UUD 1945."}, {"question": "Contoh perilaku diskriminatif di sekolah adalah …", "difficulty": "Sedang", "options": {"A": "memberi kesempatan yang sama kepada semua siswa", "B": "membagi tugas secara adil", "C": "memilih teman hanya karena satu asal daerah", "D": "menghargai pendapat berbeda", "E": "bekerja sama dalam kelompok"}, "answer": "C", "explanation": "Jawaban yang tepat adalah C. memilih teman hanya karena satu asal daerah."}, {"question": "Tanggal 18 Agustus 1945 penting karena …", "difficulty": "Sedang", "options": {"A": "Soekarno berpidato tentang Pancasila", "B": "Piagam Jakarta dirumuskan", "C": "Pancasila dan UUD 1945 disahkan", "D": "Sumpah Pemuda dibacakan", "E": "Budi Utomo berdiri"}, "answer": "C", "explanation": "Jawaban yang tepat adalah C. Pancasila dan UUD 1945 disahkan."}, {"question": "Pernyataan yang paling tepat tentang NKRI dan Wawasan Nusantara adalah …", "difficulty": "Sulit", "options": {"A": "Wawasan Nusantara adalah bentuk negara, NKRI adalah cara pandang", "B": "NKRI adalah cara pandang, Wawasan Nusantara adalah bentuk negara", "C": "Wawasan Nusantara merupakan cara pandang untuk menjaga NKRI sebagai satu kesatuan utuh", "D": "keduanya tidak berkaitan", "E": "Wawasan Nusantara hanya mengatur ekonomi"}, "answer": "C", "explanation": "Jawaban yang tepat adalah C. Wawasan Nusantara merupakan cara pandang untuk menjaga NKRI sebagai satu kesatuan utuh."}, {"question": "Sila pertama Pancasila paling menonjolkan nilai …", "difficulty": "Sedang", "options": {"A": "toleransi dan religius", "B": "keserakahan dan persaingan", "C": "penyeragaman budaya", "D": "kekuasaan mayoritas", "E": "perpecahan"}, "answer": "A", "explanation": "Jawaban yang tepat adalah A. toleransi dan religius."}, {"question": "Sila ketiga menekankan nilai …", "difficulty": "Sedang", "options": {"A": "individualisme", "B": "persatuan", "C": "kekerasan", "D": "diskriminasi", "E": "penolakan keberagaman"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. persatuan."}, {"question": "Sila keempat berkaitan dengan …", "difficulty": "Mudah", "options": {"A": "musyawarah", "B": "hukuman", "C": "monarki", "D": "pembagian wilayah", "E": "perdagangan"}, "answer": "A", "explanation": "Jawaban yang tepat adalah A. musyawarah."}, {"question": "Sila kelima berkaitan dengan …", "difficulty": "Mudah", "options": {"A": "keadilan sosial", "B": "kebebasan tanpa aturan", "C": "perpecahan", "D": "kekuasaan sepihak", "E": "diskriminasi"}, "answer": "A", "explanation": "Jawaban yang tepat adalah A. keadilan sosial."}, {"question": "Urutan yang benar dari tiga peristiwa berikut adalah …", "difficulty": "Sulit", "options": {"A": "1928, 1908, 1945", "B": "1945, 1928, 1908", "C": "1908, 1928, 1945", "D": "1908, 1945, 1928", "E": "1945, 1908, 1928"}, "answer": "C", "explanation": "Jawaban yang tepat adalah C. 1908, 1928, 1945."}, {"question": "DPD berbeda dengan DPR karena DPD …", "difficulty": "Sedang", "options": {"A": "memiliki kewenangan penuh membentuk semua UU", "B": "mewakili daerah dan kewenangannya terbatas pada bidang tertentu", "C": "dipilih oleh Presiden", "D": "mengadili pelanggaran hukum", "E": "memeriksa keuangan negara"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. mewakili daerah dan kewenangannya terbatas pada bidang tertentu."}, {"question": "Dalam sistem pemerintahan Indonesia, yang bukan ciri presidensial adalah …", "difficulty": "Sedang", "options": {"A": "Presiden memegang kekuasaan pemerintahan", "B": "Presiden dibantu menteri", "C": "Presiden bertanggung jawab kepada DPR seperti dalam parlementer", "D": "Presiden dipilih langsung oleh rakyat", "E": "Presiden menjalankan pemerintahan menurut UUD"}, "answer": "C", "explanation": "Jawaban yang tepat adalah C. Presiden bertanggung jawab kepada DPR seperti dalam parlementer."}, {"question": "Sebelum amandemen, MPR dipandang sebagai lembaga tertinggi negara. Setelah amandemen, kondisi yang paling tepat adalah …", "difficulty": "Sulit", "options": {"A": "kekuasaan lebih terpusat pada MPR", "B": "semua lembaga negara memiliki kedudukan seimbang dalam checks and balances", "C": "Presiden tidak lagi ada", "D": "DPR menjadi lembaga tertinggi tunggal", "E": "DPD menggantikan MPR sepenuhnya"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. semua lembaga negara memiliki kedudukan seimbang dalam checks and balances."}, {"question": "Penyebaran hoaks yang memicu kebencian antarkelompok paling berbahaya karena dapat …", "difficulty": "Sedang", "options": {"A": "memperkuat otonomi daerah", "B": "mengganggu persatuan dan keutuhan NKRI", "C": "mempercepat legislasi", "D": "meningkatkan kewenangan MK", "E": "mengurangi peran UUD"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. mengganggu persatuan dan keutuhan NKRI."}, {"question": "MPR memiliki kewenangan penting untuk …", "difficulty": "Sedang", "options": {"A": "memeriksa keuangan negara", "B": "mengubah dan menetapkan UUD", "C": "menguji undang-undang terhadap UUD", "D": "mengadili tingkat kasasi", "E": "menyusun laporan pemeriksaan"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. mengubah dan menetapkan UUD."}, {"question": "Pancasila tercantum secara resmi dalam …", "difficulty": "Mudah", "options": {"A": "teks proklamasi", "B": "Pembukaan UUD 1945 alinea ke-4", "C": "batang tubuh UUD 1945", "D": "Piagam Jakarta tanpa perubahan", "E": "Sumpah Pemuda"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. Pembukaan UUD 1945 alinea ke-4."}, {"question": "Perbedaan utama antara Pancasila dan Bhinneka Tunggal Ika adalah …", "difficulty": "Sedang", "options": {"A": "Pancasila adalah dasar negara, Bhinneka Tunggal Ika adalah semboyan negara", "B": "Pancasila adalah bentuk negara, Bhinneka Tunggal Ika adalah konstitusi", "C": "Pancasila adalah hukum dasar tertulis, Bhinneka Tunggal Ika adalah pasal", "D": "keduanya merupakan lembaga negara", "E": "keduanya memiliki fungsi yang sama persis"}, "answer": "A", "explanation": "Jawaban yang tepat adalah A. Pancasila adalah dasar negara, Bhinneka Tunggal Ika adalah semboyan negara."}, {"question": "Pasal-pasal HAM dalam UUD 1945 menunjukkan bahwa hubungan negara dengan warga negara harus menempatkan …", "difficulty": "Sulit", "options": {"A": "hak warga sebagai pilihan pejabat", "B": "hak asasi sebagai bagian dari perlindungan konstitusional", "C": "kekuasaan di atas semua hak", "D": "kebijakan daerah di atas konstitusi", "E": "partai politik di atas hukum"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. hak asasi sebagai bagian dari perlindungan konstitusional."}, {"question": "Pancasila digunakan sebagai dasar penyusunan kebijakan karena …", "difficulty": "Sedang", "options": {"A": "kebijakan harus selalu sama di seluruh dunia", "B": "Pancasila memberi arah nilai agar kebijakan tidak bertentangan dengan keadilan dan persatuan", "C": "kebijakan hanya urusan sekolah", "D": "Pancasila menggantikan semua pasal", "E": "kebijakan tidak perlu memperhatikan rakyat"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. Pancasila memberi arah nilai agar kebijakan tidak bertentangan dengan keadilan dan persatuan."}, {"question": "Contoh sikap yang mencerminkan keadilan sosial di lingkungan masyarakat adalah …", "difficulty": "Sedang", "options": {"A": "mengambil hak orang lain", "B": "membiarkan fasilitas umum rusak", "C": "membagikan bantuan secara tepat sasaran tanpa pilih kasih", "D": "menolak kerja sama sosial", "E": "memprioritaskan kelompok sendiri"}, "answer": "C", "explanation": "Jawaban yang tepat adalah C. membagikan bantuan secara tepat sasaran tanpa pilih kasih."}, {"question": "Gagasan Soepomo dalam sidang BPUPKI dikenal karena menekankan …", "difficulty": "Sulit", "options": {"A": "negara integralistik", "B": "negara federal", "C": "monarki konstitusional", "D": "demokrasi liberal murni", "E": "negara tanpa persatuan"}, "answer": "A", "explanation": "Jawaban yang tepat adalah A. negara integralistik."}, {"question": "Persatuan Indonesia dalam kehidupan bernegara menuntut warga untuk …", "difficulty": "Sedang", "options": {"A": "memelihara konflik agar kuat", "B": "menempatkan kepentingan bangsa di atas kepentingan golongan", "C": "mengabaikan perbedaan", "D": "menolak kerja sama antardaerah", "E": "membatasi musyawarah"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. menempatkan kepentingan bangsa di atas kepentingan golongan."}, {"question": "Nilai yang paling sejalan antara Pancasila dan keberagaman masyarakat Indonesia adalah …", "difficulty": "Sedang", "options": {"A": "penyeragaman", "B": "toleransi", "C": "diskriminasi", "D": "egoisme", "E": "isolasi"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. toleransi."}, {"question": "Jika pemerintah membuat aturan yang membatasi kebebasan tanpa dasar hukum yang jelas, prinsip yang paling dilanggar adalah …", "difficulty": "Sulit", "options": {"A": "persatuan wilayah dan bahasa", "B": "kedaulatan rakyat dan negara hukum", "C": "otonomi daerah dan budaya", "D": "musyawarah dan perwakilan", "E": "sejarah dan proklamasi"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. kedaulatan rakyat dan negara hukum."}, {"question": "Dalam penyelenggaraan negara, demokrasi Pancasila menuntut agar keputusan penting …", "difficulty": "Sedang", "options": {"A": "ditentukan satu orang", "B": "dibahas bersama dan dipertanggungjawabkan", "C": "diambil secara sembunyi-sembunyi", "D": "hanya menguntungkan pihak tertentu", "E": "meniadakan partisipasi rakyat"}, "answer": "B", "explanation": "Jawaban yang tepat adalah B. dibahas bersama dan dipertanggungjawabkan."}, {"question": "Sikap berikut yang bukan wujud toleransi adalah …", "difficulty": "Sedang", "options": {"A": "menghormati ibadah orang lain", "B": "menerima perbedaan pendapat", "C": "mengejek keyakinan dan budaya orang lain", "D": "bekerja sama lintas latar belakang", "E": "tidak memaksakan kehendak"}, "answer": "C", "explanation": "Jawaban yang tepat adalah C. mengejek keyakinan dan budaya orang lain."}, {"question": "Jika hasil pembangunan hanya dinikmati sebagian kecil masyarakat, maka nilai yang paling diabaikan adalah …", "difficulty": "Sedang", "options": {"A": "keadilan sosial", "B": "persatuan", "C": "ketuhanan", "D": "musyawarah", "E": "kebebasan beragama"}, "answer": "A", "explanation": "Jawaban yang tepat adalah A. keadilan sosial."}, {"question": "DPR memiliki fungsi utama berupa …", "difficulty": "Mudah", "options": {"A": "legislasi, anggaran, dan pengawasan", "B": "kasasi, judicial review, dan eksekusi", "C": "pemeriksaan keuangan, pelantikan, dan pembubaran partai", "D": "penyusunan teks proklamasi", "E": "penetapan semboyan negara"}, "answer": "A", "explanation": "Jawaban yang tepat adalah A. legislasi, anggaran, dan pengawasan."}, {"question": "Pernyataan yang paling tepat mengenai empat pilar kebangsaan adalah …", "difficulty": "Sulit", "options": {"A": "Pancasila adalah dasar nilai, UUD 1945 adalah hukum dasar, NKRI adalah bentuk negara, dan Bhinneka Tunggal Ika adalah semboyan persatuan", "B": "Pancasila adalah konstitusi, UUD 1945 adalah dasar negara, NKRI adalah semboyan", "C": "Bhinneka Tunggal Ika adalah hukum dasar, Pancasila adalah bentuk negara", "D": "UUD 1945 adalah dasar negara, NKRI adalah sumber hukum", "E": "semuanya tidak saling berhubungan"}, "answer": "A", "explanation": "Jawaban yang tepat adalah A. Pancasila adalah dasar nilai, UUD 1945 adalah hukum dasar, NKRI adalah bentuk negara, dan Bhinneka Tunggal Ika adalah semboyan persatuan."}];
 
-    function startExam() {
-        document.getElementById('intro-screen').style.display = 'none';
-        document.getElementById('exam-screen').style.display = 'flex';
-        renderNav();
-        showQuestion(0);
-        timerInterval = setInterval(updateTimer, 1000);
+    const state = {
+      currentIndex: 0,
+      answers: Array(questions.length).fill(''),
+      doubtful: Array(questions.length).fill(false),
+      started: false,
+      submitted: false,
+      endTime: 0,
+      timerId: null
+    };
+
+    const el = {
+      landingScreen: document.getElementById('landingScreen'),
+      examScreen: document.getElementById('examScreen'),
+      resultScreen: document.getElementById('resultScreen'),
+      startBtn: document.getElementById('startBtn'),
+      previewBtn: document.getElementById('previewBtn'),
+      restartBtn: document.getElementById('restartBtn'),
+      prevBtn: document.getElementById('prevBtn'),
+      nextBtn: document.getElementById('nextBtn'),
+      doubtBtn: document.getElementById('doubtBtn'),
+      submitBtn: document.getElementById('submitBtn'),
+      timer: document.getElementById('timer'),
+      progressFill: document.getElementById('progressFill'),
+      progressText: document.getElementById('progressText'),
+      navGrid: document.getElementById('navGrid'),
+      questionCount: document.getElementById('questionCount'),
+      difficultyBadge: document.getElementById('difficultyBadge'),
+      questionText: document.getElementById('questionText'),
+      optionsContainer: document.getElementById('optionsContainer'),
+      questionStatus: document.getElementById('questionStatus'),
+      resultSubtitle: document.getElementById('resultSubtitle'),
+      summaryGrid: document.getElementById('summaryGrid'),
+      reviewList: document.getElementById('reviewList')
+    };
+
+    function showScreen(which) {
+      el.landingScreen.classList.toggle('hidden', which !== 'landing');
+      el.examScreen.classList.toggle('hidden', which !== 'exam');
+      el.resultScreen.classList.toggle('hidden', which !== 'result');
+    }
+
+    function formatTime(ms) {
+      const safe = Math.max(0, ms);
+      const totalSeconds = Math.ceil(safe / 1000);
+      const m = Math.floor(totalSeconds / 60);
+      const s = totalSeconds % 60;
+      return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+    }
+
+    function getStatus(index) {
+      if (state.doubtful[index]) return 'doubtful';
+      if (state.answers[index]) return 'answered';
+      return 'unanswered';
+    }
+
+    function getStatusLabel(index) {
+      if (state.doubtful[index]) return 'Ragu-ragu';
+      if (state.answers[index]) return 'Sudah dijawab';
+      return 'Belum dijawab';
+    }
+
+    function updateProgress() {
+      const answered = state.answers.filter(Boolean).length;
+      const doubtful = state.doubtful.filter(Boolean).length;
+      el.progressFill.style.width = ((answered / questions.length) * 100) + '%';
+      el.progressText.textContent = `${answered}/${questions.length} dijawab • ${doubtful} ragu-ragu`;
     }
 
     function renderNav() {
-        const grid = document.getElementById('nav-grid');
-        grid.innerHTML = '';
-        questions.forEach((_, i) => {
-            const div = document.createElement('div');
-            div.className = 'nav-num';
-            div.id = `nav-${i}`;
-            div.innerText = i + 1;
-            div.onclick = () => showQuestion(i);
-            grid.appendChild(div);
+      el.navGrid.innerHTML = '';
+      questions.forEach((q, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `nav-btn ${getStatus(idx)}${idx === state.currentIndex ? ' active' : ''}`;
+        btn.textContent = idx + 1;
+        btn.title = getStatusLabel(idx);
+        btn.addEventListener('click', () => {
+          state.currentIndex = idx;
+          renderQuestion();
         });
+        el.navGrid.appendChild(btn);
+      });
     }
 
-    function showQuestion(idx) {
-        currentIdx = idx;
-        const q = questions[idx];
-        document.getElementById('q-label').innerText = `SOAL NOMOR ${idx + 1}`;
-        document.getElementById('q-text').innerText = q.q;
-        document.getElementById('progress-header').innerText = `Soal ${idx + 1} dari ${questions.length}`;
+    function renderQuestion() {
+      const q = questions[state.currentIndex];
+      el.questionCount.textContent = `Soal ${state.currentIndex + 1} dari ${questions.length}`;
+      el.difficultyBadge.textContent = q.difficulty || 'TWK';
+      el.questionText.textContent = q.question;
+      el.questionStatus.textContent = getStatusLabel(state.currentIndex) + '.';
 
-        const container = document.getElementById('options-container');
-        container.innerHTML = '';
-        
-        ['A','B','C','D','E'].forEach((label, i) => {
-            const div = document.createElement('div');
-            div.className = `option-item ${userAnswers[idx] === i ? 'selected' : ''}`;
-            div.onclick = () => selectOption(i);
-            div.innerHTML = `<span class="opt-label">${label}.</span> <span>${q.o[i]}</span>`;
-            container.appendChild(div);
+      el.optionsContainer.innerHTML = '';
+      const selected = state.answers[state.currentIndex];
+      Object.entries(q.options).forEach(([letter, text]) => {
+        const label = document.createElement('label');
+        label.className = 'option' + (selected === letter ? ' selected' : '');
+        label.innerHTML = `
+          <input type="radio" name="answer" value="${letter}" ${selected === letter ? 'checked' : ''} />
+          <span class="letter">${letter}</span>
+          <span class="text">${text}</span>
+        `;
+        const input = label.querySelector('input');
+        input.addEventListener('change', (e) => {
+          state.answers[state.currentIndex] = e.target.value;
+          renderQuestion();
+          renderNav();
+          updateProgress();
         });
+        el.optionsContainer.appendChild(label);
+      });
 
-        document.getElementById('btn-next').style.display = (idx === questions.length - 1) ? 'none' : 'block';
-        document.getElementById('btn-finish').style.display = (idx === questions.length - 1) ? 'block' : 'none';
-        updateNavStyles();
+      el.prevBtn.disabled = state.currentIndex === 0;
+      el.nextBtn.disabled = state.currentIndex === questions.length - 1;
+      el.doubtBtn.textContent = state.doubtful[state.currentIndex] ? 'Batal Ragu-ragu' : 'Ragu-ragu';
+
+      renderNav();
+      updateProgress();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function selectOption(i) {
-        userAnswers[currentIdx] = i;
-        userDoubts[currentIdx] = false;
-        showQuestion(currentIdx);
-    }
-
-    function markDoubt() {
-        userDoubts[currentIdx] = !userDoubts[currentIdx];
-        updateNavStyles();
-    }
-
-    function changeQuestion(dir) {
-        let newIdx = currentIdx + dir;
-        if(newIdx >= 0 && newIdx < questions.length) showQuestion(newIdx);
-    }
-
-    function updateNavStyles() {
-        questions.forEach((_, i) => {
-            const el = document.getElementById(`nav-${i}`);
-            if(!el) return;
-            el.className = 'nav-num';
-            if(userAnswers[i] !== null) el.classList.add('answered');
-            if(userDoubts[i]) el.classList.add('doubt');
-            if(i === currentIdx) el.classList.add('active');
-        });
-    }
-
-    function updateTimer() {
-        timeLeft--;
-        if(timeLeft <= 0) finishExam();
-        const m = Math.floor(timeLeft / 60);
-        const s = timeLeft % 60;
-        document.getElementById('timer').innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-    }
-
-    function showConfirm() { document.getElementById('modal-overlay').style.display = 'flex'; }
-    function hideConfirm() { document.getElementById('modal-overlay').style.display = 'none'; }
-
-    function finishExam() {
-        clearInterval(timerInterval);
-        hideConfirm();
-        let correct = 0;
-        userAnswers.forEach((ans, i) => { if(ans === questions[i].a) correct++; });
-        let score = correct * 5;
-
-        document.getElementById('exam-screen').style.display = 'none';
-        document.getElementById('result-screen').style.display = 'block';
-        document.getElementById('score-text').innerText = score;
-        
-        const status = document.getElementById('status-tag');
-        if(score >= 65) {
-            status.innerText = "LULUS (MEMENUHI SYARAT)";
-            status.style.color = "#28a745";
-        } else {
-            status.innerText = "TIDAK LULUS (DI BAWAH PASSING GRADE)";
-            status.style.color = "#dc3545";
+    function startTimer() {
+      clearInterval(state.timerId);
+      state.endTime = Date.now() + 30 * 60 * 1000;
+      const tick = () => {
+        const remaining = state.endTime - Date.now();
+        el.timer.textContent = formatTime(remaining);
+        if (remaining <= 0) {
+          el.timer.textContent = '00:00';
+          clearInterval(state.timerId);
+          if (!state.submitted) submitExam(true);
         }
-        document.getElementById('stats-detail').innerText = `Benar: ${correct} | Salah: ${questions.length - correct} | Total: ${score}/250`;
+      };
+      tick();
+      state.timerId = setInterval(tick, 1000);
     }
 
-    function showReview() {
-        document.getElementById('result-screen').style.display = 'none';
-        document.getElementById('review-screen').style.display = 'block';
-        const container = document.getElementById('review-content');
-        container.innerHTML = '';
-        const labels = ['A','B','C','D','E'];
-
-        questions.forEach((q, i) => {
-            const isCorrect = userAnswers[i] === q.a;
-            const div = document.createElement('div');
-            div.className = 'review-card';
-            div.style.borderColor = isCorrect ? '#28a745' : '#dc3545';
-            div.innerHTML = `
-                <p style="margin-bottom:10px;"><strong>Soal ${i+1}:</strong> ${q.q}</p>
-                <div style="background:#f9f9f9; padding:10px; border-radius:5px;">
-                    <p>Jawaban Anda: <span style="color:${isCorrect ? 'green' : 'red'}; font-weight:bold;">${userAnswers[i] !== null ? labels[userAnswers[i]] + '. ' + q.o[userAnswers[i]] : 'Tidak Dijawab'}</span></p>
-                    <p>Kunci Jawaban: <strong style="color:green">${labels[q.a]}. ${q.o[q.a]}</strong></p>
-                </div>
-            `;
-            container.appendChild(div);
-        });
+    function calculateResult() {
+      let correct = 0;
+      let wrong = 0;
+      let blank = 0;
+      questions.forEach((q, idx) => {
+        const a = state.answers[idx];
+        if (!a) {
+          blank += 1;
+        } else if (a === q.answer) {
+          correct += 1;
+        } else {
+          wrong += 1;
+        }
+      });
+      const score = correct * 5;
+      const status = score >= 65 ? 'LULUS' : 'TIDAK LULUS';
+      return { correct, wrong, blank, score, status };
     }
-</script>
 
+    function renderResults() {
+      const res = calculateResult();
+      el.resultSubtitle.innerHTML = `
+        Skor akhir <strong>${res.score}</strong> dari maksimal <strong>${questions.length * 5}</strong>.
+        Status ujian: <strong class="${res.status === 'LULUS' ? 'pass' : 'fail'}">${res.status}</strong>.
+      `;
+
+      el.summaryGrid.innerHTML = `
+        <div class="summary-card">
+          <div class="label">Skor Total</div>
+          <div class="value">${res.score}</div>
+          <div class="hint">Benar × 5 poin</div>
+        </div>
+        <div class="summary-card">
+          <div class="label">Jawaban Benar</div>
+          <div class="value pass">${res.correct}</div>
+          <div class="hint">Dari 100 soal</div>
+        </div>
+        <div class="summary-card">
+          <div class="label">Salah / Kosong</div>
+          <div class="value fail">${res.wrong + res.blank}</div>
+          <div class="hint">Tidak menambah skor</div>
+        </div>
+        <div class="summary-card">
+          <div class="label">Status</div>
+          <div class="value ${res.status === 'LULUS' ? 'pass' : 'fail'}">${res.status}</div>
+          <div class="hint">Lulus jika skor ≥ 65</div>
+        </div>
+      `;
+
+      el.reviewList.innerHTML = '';
+      questions.forEach((q, idx) => {
+        const user = state.answers[idx];
+        const isCorrect = user === q.answer;
+        const div = document.createElement('div');
+        div.className = 'review-item ' + (isCorrect ? 'correct' : 'wrong');
+        div.innerHTML = `
+          <div class="review-title">Soal ${idx + 1}. ${q.question}</div>
+          <div class="review-meta">
+            <span class="pill"><strong>Jawaban user:</strong> ${user ? user : 'Belum dijawab'}</span>
+            <span class="pill"><strong>Jawaban benar:</strong> ${q.answer}</span>
+            <span class="pill"><strong>Status:</strong> ${state.doubtful[idx] ? 'Ragu-ragu' : 'Tidak ragu-ragu'}</span>
+          </div>
+          <div class="review-options">
+            <div><strong>A.</strong> ${q.options.A}</div>
+            <div><strong>B.</strong> ${q.options.B}</div>
+            <div><strong>C.</strong> ${q.options.C}</div>
+            <div><strong>D.</strong> ${q.options.D}</div>
+            <div><strong>E.</strong> ${q.options.E}</div>
+          </div>
+          <div class="review-expl">${q.explanation}</div>
+        `;
+        el.reviewList.appendChild(div);
+      });
+    }
+
+    function submitExam(fromTimeout = false) {
+      if (state.submitted) return;
+      if (!fromTimeout) {
+        const ok = confirm('Selesaikan ujian sekarang?');
+        if (!ok) return;
+      }
+      state.submitted = true;
+      clearInterval(state.timerId);
+      showScreen('result');
+      renderResults();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function goPrev() {
+      if (state.currentIndex > 0) {
+        state.currentIndex -= 1;
+        renderQuestion();
+      }
+    }
+
+    function goNext() {
+      if (state.currentIndex < questions.length - 1) {
+        state.currentIndex += 1;
+        renderQuestion();
+      }
+    }
+
+    function toggleDoubt() {
+      state.doubtful[state.currentIndex] = !state.doubtful[state.currentIndex];
+      renderQuestion();
+      renderNav();
+    }
+
+    function resetAll() {
+      clearInterval(state.timerId);
+      state.currentIndex = 0;
+      state.answers = Array(questions.length).fill('');
+      state.doubtful = Array(questions.length).fill(false);
+      state.started = false;
+      state.submitted = false;
+      state.endTime = 0;
+      el.timer.textContent = '30:00';
+      el.progressFill.style.width = '0%';
+      el.progressText.textContent = `0/${questions.length} dijawab • 0 ragu-ragu`;
+      showScreen('landing');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    el.startBtn.addEventListener('click', () => {
+      state.started = true;
+      showScreen('exam');
+      renderQuestion();
+      startTimer();
+      updateProgress();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    el.previewBtn.addEventListener('click', () => {
+      const target = document.querySelector('.hero-right');
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    el.prevBtn.addEventListener('click', goPrev);
+    el.nextBtn.addEventListener('click', goNext);
+    el.doubtBtn.addEventListener('click', toggleDoubt);
+    el.submitBtn.addEventListener('click', () => submitExam(false));
+    el.restartBtn.addEventListener('click', resetAll);
+
+    showScreen('landing');
+    updateProgress();
+  </script>
 </body>
 </html>
